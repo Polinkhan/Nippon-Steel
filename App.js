@@ -1,85 +1,150 @@
-import React from "react";
-import {
-  Text,
-  Link,
-  HStack,
-  Center,
-  Heading,
-  Switch,
-  useColorMode,
-  NativeBaseProvider,
-  extendTheme,
-  VStack,
-  Box,
-} from "native-base";
-import NativeBaseIcon from "./components/NativeBaseIcon";
-import { Platform } from "react-native";
-
-// Define the config
-const config = {
-  useSystemColorMode: false,
-  initialColorMode: "dark",
-};
-
-// extend the theme
-export const theme = extendTheme({ config });
+import { useFonts } from "expo-font";
+import { NativeBaseProvider, Skeleton, VStack } from "native-base";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import DataContextProvider, { useDataContext } from "./contexts/DataContext";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Alert, BackHandler } from "react-native";
+import SignIn from "./components/Auth/SignIn";
+import Home from "./components/Home";
+import { useCallback } from "react";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+import About from "./components/About";
+import Service from "./components/Service";
 
 export default function App() {
   return (
     <NativeBaseProvider>
-      <Center
-        _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "blueGray.50" }}
-        px={4}
-        flex={1}
-      >
-        <VStack space={5} alignItems="center">
-          <NativeBaseIcon />
-          <Heading size="lg">Welcome to NativeBase</Heading>
-          <HStack space={2} alignItems="center">
-            <Text>Edit</Text>
-            <Box
-              _web={{
-                _text: {
-                  fontFamily: "monospace",
-                  fontSize: "sm",
-                },
-              }}
-              px={2}
-              py={1}
-              _dark={{ bg: "blueGray.800" }}
-              _light={{ bg: "blueGray.200" }}
-            >
-              App.js
-            </Box>
-            <Text>and save to reload.</Text>
-          </HStack>
-          <Link href="https://docs.nativebase.io" isExternal>
-            <Text color="primary.500" underline fontSize={"xl"}>
-              Learn NativeBase
-            </Text>
-          </Link>
-          <ToggleDarkMode />
-        </VStack>
-      </Center>
+      <NavigationContainer>
+        <DataContextProvider>
+          <MyStack />
+        </DataContextProvider>
+      </NavigationContainer>
     </NativeBaseProvider>
   );
 }
 
-// Color Switch Component
-function ToggleDarkMode() {
-  const { colorMode, toggleColorMode } = useColorMode();
+function MyStack() {
+  const { currentUser, isFirebaseLoaded } = useDataContext();
+  const Stack = createNativeStackNavigator();
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        Alert.alert(
+          "Exit App",
+          "Exiting the application?",
+          [
+            {
+              text: "Cancel",
+              onPress: () => "",
+              style: "cancel",
+            },
+            {
+              text: "OK",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          {
+            cancelable: false,
+          }
+        );
+        return true;
+      };
+
+      const subscription = BackHandler.addEventListener(
+        "hardwareBackPress",
+        onBackPress
+      );
+
+      return () => subscription.remove();
+    }, [])
+  );
+
+  const [fontsLoaded] = useFonts({
+    "Nunito-SemiBold": require("./assets/fonts/Nunito-SemiBold.ttf"),
+  });
+
   return (
-    <HStack space={2} alignItems="center">
-      <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === "light"}
-        onToggle={toggleColorMode}
-        aria-label={
-          colorMode === "light" ? "switch to dark mode" : "switch to light mode"
-        }
+    fontsLoaded && (
+      <>
+        <SafeAreaView />
+        {isFirebaseLoaded ? (
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}
+            style={{}}
+          >
+            {currentUser ? (
+              <Stack.Screen name="/" component={BottomTab} />
+            ) : (
+              <Stack.Screen name="signin" component={SignIn} />
+            )}
+          </Stack.Navigator>
+        ) : (
+          <VStack space={20} h={"100%"}>
+            <Skeleton h="40" px="4" />
+            <Skeleton.Text px="4" />
+            <Skeleton.Text px="4" />
+            <Skeleton.Text px="4" />
+            <Skeleton.Text px="4" />
+            <Skeleton px="4" startColor="primary.100" />
+          </VStack>
+        )}
+      </>
+    )
+  );
+}
+
+function BottomTab() {
+  const Tab = createMaterialBottomTabNavigator();
+
+  return (
+    <Tab.Navigator barStyle={{ backgroundColor: "#2563eb" }}>
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name="home"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="home"
+        component={Home}
       />
-      <Text>Light</Text>
-    </HStack>
+      <Tab.Screen
+        options={{
+          tabBarLabel: "PDF Viwer",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name="settings-outline"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="service"
+        component={Service}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: "About",
+          tabBarIcon: ({ color, focused }) => (
+            <AntDesign
+              name="questioncircleo"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="about"
+        component={About}
+      />
+    </Tab.Navigator>
   );
 }
