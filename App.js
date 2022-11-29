@@ -1,4 +1,4 @@
-//add another comment
+//add another comment for checking
 import { useFonts } from "expo-font";
 import { NativeBaseProvider, Skeleton, VStack } from "native-base";
 import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
