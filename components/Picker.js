@@ -1,28 +1,28 @@
 import { HStack, Select, Text } from "native-base";
 import { useDataContext } from "../contexts/DataContext";
 
-const Picker = ({ name, value, setValue }) => {
-  const { Data } = useDataContext();
+const Picker = ({ name }) => {
+  const { Data, queryParam, setQueryParam } = useDataContext();
   return (
     <HStack w={"80%"} justifyContent={"space-between"}>
       <Text
-        w={"35%"}
+        w={"40%"}
         my={"auto"}
         fontSize={"lg"}
-        textAlign={"right"}
+        textAlign={"center"}
         fontFamily={"Nunito-SemiBold"}
       >
         Select {name} :
       </Text>
       <Select
         flex={0.9}
-        h={12}
-        w={"100%"}
         borderRadius={"lg"}
-        size={"xl"}
-        selectedValue={value}
+        size={"md"}
+        selectedValue={queryParam[name]}
         placeholder="Select"
-        onValueChange={(itemValue) => setValue(itemValue)}
+        onValueChange={(itemValue) =>
+          setQueryParam({ ...queryParam, [name]: itemValue })
+        }
         _selectedItem={{
           bg: "gray.200",
           borderRadius: "lg",

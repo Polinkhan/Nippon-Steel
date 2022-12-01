@@ -13,6 +13,7 @@ import { useCallback } from "react";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import About from "./components/About";
 import Service from "./components/Service";
+import FindPdf from "./components/Tabs/FindPdf";
 
 export default function App() {
   return (
@@ -27,7 +28,7 @@ export default function App() {
 }
 
 function MyStack() {
-  const { currentUser, isFirebaseLoaded } = useDataContext();
+  const { isAuth } = useDataContext();
   const Stack = createNativeStackNavigator();
 
   useFocusEffect(
@@ -71,29 +72,22 @@ function MyStack() {
     fontsLoaded && (
       <>
         <SafeAreaView />
-        {isFirebaseLoaded ? (
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-            style={{}}
-          >
-            {currentUser ? (
+
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          {isAuth ? (
+            <>
               <Stack.Screen name="/" component={BottomTab} />
-            ) : (
-              <Stack.Screen name="signin" component={SignIn} />
-            )}
-          </Stack.Navigator>
-        ) : (
-          <VStack space={20} h={"100%"}>
-            <Skeleton h="40" px="4" />
-            <Skeleton.Text px="4" />
-            <Skeleton.Text px="4" />
-            <Skeleton.Text px="4" />
-            <Skeleton.Text px="4" />
-            <Skeleton px="4" startColor="primary.100" />
-          </VStack>
-        )}
+              <Stack.Screen name="findpdf" component={FindPdf} />
+              <Stack.Screen name="pdfview" component={Service} />
+            </>
+          ) : (
+            <Stack.Screen name="signin" component={SignIn} />
+          )}
+        </Stack.Navigator>
       </>
     )
   );
@@ -117,20 +111,6 @@ function BottomTab() {
         }}
         name="home"
         component={Home}
-      />
-      <Tab.Screen
-        options={{
-          tabBarLabel: "PDF Viwer",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name="settings-outline"
-              size={20}
-              color={focused ? "white" : "#cccccc"}
-            />
-          ),
-        }}
-        name="service"
-        component={Service}
       />
       <Tab.Screen
         options={{

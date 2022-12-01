@@ -14,6 +14,14 @@ const About = () => {
       >
         About
       </Text>
+      <VStack>
+        <Text fontFamily={"Nunito-SemiBold"} textAlign={"center"}>
+          Author : MD. NAEEM KHAN
+        </Text>
+        <Text fontFamily={"Nunito-SemiBold"} textAlign={"center"}>
+          Created On : 1 Dec 2022
+        </Text>
+      </VStack>
       <Center>
         <Button
           _text={{ fontSize: "2xl" }}

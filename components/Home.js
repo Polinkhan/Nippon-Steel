@@ -1,45 +1,91 @@
-import { Text, VStack } from "native-base";
+import {
+  Button,
+  Center,
+  Divider,
+  HStack,
+  Spinner,
+  Text,
+  VStack,
+} from "native-base";
 import { useDataContext } from "../contexts/DataContext";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import CheckTime from "./Tabs/CheckTime";
-import CheckPaySlip from "./Tabs/CheckPaySlip";
-import Other from "./Tabs/Other";
+import { UserInfoLabel, UserInfoDataKey } from "../utils/StaticData";
+
+const buttonProps = {
+  colorScheme: "blue",
+  borderRadius: "full",
+  px: 4,
+  h: 12,
+  _text: { fontFamily: "Nunito-SemiBold" },
+};
 
 const Home = ({ navigation }) => {
   const { currentUser } = useDataContext();
-  const Tab = createMaterialTopTabNavigator();
   return (
-    <VStack h={"100%"} bg={"white"}>
-      <VStack
-        w={"60%"}
-        alignSelf={"flex-end"}
-        justifyContent={"center"}
-        p={4}
-        m={4}
-        mt={8}
-        bg={"gray.100"}
-        borderRadius={"xl"}
-        shadow={"2"}
-        space={2}
+    <VStack h={"100%"} p={4} bg={"white"} justifyContent={"space-between"}>
+      <HStack
+        p={2}
+        borderRadius={"sm"}
+        borderWidth={1}
+        borderColor={"gray.300"}
       >
-        <Text fontFamily={"Nunito-SemiBold"} fontSize={"2xl"}>
-          Welcome : {currentUser.name}
-        </Text>
-        <Text fontFamily={"Nunito-SemiBold"} fontSize={"xl"}>
-          Email : {currentUser.email}
-        </Text>
-        <Text fontFamily={"Nunito-SemiBold"} fontSize={"lg"}>
-          ID : {currentUser.id}
-        </Text>
-        <Text fontFamily={"Nunito-SemiBold"} fontSize={"lg"}>
-          Date : {new Date().toLocaleDateString()}
-        </Text>
+        <VStack w={"45%"} space={1}>
+          {UserInfoLabel.map((info, i) => (
+            <Text key={i} fontFamily={"Nunito-SemiBold"} fontSize={"md"}>
+              {info}
+            </Text>
+          ))}
+        </VStack>
+        <Divider orientation="vertical" />
+        <VStack pl={4} w={"55%"} space={1}>
+          {UserInfoDataKey.map((KEY, i) => (
+            <Text key={i} fontFamily={"Nunito-SemiBold"} fontSize={"md"}>
+              {currentUser[KEY] ? (
+                currentUser[KEY]
+              ) : (
+                <Spinner color="indigo.500" />
+              )}
+            </Text>
+          ))}
+          <Text fontFamily={"Nunito-SemiBold"} fontSize={"md"}>
+            {new Date().toDateString()}
+          </Text>
+        </VStack>
+      </HStack>
+      <Center
+        h={"40%"}
+        p={2}
+        borderRadius={"sm"}
+        borderWidth={1}
+        borderColor={"gray.300"}
+      ></Center>
+      <VStack
+        // alignItems={"center"}
+        px={4}
+        py={8}
+        space={8}
+        borderRadius={"sm"}
+        borderWidth={1}
+        borderColor={"gray.300"}
+      >
+        <Button {...buttonProps} onPress={() => navigation.navigate("findpdf")}>
+          Find PDF
+        </Button>
+        <HStack justifyContent={"space-around"} w={"100%"}>
+          <Button w={"45%"} {...buttonProps}>
+            Information
+          </Button>
+          <Button w={"45%"} {...buttonProps}>
+            Contact
+          </Button>
+        </HStack>
       </VStack>
-      <Tab.Navigator>
+
+      {/* <Tab.Navigator>
         <Tab.Screen name="checkTime" component={CheckTime} />
         <Tab.Screen name="checkpay" component={CheckPaySlip} />
         <Tab.Screen name="other" component={Other} />
-      </Tab.Navigator>
+      </Tab.Navigator> */}
     </VStack>
   );
 };

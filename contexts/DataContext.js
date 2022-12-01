@@ -1,14 +1,7 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { ref, listAll, getDownloadURL } from "firebase/storage";
-import { auth, db, storage } from "../firebase_init";
+import { createContext, useContext, useState } from "react";
 import { LogBox } from "react-native";
-import { doc, getDoc } from "firebase/firestore";
-import {
-  signOut,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { fetchDataFromApi } from "../utils/ApiCall";
+import { isAuthApi, uriFetchApi, Data } from "../utils/StaticData";
 
 const DataContext = createContext();
 export const useDataContext = () => useContext(DataContext);
@@ -16,68 +9,52 @@ export const useDataContext = () => useContext(DataContext);
 LogBox.ignoreLogs(["AsyncStorage"]);
 LogBox.ignoreLogs(["Setting a timer"]);
 
-const Data = {
-  month: [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ],
-  year: ["2018", "2019", "2020", "2021", "2022", "2023"],
-};
-
 const DataContextProvider = (props) => {
-  const [currentUser, setCurrentUser] = useState();
-  const [pdfList, setPdfList] = useState([]);
-  const [isFirebaseLoaded, setFirebaseLoded] = useState(false);
+  const [isAuth, setAuth] = useState(false);
+  const [currentPdf, setCurrentPdf] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
+  const [queryParam, setQueryParam] = useState({
+    id: "",
+    month: "",
+    year: "",
+    type: "",
+  });
 
-  const requestforPdf = async (year, month) => {
-    return listAll(ref(storage, `${currentUser.id}/${year}/${month}/`));
-  };
-
-  const SignInWithId = async (id, pass) => {
-    return signInWithEmailAndPassword(auth, id + "@dev.bd", pass);
-  };
-
-  useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const id = user.email.slice(0, 4);
-        const snap = await getDoc(doc(db, "UserData", id));
-        setCurrentUser(snap.data());
+  const SignInWithId = (user, callback) => {
+    fetchDataFromApi(user, isAuthApi, (flag) => {
+      if (flag === "false") {
+        callback(false);
+      } else {
+        console.log(flag);
+        setCurrentUser(JSON.parse(flag));
+        callback(true);
       }
-      setFirebaseLoded(true);
     });
-    return () => unSubscribe();
-  }, []);
+  };
+
+  const getPDF = (data, callback) => {
+    fetchDataFromApi(data, uriFetchApi, (link) => {
+      callback(link);
+    });
+  };
 
   const singOut = () => {
-    signOut(auth)
-      .then(() => {
-        setCurrentUser(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
+    setAuth(false);
   };
 
   const value = {
-    currentUser,
-    SignInWithId,
     Data,
-    pdfList,
-    setPdfList,
-    requestforPdf,
+    isAuth,
+    setAuth,
+    SignInWithId,
     singOut,
-    isFirebaseLoaded,
+    currentUser,
+    setCurrentUser,
+    currentPdf,
+    setCurrentPdf,
+    getPDF,
+    queryParam,
+    setQueryParam,
   };
   return (
     <DataContext.Provider value={value}>{props.children}</DataContext.Provider>
