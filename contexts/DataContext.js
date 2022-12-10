@@ -13,21 +13,24 @@ const DataContextProvider = (props) => {
   const [isAuth, setAuth] = useState(false);
   const [currentPdf, setCurrentPdf] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
+  const [contactLists, setContactLists] = useState({});
   const [queryParam, setQueryParam] = useState({
     id: "",
     month: "",
     year: "",
-    type: "",
+    type: "PAY",
   });
 
   const SignInWithId = (user, callback) => {
-    fetchDataFromApi(user, isAuthApi, (flag) => {
-      if (flag === "false") {
-        callback(false);
-      } else {
-        console.log(flag);
-        setCurrentUser(JSON.parse(flag));
+    fetchDataFromApi(user, isAuthApi, (res) => {
+      const { cred, cont } = JSON.parse(res);
+      console.log(res);
+      if (cred) {
+        setCurrentUser(cred);
+        setContactLists(cont);
         callback(true);
+      } else {
+        callback(false);
       }
     });
   };
@@ -40,6 +43,10 @@ const DataContextProvider = (props) => {
 
   const singOut = () => {
     setAuth(false);
+    setCurrentPdf(null);
+    setCurrentUser({});
+    setContactLists({});
+    setQueryParam({ id: "", month: "", year: "", type: "PAY" });
   };
 
   const value = {
@@ -55,6 +62,7 @@ const DataContextProvider = (props) => {
     getPDF,
     queryParam,
     setQueryParam,
+    contactLists,
   };
   return (
     <DataContext.Provider value={value}>{props.children}</DataContext.Provider>

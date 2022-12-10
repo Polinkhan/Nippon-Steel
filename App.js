@@ -5,15 +5,17 @@ import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import DataContextProvider, { useDataContext } from "./contexts/DataContext";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Alert, BackHandler } from "react-native";
+import { Alert, BackHandler, SafeAreaView, StatusBar } from "react-native";
 import SignIn from "./components/Auth/SignIn";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 import { useCallback } from "react";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, FontAwesome5 } from "@expo/vector-icons";
 import About from "./components/About";
-import Service from "./components/Service";
-import FindPdf from "./components/Tabs/FindPdf";
+import Profile from "./components/Profile/Profile";
+import { theme } from "./utils/StaticVariable";
+import Payroll from "./components/Payroll/Payroll";
+import Contact from "./components/Contact/Contact";
+import Service from "./components/Payroll/Service";
 
 export default function App() {
   return (
@@ -29,6 +31,7 @@ export default function App() {
 
 function MyStack() {
   const { isAuth } = useDataContext();
+  const { primaryColor } = theme;
   const Stack = createNativeStackNavigator();
 
   useFocusEffect(
@@ -71,18 +74,22 @@ function MyStack() {
   return (
     fontsLoaded && (
       <>
-        <SafeAreaView />
-
+        <StatusBar
+          //   // animated={true}
+          hidden={false} // true
+          barStyle={"light-content"} //"default", "dark-content", "light-content"
+          backgroundColor={primaryColor}
+        />
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
+            animation: "slide_from_right",
           }}
         >
           {isAuth ? (
             <>
               <Stack.Screen name="/" component={BottomTab} />
-              <Stack.Screen name="findpdf" component={FindPdf} />
-              <Stack.Screen name="pdfview" component={Service} />
+              <Stack.Screen name="view" component={Service} />
             </>
           ) : (
             <Stack.Screen name="signin" component={SignIn} />
@@ -95,9 +102,13 @@ function MyStack() {
 
 function BottomTab() {
   const Tab = createMaterialBottomTabNavigator();
+  const { primaryColor } = theme;
 
   return (
-    <Tab.Navigator barStyle={{ backgroundColor: "#2563eb" }}>
+    <Tab.Navigator barStyle={{ backgroundColor: primaryColor }}>
+      {/*  */}
+
+      {/* Bottom Tab Home Button */}
       <Tab.Screen
         options={{
           tabBarLabel: "Home",
@@ -111,13 +122,64 @@ function BottomTab() {
         }}
         name="home"
         component={Home}
+        // initialParams={{ isRoot: true }}
       />
+
+      {/* Bottom Tab Payroll Button */}
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Payroll",
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5
+              name="money-check-alt"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="payroll"
+        component={Payroll}
+      />
+
+      {/* Bottom Tab Proile Button */}
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Profile",
+          tabBarIcon: ({ color, focused }) => (
+            <AntDesign
+              name="profile"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="profile"
+        component={Profile}
+      />
+
+      {/* Bottom Tab Contact Button */}
+      <Tab.Screen
+        options={{
+          tabBarLabel: "Contact",
+          tabBarIcon: ({ color, focused }) => (
+            <AntDesign
+              name="contacts"
+              size={20}
+              color={focused ? "white" : "#cccccc"}
+            />
+          ),
+        }}
+        name="contact"
+        component={Contact}
+      />
+
+      {/* Bottom Tab About Button */}
       <Tab.Screen
         options={{
           tabBarLabel: "About",
           tabBarIcon: ({ color, focused }) => (
             <AntDesign
-              name="questioncircleo"
+              name="infocirlceo"
               size={20}
               color={focused ? "white" : "#cccccc"}
             />

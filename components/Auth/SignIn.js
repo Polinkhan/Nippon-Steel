@@ -1,13 +1,23 @@
-import { Button, Image, Input, Text, useToast, VStack } from "native-base";
+import {
+  Button,
+  Center,
+  Image,
+  Input,
+  Text,
+  useToast,
+  VStack,
+} from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Link } from "@react-navigation/native";
 import { useDataContext } from "../../contexts/DataContext";
 import { useState } from "react";
+import { theme } from "../../utils/StaticVariable";
 
 const SignIn = () => {
   const { SignInWithId, setAuth } = useDataContext();
   const [user, setUser] = useState({ id: "", pass: "" });
   const [btnLoad, setBtnLoad] = useState(false);
+  const { primaryColor } = theme;
   const toast = useToast();
 
   const handleSubmit = () => {
@@ -21,7 +31,6 @@ const SignIn = () => {
       SignInWithId(user, (flag) => {
         setBtnLoad(false);
         setAuth(flag);
-        console.log(flag);
         !flag &&
           toast.show({
             description: "Invalid User ID / Pass",
@@ -32,14 +41,16 @@ const SignIn = () => {
 
   return (
     <VStack bg={"white"} h={"100%"}>
-      <Image
-        source={require("../../assets/banner.png")}
-        w={"100%"}
-        alt={""}
-        flex={0.7}
-        resizeMode={"contain"}
-      />
-      <VStack flex={1.3} p={12} justifyContent={"space-around"} space={16}>
+      <Center flex={0.3}>
+        <Image
+          source={require("../../assets/banner.png")}
+          w={"70%"}
+          alt={""}
+          flex={0.7}
+          resizeMode={"contain"}
+        />
+      </Center>
+      <VStack flex={0.7} p={12} justifyContent={"space-around"} space={16}>
         <VStack space={6}>
           <Text fontFamily="Nunito-SemiBold" fontSize={"4xl"}>
             Login
@@ -52,7 +63,7 @@ const SignIn = () => {
             placeholder="User ID"
             keyboardType="numeric"
             size={"xl"}
-            onChangeText={(text) => setUser({ id: text, pass: user.pass })}
+            onChangeText={(text) => setUser((prev) => ({ ...prev, id: text }))}
           />
           <Input
             leftElement={
@@ -62,8 +73,11 @@ const SignIn = () => {
             fontFamily="Nunito-SemiBold"
             variant={"underlined"}
             placeholder="Password"
+            type="password"
             size={"xl"}
-            onChangeText={(text) => setUser({ id: user.id, pass: text })}
+            onChangeText={(text) =>
+              setUser((prev) => ({ ...prev, pass: text }))
+            }
           />
         </VStack>
         <Button
@@ -73,9 +87,9 @@ const SignIn = () => {
             fontFamily: "Nunito-SemiBold",
           }}
           borderRadius={"full"}
-          colorScheme={"blue"}
+          bg={primaryColor}
           isLoading={btnLoad}
-          isLoadingText={"Submitting ...."}
+          isLoadingText={"Fetching Your Data From Box ...."}
           onPress={handleSubmit}
         >
           Login
