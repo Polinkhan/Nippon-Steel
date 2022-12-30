@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "Nippon Steel Engineering",
-    "slug": "nippon-steel",
+    "name": "Nippon-Steel",
+    "slug": "Nippon-Steel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -13,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -21,8 +24,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.abusayedpolin.nipponsteel"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

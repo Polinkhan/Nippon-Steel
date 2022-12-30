@@ -13,7 +13,6 @@ import { useDataContext } from "../../contexts/DataContext";
 import Header from "../Header";
 import { theme } from "../../utils/StaticVariable";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Service from "./Service";
 import { ff } from "../../utils/StaticData";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
