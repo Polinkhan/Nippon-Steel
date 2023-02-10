@@ -6,7 +6,6 @@ import { EvilIcons } from "@expo/vector-icons";
 const PickerBox = ({ name }) => {
   const { selectOptions, queryParam, setQueryParam } = useDataContext();
   const { secondaryColor } = theme;
-  console.log(selectOptions[name]);
 
   return (
     selectOptions && (

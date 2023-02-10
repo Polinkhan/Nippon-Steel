@@ -80,11 +80,11 @@ const Home = ({ navigation }) => {
             Recent Announment
           </Text>
         </VStack>
-        <VStack space={6} pb={6}>
+        {/* <VStack space={6} pb={6}>
           {AnnounmentPost.map((post, i) => (
             <StatusPost key={i} post={post} />
           ))}
-        </VStack>
+        </VStack> */}
       </ScrollView>
     </VStack>
   );

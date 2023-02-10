@@ -18,7 +18,24 @@ const DataContextProvider = (props) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [contactLists, setContactLists] = useState([]);
   const [adData, setAdData] = useState([]);
-  const [selectOptions, setSelectOptions] = useState(null);
+  const [selectOptions, setSelectOptions] = useState({
+    month: [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ],
+    year: ["2022", "2023", "2024"],
+    type: ["Payslip", "Timesheet", "Others"],
+  });
   const [queryParam, setQueryParam] = useState({});
   const [payslipData, setPayslipData] = useState(null);
   const [initialFetch, setInitialFetch] = useState(null);
@@ -30,23 +47,25 @@ const DataContextProvider = (props) => {
     (async () => {
       if (currentUser) {
         fetcher
-          .get(`${api}/db/${currentUser.UserID}`)
+          .get(`db/${currentUser.UserID}`)
           .then((res) => {
-            const { Date, contact_res, type } = res;
+            const { contact_res } = res.data;
             setContactLists(contact_res);
-            setSelectOptions({ Date, type });
           })
           .catch((err) => makeToast(err.message))
           .finally(() => setInitialFetch({ fetchErrorStatus: true }));
       } else {
         const accessToken = await SecureStore.getItemAsync("accessToken");
         fetcher
-          .get(`${api}/auth`, { authorization: accessToken })
-          .then((res) => setCurrentUser(res.user))
+          .get("auth", {
+            headers: { Authorization: accessToken },
+          })
+          .then((res) => setCurrentUser(res.data.user))
           .catch((err) => {
+            const { error } = err.response.data;
             setInitialFetch({
-              fetchErrorStatus: err.status === 401 ? true : false,
-              ...err,
+              fetchErrorStatus: error.status === 401 ? true : false,
+              ...error,
             });
           });
       }

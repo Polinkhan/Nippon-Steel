@@ -29,23 +29,29 @@ const SignIn = () => {
 
   const handleSubmit = async () => {
     setError(false);
-    if (user.id === "" || user.pass === "") {
-      setError(true);
-      makeToast("User ID or Password cannot be empty!!");
-    } else {
-      setBtnLoad(true);
-      fetcher
-        .post(`${api}/auth/login`, user)
-        .then((res) => {
-          SecureStore.setItemAsync("accessToken", res.accessToken);
-          setCurrentUser(res.user);
-        })
-        .catch((res) => {
-          setError(true);
-          setBtnLoad(false);
-          makeToast(res.message);
-        });
-    }
+    // if (user.id === "" || user.pass === "") {
+    //   setError(true);
+    //   makeToast("User ID or Password cannot be empty!!");
+    // } else {
+    setBtnLoad(true);
+    fetcher
+      .post(`auth/login`, user)
+      .then((res) => {
+        const { data } = res;
+        console.log(data);
+        SecureStore.setItemAsync("accessToken", data.accessToken);
+        setCurrentUser(data.user);
+      })
+      .catch((err) => {
+        const { error } = err.response.data;
+        setError(true);
+        setBtnLoad(false);
+        makeToast(error.message);
+      });
+
+    // const response = await fetcher.post("auth/login", user);
+    // console.log(response);
+    // }
   };
 
   return (

@@ -6,8 +6,8 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-const api = "https://backend.nippontechnology.com";
-// const api = "http://100.100.1.254:3000";
+// const api = "https://backend.nippontechnology.com";
+const api = "http://10.10.10.13:3000";
 
 // const uriAdApi =
 //    "https://nipponexpress.netlify.app/.netlify/functions/index/ad";

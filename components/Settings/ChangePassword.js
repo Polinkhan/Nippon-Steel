@@ -213,7 +213,6 @@ const ChangePassword = ({ navigation, route }) => {
                 py={4}
                 borderRadius={16}
                 onPress={() => {
-                  console.log("click");
                   navigation.goBack();
                 }}
               >

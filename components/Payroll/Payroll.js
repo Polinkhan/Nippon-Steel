@@ -1,13 +1,20 @@
-import { Button, Divider, HStack, Icon, Text, VStack } from "native-base";
+import {
+  Button,
+  Center,
+  Divider,
+  HStack,
+  Icon,
+  Text,
+  VStack,
+} from "native-base";
 import PickerBox from "./PickerBox";
 import { useState } from "react";
 import { useDataContext } from "../../contexts/DataContext";
 import Header from "../Header/Header";
 import { theme } from "../../utils/StaticVariable";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons, AntDesign } from "@expo/vector-icons";
 import { api } from "../../utils/StaticData";
 import { fetcher } from "../../utils/ApiCall";
-// import { Button as PaperButton } from "react-native-paper";
 
 const Payroll = ({ navigation }) => {
   const { primaryColor } = theme;
@@ -19,50 +26,70 @@ const Payroll = ({ navigation }) => {
     const { UserID } = currentUser;
     setBtnLoad(true);
     fetcher
-      .get(`${api}/db/getPayslipData/${UserID}/${queryParam.Date}`)
+      .post(`db/getPayslipData/${UserID}`, { ...queryParam })
       .then((res) => {
-        setPayslipData(res);
-        navigation.navigate("view");
+        // setPayslipData(res);
+        console.log(res);
+        navigation.navigate("view", { url: res.data, name: res.data.name });
       })
-      .catch(() => {})
+      .catch((err) => {
+        setErrorMsg(err.response.data.error.message);
+        setTimeout(() => {
+          setErrorMsg(null);
+        }, 3000);
+      })
       .finally(() => setBtnLoad(false));
   };
 
   return (
     <VStack flex={1} bg={"white"} p={6} space={4}>
       <Text fontSize={"2xl"} fontFamily={"boldExo"}>
-        Payslip Report
+        Payroll Menu
       </Text>
       <Divider />
-      <VStack px={6} flex={1} justifyContent={"center"}>
-        <VStack flex={0.6} justifyContent={"space-around"}>
+      <VStack px={6} flex={1} justifyContent={"space-between"}>
+        <HStack
+          justifyContent={"center"}
+          alignItems={"center"}
+          space={2}
+          color={"gray.500"}
+          flex={0.3}
+        >
+          <Icon as={AntDesign} name={"barschart"} />
+          <Text fontSize={"xl"} fontFamily={"exo"} color={"gray.500"}>
+            Payslip Report
+          </Text>
+        </HStack>
+        <VStack flex={0.6} justifyContent={"space-between"}>
           <VStack w={"100%"} space={6}>
-            <PickerBox name={"Date"} />
             <PickerBox name={"type"} />
+            <PickerBox name={"year"} />
+            <PickerBox name={"month"} />
           </VStack>
-
           <Button
+            py={5}
             isLoading={btnLoad}
-            isLoadingText={"Genarating Report ...."}
+            isLoadingText={"Searching Report ...."}
             background={primaryColor}
             _text={{ fontSize: "lg", fontFamily: "exo" }}
-            py={5}
             borderRadius={16}
             onPress={handlePress}
           >
             Search
           </Button>
         </VStack>
-        <HStack alignItems={"center"} justifyContent={"center"} h={"5%"}>
+        <HStack
+          alignItems={"center"}
+          justifyContent={"center"}
+          h={20}
+          space={1}
+        >
           {errorMsg && (
             <>
-              <Icon
-                size={"xs"}
-                as={MaterialIcons}
-                name="error-outline"
-                color="red.400"
-              />
-              <Text color={"red.400"}>{" Error! " + errorMsg}</Text>
+              <Icon as={AntDesign} name="warning" color="red.400" />
+              <Text fontFamily={"exo"} fontSize={"xl"} color={"red.400"}>
+                {" Error! " + errorMsg}
+              </Text>
             </>
           )}
         </HStack>
