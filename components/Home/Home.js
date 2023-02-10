@@ -1,13 +1,4 @@
-import {
-  Avatar,
-  Center,
-  HStack,
-  Icon,
-  Image,
-  Input,
-  Text,
-  VStack,
-} from "native-base";
+import { HStack, Icon, Image, Input, Text, VStack } from "native-base";
 import { useDataContext } from "../../contexts/DataContext";
 import { theme } from "../../utils/StaticVariable";
 

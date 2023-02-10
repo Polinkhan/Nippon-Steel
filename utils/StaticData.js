@@ -7,16 +7,7 @@ import {
 } from "@expo/vector-icons";
 
 // const api = "https://backend.nippontechnology.com";
-const api = "http://10.10.10.13:3000";
-
-// const uriAdApi =
-//    "https://nipponexpress.netlify.app/.netlify/functions/index/ad";
-//   "https://backend.nippontechnology.com/boxData/ad";
-// // "http://100.100.1.254:3000/boxData/ad";
-
-// const uriUpdateApi =
-//    "https://nipponexpress.netlify.app/.netlify/functions/index/update";
-//   "https://backend.nippontechnology.com/update";
+const api = "http://10.10.10.10:3000";
 
 const SettingsList = [
   {
@@ -26,20 +17,20 @@ const SettingsList = [
     route: "profile",
     param: {},
   },
-  {
-    label: "Change Password",
-    iconProvider: MaterialCommunityIcons,
-    icon: "form-textbox-password",
-    route: "password",
-    param: { id: "verify" },
-  },
-  {
-    label: "Change Profile Picture",
-    iconProvider: AntDesign,
-    icon: "picture",
-    route: "profilePicture",
-    param: {},
-  },
+  // {
+  //   label: "Change Password",
+  //   iconProvider: MaterialCommunityIcons,
+  //   icon: "form-textbox-password",
+  //   route: "password",
+  //   param: { id: "verify" },
+  // },
+  // {
+  //   label: "Change Profile Picture",
+  //   iconProvider: AntDesign,
+  //   icon: "picture",
+  //   route: "profilePicture",
+  //   param: {},
+  // },
   {
     label: "Report A Problem",
     iconProvider: Octicons,

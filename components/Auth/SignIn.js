@@ -24,11 +24,10 @@ const SignIn = () => {
   const [user, setUser] = useState({ id: "", pass: "" });
   const [showPass, setShowPass] = useState(false);
   const [btnLoad, setBtnLoad] = useState(false);
-  const [isError, setError] = useState(false);
+
   const { primaryColor, secondaryColor } = theme;
 
   const handleSubmit = async () => {
-    setError(false);
     // if (user.id === "" || user.pass === "") {
     //   setError(true);
     //   makeToast("User ID or Password cannot be empty!!");
@@ -38,20 +37,16 @@ const SignIn = () => {
       .post(`auth/login`, user)
       .then((res) => {
         const { data } = res;
-        console.log(data);
+        console.log(41, data);
         SecureStore.setItemAsync("accessToken", data.accessToken);
         setCurrentUser(data.user);
       })
       .catch((err) => {
         const { error } = err.response.data;
-        setError(true);
+        console.log(error);
         setBtnLoad(false);
         makeToast(error.message);
       });
-
-    // const response = await fetcher.post("auth/login", user);
-    // console.log(response);
-    // }
   };
 
   return (
@@ -93,12 +88,10 @@ const SignIn = () => {
                   onChangeText={(text) =>
                     setUser((prev) => ({ ...prev, id: text }))
                   }
-                  error={isError}
                 />
                 <Input
                   value={user.pass}
                   placeholder={"Password"}
-                  error={isError}
                   borderRadius={16}
                   variant={"filled"}
                   type={showPass ? "text" : "password"}
