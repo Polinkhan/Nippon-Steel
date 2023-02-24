@@ -6,8 +6,8 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 
-// const api = "https://backend.nippontechnology.com";
-const api = "http://10.10.10.10:3000";
+const api = "https://backend.nippontechnology.com";
+// const api = "http://10.10.10.13:3000";
 
 const SettingsList = [
   {
@@ -17,6 +17,12 @@ const SettingsList = [
     route: "profile",
     param: {},
   },
+  // {
+  //   label: "Help",
+  //   iconProvider: Ionicons,
+  //   icon: "help-outline",
+  //   route: null,
+  // },
   // {
   //   label: "Change Password",
   //   iconProvider: MaterialCommunityIcons,
@@ -42,14 +48,15 @@ const SettingsList = [
     label: "Change For Update",
     iconProvider: MaterialIcons,
     icon: "update",
-    route: null,
+    route: "checkUpdate",
     param: {},
   },
   {
-    label: "Help",
-    iconProvider: Ionicons,
-    icon: "help-outline",
-    route: null,
+    label: "About",
+    iconProvider: AntDesign,
+    icon: "infocirlceo",
+    route: "about",
+    param: {},
   },
 ];
 

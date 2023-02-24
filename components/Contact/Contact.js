@@ -1,14 +1,12 @@
 import { Divider, HStack, Icon, IconButton, Text, VStack } from "native-base";
-import { useState } from "react";
 import { useDataContext } from "../../contexts/DataContext";
-import Header from "../Header/Header";
-import { theme } from "../../utils/StaticVariable";
+import { theme } from "../../utils/Colors";
 import { Fontisto, Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { Linking } from "react-native";
 
 const Contact = () => {
-  const { currentUser, contactLists } = useDataContext();
+  const { contactLists } = useDataContext();
   const { primaryColor, secondaryBackgroundColor, secondaryColor } = theme;
 
   const IconButtonProps = {

@@ -1,8 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
-  Center,
   Divider,
   HStack,
   Icon,
@@ -10,36 +8,21 @@ import {
   Text,
   VStack,
 } from "native-base";
-import React, { useState } from "react";
+import React from "react";
 import { useDataContext } from "../../contexts/DataContext";
 import { ScrollView } from "react-native";
-import { theme } from "../../utils/StaticVariable";
+import { theme } from "../../utils/Colors";
 import { TouchableOpacity, Clipboard } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { LogBox } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import ProfileContextProvider, {
-  useProfileContext,
-} from "../../contexts/ProfileContext";
 LogBox.ignoreLogs(["Clipboard"]);
 const Profile = ({ navigation }) => {
-  return (
-    <ProfileContextProvider>
-      <App navigation={navigation} />
-    </ProfileContextProvider>
-  );
-};
-
-const App = ({ navigation }) => {
   const { currentUser } = useDataContext();
   const { primaryColor, primaryBackgroundColor, secondaryColor } = theme;
-  const btnProps = { borderRadius: "full" };
 
   const handleCopy = (value) => {
     Clipboard.setString(value);
   };
-
-  const { setShowModal } = useProfileContext();
 
   return (
     <VStack flex={1} bg={primaryBackgroundColor} p={4}>
@@ -101,15 +84,15 @@ const App = ({ navigation }) => {
               {Object.keys(currentUser).map((label, i) => (
                 <HStack key={i} bg={"#f2f2f2"} borderRadius={16} px={4} py={6}>
                   <HStack
-                    flex={1}
+                    flex={0.6}
                     justifyContent={"space-between"}
                     alignItems={"center"}
                   >
                     <Text fontFamily={"lightExo"} fontSize={"lg"}>
                       {label}
                     </Text>
-                    <Text fontFamily={"exo"} fontSize={"lg"}>
-                      {":\t\t"}
+                    <Text fontFamily={"exo"} fontSize={"lg"} pr={6}>
+                      {":"}
                     </Text>
                   </HStack>
                   <TouchableOpacity

@@ -10,13 +10,12 @@ import Contact from "./components/Contact/Contact";
 import View from "./components/Payroll/View";
 import Settings from "./components/Settings/Settings";
 import DataContextProvider, { useDataContext } from "./contexts/DataContext";
-import { theme } from "./utils/StaticVariable";
+import { theme } from "./utils/Colors";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import Constants from "expo-constants";
-import ChangePassword from "./components/Settings/ChangePassword";
-import ChangeProfilePicture from "./components/Settings/ChangeProfilePicture";
 import Report from "./components/Settings/Report";
+import CheckUpdate from "./components/Settings/CheckUpdate";
+import About from "./components/Settings/About";
 
 export default function App() {
   return (
@@ -48,7 +47,8 @@ function MyStack() {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            animation: "slide_from_right",
+            animation: "fade_from_bottom",
+            orientation: "portrait_up",
           }}
         >
           {currentUser ? (
@@ -56,12 +56,9 @@ function MyStack() {
               <Stack.Screen name="/" component={BottomTab} />
               <Stack.Screen name="view" component={View} />
               <Stack.Screen name="profile" component={Profile} />
-              <Stack.Screen name="password" component={ChangePassword} />
               <Stack.Screen name="report" component={Report} />
-              <Stack.Screen
-                name="profilePicture"
-                component={ChangeProfilePicture}
-              />
+              <Stack.Screen name="about" component={About} />
+              <Stack.Screen name="checkUpdate" component={CheckUpdate} />
             </>
           ) : (
             <Stack.Screen name="signin" component={SignIn} />
@@ -110,7 +107,7 @@ const BottomTab = () => {
   return (
     <Tab.Navigator
       activeColor={primaryColor}
-      sceneAnimationEnabled={true}
+      // sceneAnimationEnabled={true}
       barStyle={{ backgroundColor: "white" }}
     >
       {tabs.map((_, i) => (

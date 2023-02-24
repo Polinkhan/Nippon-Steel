@@ -1,9 +1,7 @@
 import {
-  Box,
   Button,
   Center,
   Divider,
-  Flex,
   HStack,
   Icon,
   IconButton,
@@ -13,7 +11,7 @@ import {
   VStack,
 } from "native-base";
 import React, { useState } from "react";
-import { theme } from "../../utils/StaticVariable";
+import { theme } from "../../utils/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 

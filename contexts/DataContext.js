@@ -1,8 +1,8 @@
 import { useToast } from "native-base";
 import { createContext, useContext, useEffect, useState } from "react";
 import { LogBox } from "react-native";
-import { fetchDataFromApi, fetcher } from "../utils/ApiCall";
-import { api } from "../utils/StaticData";
+import { fetcher } from "../utils/ApiCall";
+import * as Network from "expo-network";
 import * as SecureStore from "expo-secure-store";
 // import * as Network from "expo-network";
 
@@ -15,9 +15,10 @@ LogBox.ignoreLogs(["Setting a timer"]);
 const DataContextProvider = (props) => {
   const toast = useToast();
   const appName = "Nippon Steel Engineering [Ver 1.2.2].apk";
+  const [cacheData, setCacheData] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [contactLists, setContactLists] = useState([]);
-  const [adData, setAdData] = useState([]);
+  const [adPictures, setSdPictures] = useState(null);
   const [selectOptions, setSelectOptions] = useState({
     month: [
       "January",
@@ -37,23 +38,22 @@ const DataContextProvider = (props) => {
     type: ["Payslip", "Timesheet", "Others"],
   });
   const [queryParam, setQueryParam] = useState({});
-  const [payslipData, setPayslipData] = useState(null);
   const [initialFetch, setInitialFetch] = useState(null);
 
   useEffect(() => {
-    // const networkStatus = await Network.getNetworkStateAsync();
-    // console.log(networkStatus);
-
     (async () => {
+      // const networkStatus = await Network.getNetworkStateAsync();
       if (currentUser) {
         fetcher
           .get(`db/${currentUser.UserID}`)
           .then((res) => {
-            const { contact_res } = res.data;
-            setContactLists(contact_res);
+            setSdPictures(res.data.images);
+            setContactLists(res.data.admin);
           })
-          .catch((err) => makeToast(err.message))
-          .finally(() => setInitialFetch({ fetchErrorStatus: true }));
+          .catch((err) => {
+            // makeToast(err.message);
+          })
+          .finally(() => setInitialFetch(true));
       } else {
         const accessToken = await SecureStore.getItemAsync("accessToken");
         fetcher
@@ -63,26 +63,11 @@ const DataContextProvider = (props) => {
           .then((res) => setCurrentUser(res.data.user))
           .catch((err) => {
             const { error } = err.response.data;
-            setInitialFetch({
-              fetchErrorStatus: error.status === 401 ? true : false,
-              ...error,
-            });
-          });
+          })
+          .finally(() => setInitialFetch(true));
       }
     })();
   }, [currentUser]);
-  // const checkFforUpdate = (callback) => {
-  //   fetchDataFromApi({ name: appName }, uriUpdateApi, (res) => {
-  //     uriUpdateApi;
-  //     callback(res);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   fetchDataFromApi({}, uriAdApi, (res) => {
-  //     setAdData(JSON.parse(res));
-  //   });
-  // }, []);
 
   const makeToast = (message) => {
     return toast.show({
@@ -91,15 +76,15 @@ const DataContextProvider = (props) => {
   };
 
   const value = {
+    adPictures,
+    cacheData,
+    setCacheData,
     currentUser,
     setCurrentUser,
     queryParam,
     setQueryParam,
     contactLists,
-    adData,
     selectOptions,
-    payslipData,
-    setPayslipData,
     makeToast,
     initialFetch,
   };

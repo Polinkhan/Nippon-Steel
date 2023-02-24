@@ -8,12 +8,9 @@ import {
   Center,
   Text,
 } from "native-base";
-import { useDataContext } from "../../contexts/DataContext";
 import { useEffect, useState } from "react";
-import { Linking } from "react-native";
 import { shareAsync } from "expo-sharing";
-import { theme } from "../../utils/StaticVariable";
-import WebView from "react-native-webview";
+import { theme } from "../../utils/Colors";
 import * as Print from "expo-print";
 import PDFReader from "rn-pdf-reader-js";
 import * as FileSystem from "expo-file-system";
@@ -21,8 +18,7 @@ import * as Progress from "react-native-progress";
 import { Ionicons, AntDesign, Feather } from "@expo/vector-icons";
 
 const View = ({ navigation, route }) => {
-  const { payslipData, currentUser, queryParam } = useDataContext();
-  const { primaryColor, secondaryColor, secondaryBackgroundColor } = theme;
+  const { primaryColor, secondaryColor, pressedColor } = theme;
   const [downloadBtnLoad, setDownloadBtnLoad] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
   const [downloadUri, setDownloadUri] = useState(null);
@@ -100,7 +96,7 @@ const View = ({ navigation, route }) => {
 
   return (
     <>
-      <HStack m={4}>
+      <HStack m={4} alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"lg"}
           variant={"outline"}
@@ -116,6 +112,9 @@ const View = ({ navigation, route }) => {
             />
           }
         />
+        <Text fontFamily={"exo"} fontSize={"lg"}>
+          ▪︎{name}
+        </Text>
       </HStack>
       <VStack flex={1}>
         <Box
@@ -161,6 +160,7 @@ const View = ({ navigation, route }) => {
           <Button
             w={"40%"}
             background={primaryColor}
+            _pressed={{ backgroundColor: pressedColor }}
             _text={{ fontSize: "lg", fontFamily: "exo" }}
             py={3}
             borderRadius={16}
@@ -172,7 +172,8 @@ const View = ({ navigation, route }) => {
           </Button>
           <Button
             w={"40%"}
-            background={primaryColor}
+            backgroundColor={primaryColor}
+            _pressed={{ backgroundColor: pressedColor }}
             _text={{ fontSize: "lg", fontFamily: "exo" }}
             py={3}
             borderRadius={16}
@@ -182,15 +183,6 @@ const View = ({ navigation, route }) => {
           >
             Download
           </Button>
-          {/* <Button
-              icon={"cloud-download-outline"}
-              mode={"contained"}
-              color={primaryColor}
-              disabled
-              // onPress={saveAndroidFile}
-            >
-              Save to device
-            </Button> */}
         </HStack>
       </VStack>
     </>

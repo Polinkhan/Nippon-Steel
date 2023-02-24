@@ -1,24 +1,15 @@
-import {
-  Button,
-  Center,
-  Divider,
-  HStack,
-  Icon,
-  Text,
-  VStack,
-} from "native-base";
+import { Button, Divider, HStack, Icon, Text, VStack } from "native-base";
 import PickerBox from "./PickerBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDataContext } from "../../contexts/DataContext";
-import Header from "../Header/Header";
-import { theme } from "../../utils/StaticVariable";
-import { MaterialIcons, AntDesign } from "@expo/vector-icons";
-import { api } from "../../utils/StaticData";
+import { theme } from "../../utils/Colors";
+import { AntDesign } from "@expo/vector-icons";
 import { fetcher } from "../../utils/ApiCall";
+import * as SecureStore from "expo-secure-store";
 
 const Payroll = ({ navigation }) => {
-  const { primaryColor } = theme;
-  const { currentUser, queryParam, setPayslipData } = useDataContext();
+  const { primaryColor, pressedColor, secondaryColor } = theme;
+  const { currentUser, queryParam, setCacheData } = useDataContext();
   const [btnLoad, setBtnLoad] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -27,9 +18,20 @@ const Payroll = ({ navigation }) => {
     setBtnLoad(true);
     fetcher
       .post(`db/getPayslipData/${UserID}`, { ...queryParam })
-      .then((res) => {
-        // setPayslipData(res);
-        console.log(res);
+      .then(async (res) => {
+        // const value = `${UserID}_${queryParam.type}_${queryParam.year}_${queryParam.month}`;
+        const value = {
+          ID: UserID,
+          type: queryParam.type,
+          year: queryParam.year,
+          month: queryParam.month,
+        };
+        let cache = JSON.parse(await SecureStore.getItemAsync("cacheData"));
+        if (!cache) cache = [];
+        cache.push(value);
+        if (cache.length > 3) cache.shift();
+        setCacheData([...cache]);
+        await SecureStore.setItemAsync("cacheData", JSON.stringify(cache));
         navigation.navigate("view", { url: res.data, name: res.data.name });
       })
       .catch((err) => {
@@ -60,7 +62,7 @@ const Payroll = ({ navigation }) => {
             Payslip Report
           </Text>
         </HStack>
-        <VStack flex={0.6} justifyContent={"space-between"}>
+        <VStack flex={1} justifyContent={"space-between"}>
           <VStack w={"100%"} space={6}>
             <PickerBox name={"type"} />
             <PickerBox name={"year"} />
@@ -70,7 +72,8 @@ const Payroll = ({ navigation }) => {
             py={5}
             isLoading={btnLoad}
             isLoadingText={"Searching Report ...."}
-            background={primaryColor}
+            backgroundColor={primaryColor}
+            _pressed={{ backgroundColor: pressedColor }}
             _text={{ fontSize: "lg", fontFamily: "exo" }}
             borderRadius={16}
             onPress={handlePress}

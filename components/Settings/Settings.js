@@ -1,6 +1,6 @@
 import { Box, Divider, HStack, Icon, Image, Text, VStack } from "native-base";
 import { useDataContext } from "../../contexts/DataContext";
-import { theme } from "../../utils/StaticVariable";
+import { theme } from "../../utils/Colors";
 import { SettingsList } from "../../utils/StaticData";
 import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -15,23 +15,28 @@ const Settings = ({ navigation }) => {
         Settings
       </Text>
       <Divider />
-      <Image
-        h={16}
-        w={16}
-        borderWidth={1}
-        borderRadius={8}
-        borderColor={"gray.100"}
-        alt={"Profile Picture"}
-        source={require("../../assets/images/avater.png")}
-      />
-      <VStack>
-        <Text fontFamily={"exo"} fontSize={"lg"} color={"gray.500"}>
-          {currentUser["Employee Name"]}
-        </Text>
-        <Text fontFamily={"boldExo"} fontSize={"lg"} color={"gray.500"}>
-          {currentUser["Email"]}
-        </Text>
-      </VStack>
+      <TouchableOpacity>
+        <HStack alignItems={"center"} space={6}>
+          <Image
+            h={16}
+            w={16}
+            borderWidth={1}
+            borderRadius={8}
+            borderColor={"gray.100"}
+            alt={"Profile Picture"}
+            source={require("../../assets/images/avater.png")}
+          />
+          <VStack>
+            <Text fontFamily={"boldExo"} fontSize={"lg"} color={"gray.600"}>
+              {currentUser.Name}
+            </Text>
+            <Text fontFamily={"exo"} fontSize={"lg"} color={"gray.600"}>
+              {currentUser.Email}
+            </Text>
+          </VStack>
+        </HStack>
+      </TouchableOpacity>
+      <Divider />
       <VStack>
         {SettingsList.map((_, i) => (
           <TouchableOpacity
@@ -53,6 +58,7 @@ const Settings = ({ navigation }) => {
         <TouchableOpacity
           onPress={async () => {
             await SecureStore.setItemAsync("accessToken", "_");
+            await SecureStore.setItemAsync("cacheData", JSON.stringify([]));
             setQueryParam({});
             setCurrentUser(null);
           }}
