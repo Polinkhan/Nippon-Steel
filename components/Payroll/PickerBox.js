@@ -1,9 +1,10 @@
 import { Box, FormControl, HStack, Icon, Select } from "native-base";
 import { useDataContext } from "../../contexts/DataContext";
 import { theme } from "../../utils/Colors";
+import { selectOptions } from "../../utils/StaticData";
 
 const PickerBox = ({ name }) => {
-  const { selectOptions, queryParam, setQueryParam } = useDataContext();
+  const { queryParam, setQueryParam } = useDataContext();
   const { secondaryColor } = theme;
 
   return (
@@ -38,12 +39,12 @@ const PickerBox = ({ name }) => {
                 setQueryParam((prev) => ({ ...prev, [name]: itemValue }))
               }
             >
-              {selectOptions[name].map((elem, i) => (
+              {selectOptions[name].key.map((elem, i) => (
                 <Select.Item
                   _pressed={{ bg: "gray.200", borderRadius: 12 }}
                   key={i}
                   label={elem}
-                  value={elem}
+                  value={selectOptions[name].val[i]}
                 />
               ))}
             </Select>
