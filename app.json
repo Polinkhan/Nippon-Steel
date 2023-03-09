@@ -2,28 +2,26 @@
   "expo": {
     "name": "Nippon-Steel",
     "slug": "Nippon-Steel",
-    "version": "1.0.0",
+    "version": "2.6.1",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "icon": "./App/assets/icon.png",
+    "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./App/assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.abusayedpolin.NipponSteel"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./App/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.abusayedpolin.NipponSteel"
@@ -36,5 +34,17 @@
         "projectId": "55ac034c-249b-44b3-bb30-1414ae140cd8"
       }
     }
-  }
+  },
+  "plugins": [
+    [
+      "expo-location",
+      {
+        "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+      },
+      "expo-local-authentication",
+      {
+        "faceIDPermission": "Allow $(Nippon Steel) to use Face ID."
+      }
+    ]
+  ]
 }
