@@ -1,0 +1,23 @@
+{
+  "name": "Nippon-Steel-Server",
+  "version": "2.0.1",
+  "main": "index.js",
+  "author": "Abu Sayed Polin",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "box-node-sdk": "^2.7.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "loadash": "^1.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.9.1",
+    "nodemon": "^2.0.20"
+  }
+}
