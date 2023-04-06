@@ -14,19 +14,31 @@ import { View } from "react-native";
 
 const BottomTab = createBottomTabNavigator();
 
-export default function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+const iconStyle = {
+  height: 40,
+  width: 100,
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: 10,
+  backgroundColor: Colors.light.tintOpacity,
+  // elevation: 1,
+};
 
+export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors.light.tint,
         tabBarShowLabel: false,
-        tabBarStyle: { height: 70 },
+        tabBarStyle: {
+          height: 60,
+        },
         tabBarButton: (props) => (
-          <TouchableOpacity {...props} activeOpacity={0.5} />
+          <TouchableOpacity {...props} activeOpacity={0.7} />
         ),
+        headerStyle: { backgroundColor: Colors.light.tabIconSelected },
+        lazy: false,
       }}
     >
       <BottomTab.Screen
@@ -35,16 +47,18 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons name={"ios-home-outline"} size={20} color={"#000"} />
+              <Ionicons name={"ios-home"} size={20} color={"#fff"} />
               <Text style={styles.text}>Home</Text>
             </View>
           ),
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "ios-home" : "ios-home-outline"}
-              size={24}
-              color={color}
-            />
+            <View style={focused && iconStyle}>
+              <Ionicons
+                name={focused ? "ios-home" : "ios-home-outline"}
+                size={24}
+                color={color}
+              />
+            </View>
           ),
         }}
       />
@@ -54,20 +68,24 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons name={"ios-search"} size={20} color={"#000"} />
+              <Ionicons name={"ios-search"} size={20} color={"#fff"} />
               <Text style={styles.text}>Search Report</Text>
             </View>
           ),
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={"ios-search"} size={24} color={"#fff"} />
+            <View>
+              <Ionicons name={"ios-search"} size={24} color={"#fff"} />
+              <View style={styles.before} />
+            </View>
           ),
           tabBarIconStyle: {
             bottom: 25,
-            width: 70,
-            backgroundColor: Colors[colorScheme].tint,
+            width: 120,
+            backgroundColor: Colors.light.tint,
             borderRadius: 999,
             borderWidth: 6,
             borderColor: "white",
+            // elevation: 1,
           },
         }}
       />
@@ -77,20 +95,18 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons
-                name={"ios-settings-outline"}
-                size={20}
-                color={"#000"}
-              />
+              <Ionicons name={"ios-settings"} size={20} color={"#fff"} />
               <Text style={styles.text}>Settings</Text>
             </View>
           ),
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "ios-settings" : "ios-settings-outline"}
-              size={24}
-              color={color}
-            />
+            <View style={focused && iconStyle}>
+              <Ionicons
+                name={focused ? "ios-settings" : "ios-settings-outline"}
+                size={24}
+                color={color}
+              />
+            </View>
           ),
         }}
       />
@@ -101,11 +117,12 @@ export default function BottomTabNavigator() {
 const styles = StyleSheet.create({
   headerBox: {
     flexDirection: "row",
-    alignItems: "center",
+    marginTop: 5,
   },
   text: {
     fontSize: 20,
-    fontWeight: 600,
+    color: "#fff",
     marginHorizontal: 10,
+    fontFamily: "Poppins",
   },
 });

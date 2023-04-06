@@ -1,18 +1,95 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { Button } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
+import { Animated, Dimensions, StyleSheet, Text, View } from "react-native";
+import React, { useRef, useState } from "react";
+import Colors from "../constants/Colors";
+import { Image } from "react-native";
+// import { LinearGradient } from "expo-linear-gradient";
+
+const { width } = Dimensions.get("window");
+
+const spacing = 10;
+const Item_Size = width * 0.8;
+const Spacer_Size = (width - Item_Size) / 2;
 
 const HomeScreen = () => {
+  const scrollX = useRef(new Animated.Value(0)).current;
+
   return (
     <View style={styles.container}>
-      <Button
-        onPress={async () => {
-          await SecureStore.deleteItemAsync("onBoard");
-        }}
+      <View style={styles.header}>
+        <View style={styles.headerTextBox}>
+          <View>
+            <Text
+              style={{ fontFamily: "PoppinsBold", color: "#fff", fontSize: 24 }}
+            >
+              Hello , {"User"}
+            </Text>
+            <Text
+              style={{ fontFamily: "Poppins", color: "#fff", fontSize: 18 }}
+            >
+              {"Job Title"}
+            </Text>
+          </View>
+          <View
+            style={{
+              backgroundColor: "#f2f2f2",
+              height: 65,
+              width: 65,
+              borderRadius: 999,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text>I</Text>
+          </View>
+        </View>
+        <View style={styles.headerInnerBox}></View>
+      </View>
+      {/* <LinearGradient colors={["rgba(0,0,0,0.8)", "transparent"]} /> */}
+      <View style={styles.body}>
+        <Animated.FlatList
+          style={{ flexGrow: 0 }}
+          horizontal
+          data={data}
+          // pagingEnabled
+          decelerationRate={0}
+          snapToInterval={Item_Size}
+          scrollEventThrottle={16}
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={({ id }) => id}
+          onScroll={Animated.event(
+            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+            { useNativeDriver: true }
+          )}
+          renderItem={({ item, index }) => {
+            const inputRange = [
+              (index - 2) * Item_Size,
+              (index - 1) * Item_Size,
+              index * Item_Size,
+            ];
+            const translateY = scrollX.interpolate({
+              inputRange,
+              outputRange: [0, -30, 0],
+            });
+            if (!item.url) return <View style={{ width: Spacer_Size }} />;
+            return <Card item={item} translateY={translateY} />;
+          }}
+        />
+      </View>
+    </View>
+  );
+};
+
+const Card = ({ item, translateY }) => {
+  return (
+    <View style={{ height: 260, width: Item_Size, justifyContent: "center" }}>
+      <Animated.View
+        style={[styles.innerCard, { transform: [{ translateY }] }]}
       >
-        Remove all data
-      </Button>
+        <Image
+          source={{ uri: item.url }}
+          style={{ width: "100%", height: "100%", borderRadius: 8 }}
+        />
+      </Animated.View>
     </View>
   );
 };
@@ -25,4 +102,63 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  header: {
+    flex: 1,
+    width: width - 32,
+    borderRadius: 16,
+    backgroundColor: Colors.light.tint,
+    margin: 16,
+    padding: 16,
+  },
+  headerTextBox: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+  },
+  body: {
+    flex: 3,
+    justifyContent: "flex-end",
+  },
+  headerInnerBox: {
+    height: 60,
+    backgroundColor: "#f2f2f2",
+    borderRadius: 8,
+    elevation: 5,
+  },
+
+  innerCard: {
+    height: 200,
+    marginHorizontal: spacing,
+    padding: spacing / 2,
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 12,
+    overflow: "hidden",
+    elevation: 5,
+  },
 });
+
+const data = [
+  {
+    id: 1,
+  },
+  {
+    id: 2,
+    name: "",
+    url: "https://www.eng.nipponsteel.com/english/globalnetwork/upload/images/singapore-02_01.jpg",
+  },
+  {
+    id: 3,
+    name: "",
+    url: "https://www.eng.nipponsteel.com/english/whatwedo/upload/images/Kuroshio1-1.jpg",
+  },
+  {
+    id: 4,
+    name: "",
+    url: "https://www.eng.nipponsteel.com/english/whatwedo/upload/images/4-1-2_01.jpg",
+  },
+  {
+    id: 5,
+  },
+];

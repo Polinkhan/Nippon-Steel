@@ -12,43 +12,49 @@ const ReportSearchScreen = ({ navigation }) => {
   const [year, setYear] = useState();
   const [type, setType] = useState();
   return (
-    <SheetProvider>
-      <View style={styles.container}>
-        <View style={{ flex: 5, justifyContent: "center" }}>
-          <CustomButton
-            name={month || "Select Month"}
-            onPress={() => {
-              SheetManager.show("month", { payload: { setMonth } });
-            }}
-          />
-          <CustomButton
-            name={year || "Select Year"}
-            onPress={() => {
-              SheetManager.show("year", { payload: { setYear } });
-            }}
-          />
-          <CustomButton
-            name={type || "Select Type"}
-            onPress={() => {
-              SheetManager.show("type", { payload: { setType } });
-            }}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            mode="elevated"
-            buttonColor={Colors.light.tint}
-            labelStyle={{ color: "white", padding: 8, fontSize: 18 }}
-            style={{ borderRadius: 999 }}
-            onPress={() => {
-              navigation.navigate("searchAnimation");
-            }}
-          >
-            Search
-          </Button>
-        </View>
+    <View style={styles.container}>
+      <View style={{ flex: 5, justifyContent: "center" }}>
+        <CustomButton
+          name={month || "Select Month"}
+          onPress={() => {
+            SheetManager.show("month", { payload: { setMonth } });
+          }}
+        />
+        <CustomButton
+          name={year || "Select Year"}
+          onPress={() => {
+            SheetManager.show("year", { payload: { setYear } });
+          }}
+        />
+        <CustomButton
+          name={type || "Select Type"}
+          onPress={() => {
+            SheetManager.show("type", { payload: { setType } });
+          }}
+        />
       </View>
-    </SheetProvider>
+      <View style={{ flex: 1 }}>
+        <Button
+          mode="contained"
+          icon="database-search"
+          buttonColor={Colors.light.tint}
+          labelStyle={{
+            fontSize: 20,
+            top: 2,
+          }}
+          contentStyle={{ padding: 6 }}
+          style={{
+            borderRadius: 999,
+            borderColor: Colors.light.tint,
+          }}
+          onPress={() => {
+            navigation.navigate("searchAnimation");
+          }}
+        >
+          Search
+        </Button>
+      </View>
+    </View>
   );
 };
 
@@ -56,11 +62,13 @@ const CustomButton = ({ name, onPress }) => {
   return (
     <TouchableOpacity
       style={styles.selectBox}
-      activeOpacity={0.5}
+      activeOpacity={0.9}
       onPress={onPress}
     >
-      <Text>{name}</Text>
-      <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
+      <Text style={{ fontSize: 16, fontWeight: "500", color: "#505050" }}>
+        {name}
+      </Text>
+      <MaterialIcons name="keyboard-arrow-down" size={24} color="gray" />
     </TouchableOpacity>
   );
 };
@@ -74,7 +82,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 60,
   },
   selectBox: {
-    borderWidth: 1,
+    // borderWidth: 1,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
@@ -82,5 +90,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderColor: "#aaa",
     borderRadius: 12,
+    backgroundColor: "#fff",
+    elevation: 2,
   },
 });

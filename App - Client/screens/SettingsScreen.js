@@ -1,40 +1,28 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import LottieView from "lottie-react-native";
 import { useWindowDimensions } from "react-native";
 import { useDataContext } from "../hooks/useDataContext";
-import * as SecureStore from "expo-secure-store";
+import { SheetManager, SheetProvider } from "react-native-actions-sheet";
+import { TouchableNativeFeedback } from "react-native";
+import Colors from "../constants/Colors";
+import { useNavigation } from "@react-navigation/native";
 
-const SettingsScreen = () => {
-  const { currentUser, setCurrentUser } = useDataContext();
+const Profile = require("../assets/lottie/Profile.json");
 
-  const logout = {
-    id: 6,
-    name: "Logout",
-    source: require("../assets/lottie/Logout.json"),
-    onPress: async () => {
-      await SecureStore.deleteItemAsync("accessToken");
-      setCurrentUser(null);
-    },
-  };
+const SettingsScreen = ({}) => {
+  const { currentUser } = useDataContext();
 
   return (
     <View style={styles.container}>
       <View style={styles.imageBox}>
-        <LottieView
-          autoPlay
-          style={{ width: 200 }}
-          source={require("../assets/lottie/Profile.json")}
-        />
-        <Text style={{ fontSize: 24, fontWeight: 600, color: "#454545" }}>
-          {currentUser.UserID}
-        </Text>
+        <LottieView style={{ width: 200 }} source={Profile} />
+        <Text style={styles.manuText}>{currentUser.UserID}</Text>
       </View>
       <View style={styles.manuBox}>
         {data.map((item) => (
           <CustomButton key={item.id} item={item} />
         ))}
-        <CustomButton key={logout.id} item={logout} />
       </View>
     </View>
   );
@@ -42,16 +30,27 @@ const SettingsScreen = () => {
 
 const CustomButton = ({ item }) => {
   const { width } = useWindowDimensions();
-  const btnWidth = (width - 80) / 2;
+  const navigation = useNavigation();
+  const btnWidth = (width - 50) / 2;
   return (
-    <TouchableOpacity
-      style={[styles.manuItem, { width: btnWidth }]}
-      activeOpacity={0.7}
-      onPress={item.onPress}
-    >
-      <LottieView autoPlay style={{ width: 50 }} source={item.source} />
-      <Text style={styles.manuText}>{item.name}</Text>
-    </TouchableOpacity>
+    <View style={[styles.manuItem, { width: btnWidth }]}>
+      <TouchableNativeFeedback
+        onPress={
+          item.navigate
+            ? () => navigation.navigate(item.navigate)
+            : item.onPress
+        }
+        background={TouchableNativeFeedback.Ripple(
+          Colors.light.tintOpacity,
+          false
+        )}
+      >
+        <View style={{ padding: 12 }}>
+          <LottieView autoPlay style={{ width: 40 }} source={item.source} />
+          <Text style={styles.manuText}>{item.name}</Text>
+        </View>
+      </TouchableNativeFeedback>
+    </View>
   );
 };
 
@@ -61,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
   },
   imageBox: {
     flex: 1,
@@ -76,17 +75,17 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   manuItem: {
-    padding: 16,
-    marginTop: 20,
-    borderRadius: 16,
+    marginTop: 10,
+    borderRadius: 12,
+    overflow: "hidden",
     backgroundColor: "#fff",
     elevation: 2,
   },
   manuText: {
-    fontSize: 18,
-    fontWeight: 500,
+    fontSize: 16,
     color: "#454545",
     marginTop: 8,
+    fontFamily: "Poppins",
   },
 });
 
@@ -113,7 +112,20 @@ const data = [
   },
   {
     id: 5,
-    name: "About US",
+    name: "About App",
     source: require("../assets/lottie/About_US.json"),
+    navigate: "about",
+  },
+  {
+    id: 6,
+    name: "Contact Admin",
+    source: require("../assets/lottie/Contact.json"),
+    navigate: "contact",
+  },
+  {
+    id: 7,
+    name: "Logout",
+    source: require("../assets/lottie/Logout.json"),
+    onPress: () => SheetManager.show("confirmLogout"),
   },
 ];

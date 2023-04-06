@@ -8,7 +8,8 @@ import NextButton from "../components/NextButton";
 import { useDataContext } from "../hooks/useDataContext";
 import * as SecureStore from "expo-secure-store";
 import { authClient } from "../Api/Client";
-import { ToastAndroid } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import LottieView from "lottie-react-native";
 
 const Onbording = ({ navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -25,9 +26,11 @@ const Onbording = ({ navigation }) => {
         const res = await authClient.get("/", {
           headers: { Authorization: token },
         });
+        console.log("true");
         setCurrentUser(res?.data?.currentUser);
         JSON.parse(state) && navigation.replace("Root");
       } catch (err) {
+        onsole.log("false");
         JSON.parse(state) && navigation.replace("login");
       } finally {
         setLoading(false);
@@ -39,18 +42,17 @@ const Onbording = ({ navigation }) => {
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
-  const scrollTo = async () => {
-    if (currentIndex < Slides.length - 1) {
-      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
-    } else {
-      await SecureStore.setItemAsync("onBoard", JSON.stringify(true));
-      navigation.replace(currentUser ? "Root" : "login");
+  const scrollTo = async (value) => {
+    const updatedIndx = currentIndex + value;
+    if (updatedIndx < Slides.length && updatedIndx > -1) {
+      slidesRef.current.scrollToIndex({ index: updatedIndx });
     }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: "#fff" }]}>
-      {!loading && (
+      <StatusBar animated style="dark" />
+      {!loading ? (
         <>
           <View style={{ flex: 3 }}>
             <FlatList
@@ -78,6 +80,14 @@ const Onbording = ({ navigation }) => {
             percentage={(currentIndex + 1) * (100 / Slides.length)}
           />
         </>
+      ) : (
+        <View style={styles.container}>
+          <LottieView
+            autoPlay
+            style={{ width: 200, height: 200 }}
+            source={require("../assets/lottie/Loading.json")}
+          />
+        </View>
       )}
     </View>
   );
@@ -88,5 +98,7 @@ export default Onbording;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

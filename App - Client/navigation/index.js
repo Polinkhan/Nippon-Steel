@@ -1,26 +1,28 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import Onbording from "../screens/Onbording";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import DataContextProvider from "../contexts/DataContext";
 import { useDataContext } from "../hooks/useDataContext";
 import LoginScreen from "../screens/LoginScreen";
-import { Provider as PaperProvider } from "react-native-paper";
 import OtpVerifyScreen from "../screens/OtpVerifyScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import { useEffect, useState } from "react";
 import SearchingAnimationScreen from "../screens/SearchingAnimationScreen";
+import PDFViewerScreen from "../screens/PDFViewerScreen";
+import { Text } from "react-native";
+import AboutUsScreen from "../screens/AboutUsScreen";
+import Colors from "../constants/Colors";
+import { SheetProvider } from "react-native-actions-sheet";
+import DataContextProvider from "../contexts/DataContext";
+import { StyleSheet } from "react-native";
+import ContactAdminScreen from "../screens/ContactAdminScreen";
 
 export default function Navigation({ colorScheme }) {
   return (
     <NavigationContainer linking={LinkingConfiguration} theme={DefaultTheme}>
       <DataContextProvider>
-        <RootNavigator />
+        <SheetProvider>
+          <RootNavigator />
+        </SheetProvider>
       </DataContextProvider>
     </NavigationContainer>
   );
@@ -34,7 +36,9 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: "#f0f0f0" },
+        headerStyle: { backgroundColor: Colors.light.tabIconSelected },
+        headerTintColor: "#f2f2f2",
+        animation: "fade_from_bottom",
       }}
     >
       <Stack.Screen
@@ -50,12 +54,45 @@ function RootNavigator() {
           <Stack.Screen
             name="Root"
             component={BottomTabNavigator}
-            options={{ headerShown: false }}
+            options={{
+              headerShown: false,
+              headerTintColor: "#fff",
+            }}
           />
           <Stack.Screen
             name="searchAnimation"
             component={SearchingAnimationScreen}
-            options={{ headerShown: false, animation: "fade_from_bottom" }}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="pdfviwer"
+            component={PDFViewerScreen}
+            options={({ route }) => ({
+              animation: "slide_from_right",
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>{route.params?.name}</Text>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="about"
+            component={AboutUsScreen}
+            options={{
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>About App</Text>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="contact"
+            component={ContactAdminScreen}
+            options={{
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>Contact Admin</Text>
+              ),
+            }}
           />
         </>
       ) : (
@@ -63,7 +100,7 @@ function RootNavigator() {
           <Stack.Screen
             name="login"
             component={LoginScreen}
-            options={{ headerShown: false, animation: "fade_from_bottom" }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen
             name="otp"
@@ -78,3 +115,12 @@ function RootNavigator() {
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 20,
+    color: "#fff",
+    marginHorizontal: 10,
+    fontFamily: "Poppins",
+  },
+});

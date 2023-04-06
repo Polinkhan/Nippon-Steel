@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
   item: {
     padding: 16,
     borderRadius: 12,
-    marginVertical: 4,
-    backgroundColor: "#eee",
+    marginVertical: 6,
+    backgroundColor: "#f0f0f0",
   },
 });
 

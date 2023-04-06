@@ -3,9 +3,9 @@ import React, { useRef, useState } from "react";
 import Colors from "../constants/Colors";
 import { MonoText } from "../components/StyledText";
 import { Button, Checkbox, TextInput } from "react-native-paper";
-import { StatusBar } from "react-native";
 import { authClient } from "../Api/Client";
 import { Keyboard } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 const LoginScreen = ({ navigation }) => {
   const [checked, setChecked] = useState(true);
@@ -32,11 +32,12 @@ const LoginScreen = ({ navigation }) => {
     <View
       style={[styles.container, { backgroundColor: Colors.light.background }]}
     >
+      <StatusBar animated style="dark" />
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <MonoText style={{ fontWeight: 800, fontSize: 32 }}>Welcome</MonoText>
-        <MonoText style={{ fontWeight: 500, fontSize: 18 }}>
+        <Text style={{ fontSize: 56, fontFamily: "sultan" }}>Welcome</Text>
+        <Text style={{ fontSize: 28, fontFamily: "sultan" }}>
           Nippon Steel Engineering
-        </MonoText>
+        </Text>
       </View>
       <View style={{ flex: 2, justifyContent: "center" }}>
         <TextInput
@@ -44,23 +45,24 @@ const LoginScreen = ({ navigation }) => {
           mode="outlined"
           label="User ID"
           onChangeText={(text) => setId(text)}
-          activeOutlineColor={Colors.light.border}
+          activeOutlineColor={Colors.light.tint}
         />
         <TextInput
           style={styles.input}
           mode="outlined"
           label="Password"
           onChangeText={(text) => setPass(text)}
-          activeOutlineColor={Colors.light.border}
+          activeOutlineColor={Colors.light.tint}
           secureTextEntry
           right={<TextInput.Affix text="/100" />}
         />
 
         <View>
           <Checkbox.Item
+            labelStyle={{ fontFamily: "Poppins" }}
             label="Remember me"
             status={checked ? "checked" : "unchecked"}
-            color={Colors.light.primary}
+            color={Colors.light.tint}
             onPress={() => setChecked((prev) => !prev)}
           />
         </View>
@@ -69,10 +71,15 @@ const LoginScreen = ({ navigation }) => {
         <Button
           mode="elevated"
           onPress={!loading && handleSubmit}
-          buttonColor={Colors.light.primary}
+          buttonColor={Colors.light.tint}
           textColor="#fff"
           style={{ borderRadius: 999 }}
-          labelStyle={{ fontSize: 20, padding: 8 }}
+          labelStyle={{
+            fontSize: 20,
+            padding: 5,
+            fontFamily: "Poppins",
+            paddingTop: 10,
+          }}
           loading={loading}
         >
           Login
@@ -86,7 +93,6 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: StatusBar.currentHeight,
     flex: 1,
     justifyContent: "center",
     padding: 40,

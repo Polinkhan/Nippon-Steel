@@ -1,8 +1,15 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
+import { StatusBar } from "expo-status-bar";
 
-const SearchingAnimationScreen = () => {
+const SearchingAnimationScreen = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.replace("pdfviwer", { name: "PDF Name" });
+    }, 4000);
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={[styles.container, { flex: 3 }]}>

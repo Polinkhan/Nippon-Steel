@@ -1,10 +1,7 @@
 import { View, Text } from "react-native";
 import React, { createContext, useState } from "react";
 
-export const DataContext = createContext({
-  currentUser: {},
-  setCurrentUser: () => {},
-});
+export const DataContext = createContext();
 
 const DataContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);

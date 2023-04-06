@@ -6,20 +6,30 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { useLoadedAssets } from "./hooks/useLoadedAssets";
 import Navigation from "./navigation";
-import { useColorScheme } from "react-native";
+import { useFonts } from "expo-font";
 
 export default function App() {
   const isLoadingComplete = useLoadedAssets();
-  const colorScheme = useColorScheme();
+  const [fontsLoaded] = useFonts({
+    sultan: require("./assets/font/Sultan.ttf"),
+    Poppins: require("./assets/font/Poppins-Regular.ttf"),
+    PoppinsBold: require("./assets/font/Poppins-Bold.ttf"),
+  });
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <StatusBar />
-        <Navigation colorScheme={colorScheme} />
-      </SafeAreaProvider>
+      fontsLoaded && (
+        <SafeAreaProvider>
+          <StatusBar
+            style={"light"}
+            animated={true}
+            backgroundColor="rgba(0,0,0,0.3)"
+          />
+          <Navigation />
+        </SafeAreaProvider>
+      )
     );
   }
 }

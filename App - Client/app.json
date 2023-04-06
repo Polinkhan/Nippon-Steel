@@ -15,7 +15,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -33,6 +35,9 @@
       "eas": {
         "projectId": "5c8df4a3-06cf-4f09-8c51-ad5e9b1e9e05"
       }
-    }
+    },
+    "plugins": [
+      "expo-localization"
+    ]
   }
 }

@@ -13,7 +13,7 @@ function MonthSheet({ sheetId, payload }) {
       gestureEnabled={true}
       indicatorStyle={{ width: 100 }}
       containerStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
-      // snapPoints={[30, 60, 100]}
+      // snapPoints={[60, 100]}
     >
       <View style={styles.container}>
         {data.map((item) => (
@@ -44,8 +44,8 @@ const styles = StyleSheet.create({
   item: {
     padding: 16,
     borderRadius: 12,
-    marginVertical: 4,
-    backgroundColor: "#eee",
+    marginVertical: 6,
+    backgroundColor: "#f0f0f0",
   },
 });
 

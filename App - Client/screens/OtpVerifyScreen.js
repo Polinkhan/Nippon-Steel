@@ -1,7 +1,6 @@
 import { View, Text } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import LottieView from "lottie-react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { Button } from "react-native-paper";
@@ -9,6 +8,8 @@ import { useDataContext } from "../hooks/useDataContext";
 import { authClient } from "../Api/Client";
 import { ToastAndroid } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { StatusBar } from "expo-status-bar";
+import LottieView from "lottie-react-native";
 
 const OtpVerifyScreen = ({ navigation, route }) => {
   const [OTP, setOTP] = useState([]);
@@ -49,6 +50,11 @@ const OtpVerifyScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        style={"light"}
+        animated={true}
+        backgroundColor="rgba(0,0,0,0.2)"
+      />
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <LottieView
           autoPlay
@@ -64,34 +70,37 @@ const OtpVerifyScreen = ({ navigation, route }) => {
         </View>
         <View style={{ flex: 4, justifyContent: "center" }}>
           <View style={styles.keyboard}>
-            {[1, 2, 3, 4].map((_, i) => (
+            {[1, 2, 3].map((_, i) => (
               <KeyboardKey key={i} number={_} onPress={() => OnPress(_)} />
             ))}
           </View>
           <View style={styles.keyboard}>
-            {[5, 6, 7, 8].map((_, i) => (
+            {[4, 5, 6].map((_, i) => (
               <KeyboardKey key={i} number={_} onPress={() => OnPress(_)} />
             ))}
           </View>
           <View style={styles.keyboard}>
+            {[7, 8, 9].map((_, i) => (
+              <KeyboardKey key={i} number={_} onPress={() => OnPress(_)} />
+            ))}
+          </View>
+          <View style={[styles.keyboard]}>
+            <Button
+              style={styles.keyboardKey}
+              labelStyle={styles.labelStyle}
+              textColor={Colors.light.tint}
+              onPress={() => {}}
+            >
+              <Entypo name="eye-with-line" size={24} color="#777777" />
+            </Button>
+            <KeyboardKey number={0} onPress={() => OnPress(0)} />
             <Button
               style={styles.keyboardKey}
               onPress={handleErase}
+              textColor={Colors.light.tint}
               labelStyle={styles.labelStyle}
             >
               <Entypo name="erase" size={24} color="#777777" />
-            </Button>
-
-            <KeyboardKey number={9} onPress={() => OnPress(9)} />
-            <KeyboardKey number={0} onPress={() => OnPress(0)} />
-
-            <Button
-              style={{ borderRadius: 4, marginHorizontal: 5 }}
-              labelStyle={styles.labelStyle}
-              buttonColor={Colors.light.primary}
-              onPress={() => {}}
-            >
-              <AntDesign name="arrowright" size={24} color="#fff" />
             </Button>
           </View>
         </View>
@@ -108,7 +117,7 @@ const OtpVerifyScreen = ({ navigation, route }) => {
 
 const InputBox = ({ number }) => {
   const hasNumber = number !== undefined;
-  borderColor = hasNumber ? Colors.light.primary : "#cccccc";
+  borderColor = hasNumber ? Colors.light.tint : "#cccccc";
   return (
     <View style={[styles.inputBox, { borderColor }]}>
       <Text style={styles.text}>{hasNumber ? number : "*"}</Text>
@@ -122,6 +131,7 @@ const KeyboardKey = ({ number, onPress }) => {
       style={styles.keyboardKey}
       onPress={onPress}
       labelStyle={styles.labelStyle}
+      textColor={Colors.light.tint}
     >
       {number}
     </Button>
@@ -160,7 +170,7 @@ const styles = StyleSheet.create({
   keyboard: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 12,
   },
   keyboardKey: {
     borderRadius: 4,
@@ -171,7 +181,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
     fontWeight: 500,
     fontSize: 16,
-    color: Colors.light.primary,
+    color: Colors.light.tint,
     textDecorationLine: "underline",
   },
   labelStyle: {
