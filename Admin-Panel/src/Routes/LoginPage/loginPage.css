@@ -1,0 +1,55 @@
+.container {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: hsla(139, 72%, 83%, 1);
+  color: #3b4d61;
+
+  background: linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+}
+.outerBox {
+  display: flex;
+  width: 60vw;
+  height: 75vh;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.leftBox {
+  flex: 4;
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+.RightBox {
+  flex: 3;
+  display: flex;
+  place-items: center;
+  justify-content: space-around;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  flex-direction: column;
+}
+.form {
+  width: 60%;
+  display: flex;
+  /* place-items: center; */
+  flex-direction: column;
+}
