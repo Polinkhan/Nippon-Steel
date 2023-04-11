@@ -1,30 +1,24 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
-import LottieView from "lottie-react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React from "react";
 import { useWindowDimensions } from "react-native";
-import { useDataContext } from "../hooks/useDataContext";
 import { SheetManager, SheetProvider } from "react-native-actions-sheet";
 import { TouchableNativeFeedback } from "react-native";
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
-
-const Profile = require("../assets/lottie/Profile.json");
+import LottieView from "lottie-react-native";
+const Profile = require("../assets/lottie/Settings.json");
 
 const SettingsScreen = ({}) => {
-  const { currentUser } = useDataContext();
-
   return (
     <View style={styles.container}>
-      <View style={styles.imageBox}>
-        <LottieView style={{ width: 200 }} source={Profile} />
-        <Text style={styles.manuText}>{currentUser.UserID}</Text>
-      </View>
-      <View style={styles.manuBox}>
-        {data.map((item) => (
-          <CustomButton key={item.id} item={item} />
-        ))}
-      </View>
+      <LottieView autoPlay style={{ height: 200 }} source={Profile} />
+      <ScrollView style={{}}>
+        <View style={styles.manuBox}>
+          {data.map((item) => (
+            <CustomButton key={item.id} item={item} />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -61,14 +55,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: 20,
+    alignItems: "center",
+    padding: 20,
   },
   imageBox: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
   },
   manuBox: {
+    paddingVertical: 2,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -84,7 +80,7 @@ const styles = StyleSheet.create({
   },
   manuText: {
     fontSize: 16,
-    color: "#454545",
+    color: "rgba(0,0,0,0.5)",
     marginTop: 8,
     fontFamily: "Poppins",
   },
@@ -96,12 +92,14 @@ const data = [
     name: "View Profile",
     source: require("../assets/lottie/Profile_icon.json"),
     colors: ["transparent", "#0000ff4d", "transparent"],
+    navigate: "profile",
   },
   {
     id: 2,
     name: "Change Password",
     source: require("../assets/lottie/Password.json"),
     colors: ["transparent", "#8054204d", "transparent"],
+    navigate: "changePassword",
   },
   {
     id: 3,

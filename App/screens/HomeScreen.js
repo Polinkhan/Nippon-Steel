@@ -1,17 +1,38 @@
-import { Animated, Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import Colors from "../constants/Colors";
 import { Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { IconButton } from "react-native-paper";
 
 const { width } = Dimensions.get("window");
 
 const spacing = 10;
-const Item_Size = width * 0.8;
-const Spacer_Size = (width - Item_Size) / 2;
+const Item_Size = width;
 
 const HomeScreen = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
+  const slidesRef = useRef(null);
+
+  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+  const viewableItemsChanged = useRef(({ viewableItems }) => {
+    setCurrentIndex(viewableItems[0].index);
+  }).current;
+  const scrollTo = async (value) => {
+    const updatedIndx = currentIndex + value;
+    if (updatedIndx < data.length && updatedIndx > -1) {
+      slidesRef.current.scrollToIndex({ index: updatedIndx });
+    }
+    console.log(value);
+  };
 
   return (
     <View style={styles.container}>
@@ -49,79 +70,71 @@ const HomeScreen = () => {
         </View>
         <View style={styles.headerInnerBox}></View>
       </LinearGradient>
-      <View style={styles.body}>
-        <Animated.FlatList
-          style={{ flexGrow: 0 }}
-          horizontal
-          data={data}
-          // pagingEnabled
-          decelerationRate={0}
-          snapToInterval={Item_Size}
-          scrollEventThrottle={16}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={({ id }) => id}
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-            { useNativeDriver: true }
-          )}
-          renderItem={({ item, index }) => {
-            const inputRange = [
-              (index - 2) * Item_Size,
-              (index - 1) * Item_Size,
-              index * Item_Size,
-            ];
-            const translateY = scrollX.interpolate({
-              inputRange,
-              outputRange: [0, -30, 0],
-            });
-            if (!item.url) return <View style={{ width: Spacer_Size }} />;
-            return <Card item={item} translateY={translateY} />;
-          }}
-        />
+      <View style={{ flex: 3, paddingBottom: 30, justifyContent: "flex-end" }}>
+        <View style={styles.body}>
+          <IconButton
+            icon="chevron-left"
+            iconColor={Colors.light.tint}
+            size={24}
+            style={{ margin: 5, width: 40 }}
+            onPress={() => {
+              scrollTo(-1);
+            }}
+          />
+          <FlatList
+            horizontal
+            pagingEnabled
+            bounces={false}
+            ref={slidesRef}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+              {
+                useNativeDriver: false,
+              }
+            )}
+            onViewableItemsChanged={viewableItemsChanged}
+            showsHorizontalScrollIndicator={false}
+            viewabilityConfig={viewConfig}
+            data={data}
+            keyExtractor={({ id }) => id}
+            renderItem={({ item, index }) => {
+              return <Card item={item} />;
+            }}
+          />
+          <IconButton
+            icon="chevron-right"
+            iconColor={Colors.light.tint}
+            size={24}
+            style={{ margin: 5, width: 40 }}
+            onPress={() => {
+              scrollTo(1);
+            }}
+          />
+        </View>
       </View>
     </View>
   );
 };
 
-const Card = ({ item, translateY }) => {
+const Card = ({ item }) => {
   return (
-    <View style={{ height: 260, width: Item_Size, justifyContent: "center" }}>
-      <Animated.View
-        style={[styles.innerCard, { transform: [{ translateY }] }]}
+    <View style={styles.innerCard}>
+      <LinearGradient
+        style={{ width: "100%", borderRadius: 8, overflow: "hidden" }}
+        colors={["#000", "transparent"]}
+        start={{ x: 1, y: 1 }}
+        end={{ x: 1, y: 0.9 }}
       >
-        <LinearGradient
+        <Image
+          source={{ uri: item.url }}
           style={{
-            flex: 1,
             width: "100%",
-            borderRadius: 8,
-            overflow: "hidden",
+            height: "100%",
+            zIndex: -1,
           }}
-          colors={["#000", "transparent"]}
-          start={{ x: 1, y: 1 }}
-          end={{ x: 1, y: 0.5 }}
-        >
-          <Image
-            source={{ uri: item.url }}
-            style={{
-              width: "100%",
-              height: "100%",
-              zIndex: -1,
-            }}
-          />
-          <Text
-            style={{
-              position: "absolute",
-              bottom: 0,
-              color: "#ddd",
-              fontFamily: "Poppins",
-              right: 10,
-              bottom: 5,
-            }}
-          >
-            Nippon Steel Engineering
-          </Text>
-        </LinearGradient>
-      </Animated.View>
+        />
+        <Text style={styles.cardText}>Nippon Steel Engineering</Text>
+      </LinearGradient>
     </View>
   );
 };
@@ -148,7 +161,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   body: {
-    flex: 3,
+    // flex: 3,
+    flexDirection: "row",
+    alignItems: "center",
     justifyContent: "flex-end",
   },
   headerInnerBox: {
@@ -160,20 +175,20 @@ const styles = StyleSheet.create({
 
   innerCard: {
     height: 200,
-    marginHorizontal: spacing,
-    padding: spacing / 2,
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    overflow: "hidden",
-    elevation: 5,
+    width: width - 100,
+    paddingHorizontal: 5,
+  },
+  cardText: {
+    position: "absolute",
+    bottom: 0,
+    color: "#ddd",
+    fontFamily: "Poppins",
+    right: 10,
+    bottom: 5,
   },
 });
 
 const data = [
-  {
-    id: 1,
-  },
   {
     id: 2,
     name: "",
@@ -188,8 +203,5 @@ const data = [
     id: 4,
     name: "",
     url: "https://www.eng.nipponsteel.com/english/whatwedo/upload/images/4-1-2_01.jpg",
-  },
-  {
-    id: 5,
   },
 ];

@@ -1,4 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap");
+@import "../node_modules/@syncfusion/ej2-base/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-navigations/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-grids/styles/material.css";
+@import "../node_modules/@syncfusion/ej2-react-spreadsheet/styles/material.css";
+
 :root {
   font-family: "Poppins", sans-serif;
   font-synthesis: none;
@@ -10,4 +21,20 @@
 
 body {
   margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+@media only screen and (min-width: 992px) {
+  :root {
+    font-size: 0.8rem;
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  :root {
+    font-size: 0.9rem;
+  }
 }

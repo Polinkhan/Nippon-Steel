@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import { Image } from "react-native";
 import Colors from "../constants/Colors";
 import LottieView from "lottie-react-native";
 

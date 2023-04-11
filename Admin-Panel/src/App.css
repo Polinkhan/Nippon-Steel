@@ -1,0 +1,232 @@
+.container {
+}
+
+.header {
+  font-weight: bold;
+  color: #fff;
+  align-items: center;
+  background-color: #283542;
+}
+
+.navbar {
+  background-color: #283542;
+  color: #fff;
+}
+
+/*----- Rootpage Page----- */
+
+.sideContainer {
+  background-color: #283542;
+}
+
+.sidebarItem {
+  transition: 0.3s;
+  border-right: 0px solid #fff;
+}
+
+.rightContainer {
+  height: 100%;
+  /* height: calc(100% - 40px); */
+}
+
+.sidebarItem:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.text {
+  transition: 0.3s;
+}
+
+.sidebarItem:hover .text {
+  transition: 0.3s;
+  margin-left: 15px;
+}
+
+/*----- Dashboard Page----- */
+
+.userInfoBody {
+  background-color: #fff;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px -2px 8px 0px;
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #3b4d61;
+}
+
+/*----- Login Page----- */
+
+.container {
+  display: flex;
+  place-items: center;
+  place-content: center;
+  width: 100vw;
+  height: 100vh;
+  background: hsla(139, 72%, 83%, 1);
+  color: #3b4d61;
+
+  background: linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+
+  background: -moz-linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+
+  background: -webkit-linear-gradient(
+    180deg,
+    hsla(139, 72%, 83%, 1) 0%,
+    hsla(229, 89%, 62%, 1) 100%
+  );
+}
+.outerBox {
+  display: flex;
+  width: 60vw;
+  height: 75vh;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.leftBox {
+  flex: 4;
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+.RightBox {
+  flex: 3;
+  display: flex;
+  place-items: center;
+  justify-content: space-around;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  flex-direction: column;
+}
+.form {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+/*----- Register Page----- */
+
+.registerBody {
+  flex: 1;
+  background-color: #fff;
+  position: relative;
+}
+
+.registerInputBody {
+  filter: blur(0px);
+}
+
+.input {
+  width: 300px;
+}
+
+.input span {
+  color: red;
+}
+
+.registerFooter {
+  flex: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingBox {
+  top: 40%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+/*----- Register Page----- */
+
+.userData {
+  padding: 5px 0;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.userData p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 10px;
+}
+
+.userData:hover {
+  background-color: #28354225;
+}
+
+.userData:hover .userDataAbsolute {
+  right: 0;
+}
+
+/*----- ViewDatabase Page----- */
+
+.viewDatabaseDiv {
+  flex: 1;
+}
+
+/*----- Responsive Page----- */
+
+@media only screen and (min-width: 992px) {
+  .navbar {
+    height: 50px;
+  }
+  .navLogo {
+    width: 220px;
+  }
+  .header {
+    padding: 6px 12px;
+    font-size: 1.2rem;
+  }
+  .sideContainer {
+    width: 200px;
+    padding: 12px;
+  }
+  .sidebarItem {
+    padding: 15px 0;
+  }
+  .viewDatabaseDiv {
+    display: flex;
+    width: calc(100vw - 264px);
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .navbar {
+    height: 70px;
+  }
+  .navLogo {
+    width: 300px;
+  }
+  .header {
+    padding: 10px 20px;
+    font-size: 1.5rem;
+  }
+  .sideContainer {
+    width: 250px;
+    padding: 20px;
+  }
+  .sidebarItem {
+    padding: 20px 0;
+  }
+  .viewDatabaseDiv {
+    display: flex;
+    width: calc(100vw - 314px);
+  }
+}

@@ -15,7 +15,7 @@ const Onbording = ({ navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { currentUser, setCurrentUser } = useDataContext();
+  const { setCurrentUser } = useDataContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const Onbording = ({ navigation }) => {
         setCurrentUser(res?.data?.currentUser);
         JSON.parse(state) && navigation.replace("Root");
       } catch (err) {
-        console.log(err.response.data);
+        console.log(err?.response?.data || err);
         JSON.parse(state) && navigation.replace("login");
       } finally {
         setLoading(false);
@@ -59,11 +59,8 @@ const Onbording = ({ navigation }) => {
             <FlatList
               horizontal
               pagingEnabled
-              data={Slides}
               bounces={false}
               ref={slidesRef}
-              keyExtractor={({ id }) => id}
-              renderItem={({ item }) => <OnbordingItem item={item} />}
               onScroll={Animated.event(
                 [{ nativeEvent: { contentOffset: { x: scrollX } } }],
                 {
@@ -73,6 +70,9 @@ const Onbording = ({ navigation }) => {
               onViewableItemsChanged={viewableItemsChanged}
               showsHorizontalScrollIndicator={false}
               viewabilityConfig={viewConfig}
+              data={Slides}
+              keyExtractor={({ id }) => id}
+              renderItem={({ item }) => <OnbordingItem item={item} />}
             />
           </View>
           <Paginator data={Slides} scrollX={scrollX} />
@@ -85,7 +85,7 @@ const Onbording = ({ navigation }) => {
         <View style={styles.container}>
           <LottieView
             autoPlay
-            style={{ width: 200, height: 200 }}
+            style={{ width: 150, height: 150 }}
             source={require("../assets/lottie/DefaultLoading.json")}
           />
         </View>

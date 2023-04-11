@@ -1,9 +1,8 @@
-import "./loginPage.css";
 import Lottie from "lottie-react";
-import login from "../../assets/Lottie/login.json";
+import login from "../assets/Lottie/login.json";
 import TextField from "@mui/material/TextField";
 import { Button, Checkbox, FormControlLabel } from "@mui/material";
-import { useDataContext } from "../../contexts/DataContext";
+import { useDataContext } from "../contexts/DataContext";
 
 const LoginPage = () => {
   const { setCurrentUser } = useDataContext();
@@ -33,14 +32,9 @@ const LoginPage = () => {
               label="User ID or Email"
               variant="outlined"
               sx={{ marginTop: 2 }}
-              InputProps={{
-                classes: {
-                  borderWidth: "1px",
-                  borderColor: "yellow !important",
-                },
-              }}
             />
             <TextField
+              type="password"
               label="Password"
               variant="outlined"
               sx={{ marginTop: 2 }}

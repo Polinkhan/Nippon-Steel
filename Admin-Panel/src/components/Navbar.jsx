@@ -1,35 +1,14 @@
+import { Stack } from "@mui/material";
+import logo from "../assets/Untitled.svg";
+
 const Navbar = () => {
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        zIndex: 20,
-        color: "#fff",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-          flex: 1,
-        }}
-      >
-        <p>Logo</p>
-        <p>Name</p>
-      </div>
-      <div
-        style={{
-          height: 50,
-          display: "flex",
-          alignItems: "center",
-          flex: 8,
-        }}
-      >
-        sdf
-      </div>
-    </div>
+    <Stack direction={"row"} alignItems={"center"} className="navbar">
+      <Stack flex={1}>
+        <img className="navLogo" src={logo} />
+      </Stack>
+      <Stack flex={1}></Stack>
+    </Stack>
   );
 };
 export default Navbar;

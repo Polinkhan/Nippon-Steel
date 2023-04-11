@@ -30,7 +30,6 @@ const AboutUsScreen = () => {
         <Text style={styles.text}>Email : naeem@nsc-eng.com</Text>
         <Text style={styles.text}>WhatApp : +8801730062298</Text>
       </View>
-      <View style={{ flex: 1 }}></View>
     </View>
   );
 };
@@ -40,16 +39,16 @@ export default AboutUsScreen;
 const styles = StyleSheet.create({
   container: { padding: 20, flex: 1 },
   text: {
-    width: 260,
+    width: "80%",
     textAlign: "center",
     backgroundColor: Colors.light.tint,
     color: "#fff",
     paddingVertical: 10,
     borderRadius: 999,
-    marginVertical: 6,
+    marginVertical: 8,
     elevation: 1,
     fontFamily: "Poppins",
-    fontSize: 16,
+    fontSize: 14,
     elevation: 5,
   },
   grayText: {

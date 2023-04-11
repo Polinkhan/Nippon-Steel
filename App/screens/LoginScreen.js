@@ -21,7 +21,8 @@ const LoginScreen = ({ navigation }) => {
       ToastAndroid.show(res?.message, ToastAndroid.SHORT);
       navigation.navigate("otp", { id });
     } catch (err) {
-      const { message } = err?.response.data;
+      const { message } = err?.response?.data;
+      console.log(message);
       ToastAndroid.show(message, ToastAndroid.SHORT);
     } finally {
       setLoading(false);

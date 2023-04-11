@@ -17,6 +17,8 @@ import { StyleSheet } from "react-native";
 import ContactAdminScreen from "../screens/ContactAdminScreen";
 import UpdateScreen from "../screens/UpdateScreen";
 import PermissionScreen from "../screens/PermissionScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import ChangePasswordScreen from "../screens/ChangePasswordScreen";
 
 export default function Navigation({ colorScheme }) {
   return (
@@ -88,6 +90,15 @@ function RootNavigator() {
             })}
           />
           <Stack.Screen
+            name="profile"
+            component={ProfileScreen}
+            options={({ route }) => ({
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>{route.params.name}</Text>
+              ),
+            })}
+          />
+          <Stack.Screen
             name="contact"
             component={ContactAdminScreen}
             options={({ route }) => ({
@@ -108,6 +119,15 @@ function RootNavigator() {
           <Stack.Screen
             name="permission"
             component={PermissionScreen}
+            options={({ route }) => ({
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>{route.params.name}</Text>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="changePassword"
+            component={ChangePasswordScreen}
             options={({ route }) => ({
               headerTitle: ({ tintColor }) => (
                 <Text style={styles.text}>{route.params.name}</Text>

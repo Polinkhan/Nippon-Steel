@@ -4,7 +4,7 @@ const DataContext = createContext();
 export const useDataContext = () => useContext(DataContext);
 
 const DataContextProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
 
   const value = {
     currentUser,

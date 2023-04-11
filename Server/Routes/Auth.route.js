@@ -33,7 +33,7 @@ router.post("/login", async (req, res, next) => {
       const OTP = genarateOTP();
       const time = new Date().getTime();
       await db.query(query2, [OTP, time, id]);
-      const message = await mailTo(result[0].Email, OTP);
+      const message = await mailTo(result[0].Email, OTP, time);
 
       res.send({ message });
     } else next(createError.BadRequest("Invalid User ID or Password"));
@@ -44,7 +44,6 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/verifyOtp", async (req, res, next) => {
   const { id, otp } = req.body;
-  console.log({ id, otp });
   const query1 = `SELECT * FROM Credentials WHERE UserID=?`;
 
   try {

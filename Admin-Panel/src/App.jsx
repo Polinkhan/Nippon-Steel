@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import RootRouter from "./Routes/RootRouter/RootRouter";
 import DataContextProvider from "./contexts/DataContext";
-// import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
+import "./App.css";
+import RootRouter from "./Routes/RootRouter";
 
 const THEME = createTheme({
   typography: {
@@ -13,6 +13,10 @@ const THEME = createTheme({
   },
   palette: {
     primary: { main: "#3b4d61" },
+    secondary: { main: "#5e81f4" },
+    gray: { main: "gray" },
+    white: { main: "#fff" },
+    light: { main: "rgba(255,255,255,0.5)" },
   },
 });
 
