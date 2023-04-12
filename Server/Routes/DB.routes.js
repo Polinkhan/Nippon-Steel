@@ -19,9 +19,9 @@ router.get("/:id", async (req, res, next) => {
 router.get("/viewData/:id", async (req, res, next) => {
   const { id } = req.params;
   const query =
-    "SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID";
+    "SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ? ";
   try {
-    const [result] = await db.query(query);
+    const [result] = await db.query(query, [id]);
     res.send(result[0]);
   } catch (err) {
     next(err);

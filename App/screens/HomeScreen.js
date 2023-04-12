@@ -70,13 +70,13 @@ const HomeScreen = () => {
         </View>
         <View style={styles.headerInnerBox}></View>
       </LinearGradient>
-      <View style={{ flex: 3, paddingBottom: 30, justifyContent: "flex-end" }}>
+      <View style={{ flex: 3, paddingBottom: 50, justifyContent: "flex-end" }}>
         <View style={styles.body}>
           <IconButton
             icon="chevron-left"
             iconColor={Colors.light.tint}
             size={24}
-            style={{ margin: 5, width: 40 }}
+            style={{ margin: 5, width: 40, height: "60%" }}
             onPress={() => {
               scrollTo(-1);
             }}
@@ -105,7 +105,7 @@ const HomeScreen = () => {
             icon="chevron-right"
             iconColor={Colors.light.tint}
             size={24}
-            style={{ margin: 5, width: 40 }}
+            style={{ margin: 5, width: 40, height: "60%" }}
             onPress={() => {
               scrollTo(1);
             }}

@@ -133,6 +133,7 @@ function RootNavigator() {
                 <Text style={styles.text}>{route.params.name}</Text>
               ),
             })}
+            initialParams={{ isVerified: false }}
           />
         </>
       ) : (
@@ -142,25 +143,25 @@ function RootNavigator() {
             component={LoginScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="otp"
-            component={OtpVerifyScreen}
-            options={{
-              animation: "slide_from_right",
-              headerTitle: "Enter OTP code",
-            }}
-          />
         </>
       )}
+      <Stack.Screen
+        name="otp"
+        component={OtpVerifyScreen}
+        options={{
+          animation: "slide_from_right",
+          headerTitle: "Enter OTP code",
+        }}
+      />
     </Stack.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 20,
+    fontSize: 16,
+    top: 2,
     color: "#fff",
-    marginHorizontal: 10,
     fontFamily: "Poppins",
   },
 });

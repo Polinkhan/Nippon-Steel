@@ -17,9 +17,9 @@ const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const res = (await authClient.post("/login", { id, pass })).data;
+      const res = (await authClient.post("/requestOTP", { id, pass })).data;
       ToastAndroid.show(res?.message, ToastAndroid.SHORT);
-      navigation.navigate("otp", { id });
+      navigation.navigate("otp", { id, redirectTo: "Root" });
     } catch (err) {
       const { message } = err?.response?.data;
       console.log(message);

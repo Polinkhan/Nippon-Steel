@@ -28,6 +28,7 @@ const getPDFURL = (id, month, year, type) => {
     if (!month || !year || !type) {
       reject({ status: 500, message: "Input Field Missing" });
     }
+    console.log(`"${id}_${month}_${year}_${type}"`);
     client.search
       .query(`"${id}_${month}_${year}_${type}"`, {
         fields: "name",

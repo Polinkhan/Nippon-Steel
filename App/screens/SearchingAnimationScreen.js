@@ -1,13 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { StatusBar } from "expo-status-bar";
+import { useDataContext } from "../hooks/useDataContext";
+import { dbClient } from "../Api/Client";
 
-const SearchingAnimationScreen = ({ navigation }) => {
+const SearchingAnimationScreen = ({ navigation, route }) => {
+  const { currentUser } = useDataContext();
+  const { UserID } = currentUser;
+  const { type, month, year } = route.params;
+
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace("pdfviwer", { name: "PDF Name" });
-    }, 4000);
+    (async () => {
+      try {
+        await dbClient.post(`getPayslipData/${UserID}`, { type, month, year });
+      } catch (err) {
+        navigation.goBack();
+        ToastAndroid.show(err?.response?.data?.message, ToastAndroid.SHORT);
+      }
+    })();
   }, []);
 
   return (

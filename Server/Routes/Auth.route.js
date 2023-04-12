@@ -21,7 +21,7 @@ router.get("/", verifyAccessToken, async (req, res, next) => {
   }
 });
 
-router.post("/login", async (req, res, next) => {
+router.post("/requestOTP", async (req, res, next) => {
   const { id, pass } = req.body;
 
   const query1 = `SELECT * FROM Credentials WHERE UserID=? and Password=?`;
@@ -54,6 +54,18 @@ router.post("/verifyOtp", async (req, res, next) => {
       const accessToken = await signAccessToken(id);
       res.send({ accessToken, currentUser: result[0] });
     } else next(createError.BadRequest("OTP not matched !!"));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/changePassword", async (req, res, next) => {
+  const { id, pass } = req.body;
+  const query = `UPDATE Credentials SET Password=? WHERE UserID=?`;
+
+  try {
+    db.query(query, [pass, id]);
+    res.send({ message: "Password Updated" });
   } catch (err) {
     next(err);
   }

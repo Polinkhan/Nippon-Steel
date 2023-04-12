@@ -39,7 +39,6 @@ export default TypeSheet;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingBottom: 0,
   },
   item: {
     padding: 16,

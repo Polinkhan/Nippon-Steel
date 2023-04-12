@@ -1,47 +1,32 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
-import { Button, Switch } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
-import Colors from "../constants/Colors";
-import {
-  AntDesign,
-  Foundation,
-  Ionicons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import React from "react";
+import LottieView from "lottie-react-native";
+const Profile = require("../assets/lottie/Teamwork.json");
 
 const PermissionScreen = () => {
   return (
     <View style={styles.container}>
-      {/* <Button
-        onPress={async () => {
-          await SecureStore.deleteItemAsync("onBoard");
-        }}
-      >
-        Remove all data
-      </Button> */}
-      {data.map((item) => (
-        <Item key={item.id} item={item} />
-      ))}
-    </View>
-  );
-};
-
-const Item = ({ item }) => {
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  return (
-    <View style={styles.item}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View style={{ width: 30, alignItems: "center" }}>
-          <item.icon />
-        </View>
-        <Text style={{ fontFamily: "Poppins" }}> {item.name}</Text>
+      <View style={{ marginVertical: 20, alignItems: "center" }}>
+        <LottieView autoPlay style={{ height: 200 }} source={Profile} />
+        <Text style={{ fontFamily: "Poppins", fontSize: 14, color: "gray" }}>
+          Peoples behind this incredible (App)
+        </Text>
       </View>
-      <Switch
-        color={Colors.light.tint}
-        value={isSwitchOn}
-        onValueChange={() => setIsSwitchOn(!isSwitchOn)}
-      />
+
+      <View style={styles.itemBox}>
+        {data.map((_, i) => (
+          <View key={i} style={{ width: "100%", alignItems: "center" }}>
+            <Text style={styles.text}>{_.name}</Text>
+            <View
+              style={{
+                width: "70%",
+                borderBottomWidth: 1,
+                borderColor: "#eee",
+              }}
+            />
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
@@ -51,48 +36,56 @@ export default PermissionScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-  },
-  item: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    padding: 20,
     alignItems: "center",
-    borderBottomWidth: 1,
-    paddingVertical: 20,
-    borderColor: "#e9e9e9",
+    justifyContent: "space-around",
+  },
+  itemBox: {
+    // flex: 1,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 12,
+    elevation: 1,
+  },
+  text: {
+    fontFamily: "Poppins",
+    fontSize: 14,
+    color: "gray",
+    padding: 12,
   },
 });
 
 const data = [
   {
     id: 1,
-    name: "Notification",
-    icon: () => (
-      <Ionicons
-        name="notifications-outline"
-        size={20}
-        color={Colors.light.tint}
-      />
-    ),
+    name: "Iwamoto Kazuyuki",
   },
   {
     id: 2,
-    name: "Sound",
-    icon: () => <AntDesign name="sound" size={18} color={Colors.light.tint} />,
+    name: "Okauchi Fumihiko",
   },
   {
     id: 3,
-    name: "Vibration",
-    icon: () => (
-      <MaterialIcons name="vibration" size={20} color={Colors.light.tint} />
-    ),
+    name: "Yoshida Jun",
   },
   {
     id: 4,
-    name: "Location",
-    icon: () => (
-      <Ionicons name="location-outline" size={20} color={Colors.light.tint} />
-    ),
+    name: "Yong Chooi lin",
+  },
+  {
+    id: 5,
+    name: "Clifton O'Keeffe",
+  },
+  {
+    id: 6,
+    name: "Siti Daria Mohd",
+  },
+
+  {
+    id: 7,
+    name: "MD Naeem Khan",
   },
 ];

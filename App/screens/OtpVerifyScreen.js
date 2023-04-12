@@ -15,7 +15,7 @@ const OtpVerifyScreen = ({ navigation, route }) => {
   const [OTP, setOTP] = useState([]);
   const { setCurrentUser } = useDataContext();
 
-  const { id } = route.params;
+  const { id, redirectTo } = route.params;
 
   useEffect(() => {
     if (OTP.length === 4) {
@@ -23,16 +23,22 @@ const OtpVerifyScreen = ({ navigation, route }) => {
       (async () => {
         try {
           const res = (await authClient.post("/verifyOtp", { id, otp })).data;
-          const { accessToken, currentUser } = res;
-          await SecureStore.setItemAsync("accessToken", accessToken);
-          setCurrentUser(currentUser);
-          ToastAndroid.show("AccessToken has updated", ToastAndroid.SHORT);
+          if (redirectTo === "changePassword") {
+            navigation.replace(redirectTo, {
+              isVerified: true,
+              name: "New Password",
+            });
+          } else {
+            const { accessToken, currentUser } = res;
+            await SecureStore.setItemAsync("accessToken", accessToken);
+            setCurrentUser(currentUser);
+            navigation.replace(redirectTo);
+          }
         } catch (err) {
           setOTP([]);
           const { message } = err?.response.data;
           ToastAndroid.show(message, ToastAndroid.SHORT);
         } finally {
-          // setLoading(false);
         }
       })();
     }

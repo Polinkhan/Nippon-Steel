@@ -11,14 +11,21 @@ const Profile = require("../assets/lottie/Settings.json");
 const SettingsScreen = ({}) => {
   return (
     <View style={styles.container}>
-      <LottieView autoPlay style={{ height: 200 }} source={Profile} />
-      <ScrollView style={{}}>
-        <View style={styles.manuBox}>
-          {data.map((item) => (
-            <CustomButton key={item.id} item={item} />
-          ))}
-        </View>
-      </ScrollView>
+      <LottieView autoPlay style={{ height: 150 }} source={Profile} />
+      <View style={{ alignItems: "center" }}>
+        <Text style={{ fontFamily: "Poppins", fontSize: 16 }}>
+          OFFSHORE SUPPORT PTE LTD
+        </Text>
+        <Text style={{ fontFamily: "Poppins", fontSize: 12, color: "#aaa" }}>
+          Mobile Salary Share App
+        </Text>
+      </View>
+
+      <View style={styles.manuBox}>
+        {data.map((item) => (
+          <CustomButton key={item.id} item={item} />
+        ))}
+      </View>
     </View>
   );
 };
@@ -54,9 +61,10 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 40,
   },
   imageBox: {
     flex: 1,
@@ -69,7 +77,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     flexWrap: "wrap",
-    flex: 2,
   },
   manuItem: {
     marginTop: 10,
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   manuText: {
-    fontSize: 16,
+    fontSize: 12,
     color: "rgba(0,0,0,0.5)",
     marginTop: 8,
     fontFamily: "Poppins",
@@ -116,10 +123,10 @@ const data = [
   },
   {
     id: 5,
-    name: "About App",
-    source: require("../assets/lottie/About_US.json"),
-    navigate: "about",
-    colors: ["transparent", "#4ca1af4d", "transparent"],
+    name: "Teams",
+    source: require("../assets/lottie/Permission.json"),
+    navigate: "permission",
+    colors: ["transparent", "#0054004d", "transparent"],
   },
   {
     id: 6,
@@ -130,10 +137,10 @@ const data = [
   },
   {
     id: 7,
-    name: "Permission",
-    source: require("../assets/lottie/Permission.json"),
-    navigate: "permission",
-    colors: ["transparent", "#0054004d", "transparent"],
+    name: "About App",
+    source: require("../assets/lottie/About_US.json"),
+    navigate: "about",
+    colors: ["transparent", "#4ca1af4d", "transparent"],
   },
   {
     id: 8,

@@ -12,12 +12,11 @@ const AboutUsScreen = () => {
         <Text
           style={[
             styles.grayText,
-            { fontFamily: "sultan", fontSize: 24, marginVertical: 16 },
+            { fontFamily: "sultan", fontSize: 20, marginVertical: 16 },
           ]}
         >
           NIPPON STEEL ENGINEERING CO. , LTD.
         </Text>
-        <Text style={styles.grayText}>Mobile Salary Share Apps</Text>
         <Text style={[styles.grayText, { marginVertical: 4 }]}>
           Version : 1.0.23
         </Text>
@@ -26,7 +25,7 @@ const AboutUsScreen = () => {
       <View
         style={{ flex: 5, justifyContent: "flex-end", alignItems: "center" }}
       >
-        <Text style={styles.text}>Develop by : Md Naeem Khan</Text>
+        <Text style={styles.text}>Developed by : Md Naeem Khan</Text>
         <Text style={styles.text}>Email : naeem@nsc-eng.com</Text>
         <Text style={styles.text}>WhatApp : +8801730062298</Text>
       </View>
@@ -48,7 +47,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     elevation: 1,
     fontFamily: "Poppins",
-    fontSize: 14,
+    fontSize: 12,
     elevation: 5,
   },
   grayText: {

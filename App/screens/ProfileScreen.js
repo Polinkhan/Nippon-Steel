@@ -1,16 +1,31 @@
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useDataContext } from "../hooks/useDataContext";
 import { dbClient } from "../Api/Client";
 import React from "react";
-import { Image } from "react-native";
 import LottieView from "lottie-react-native";
 const ProfileCard = require("../assets/lottie/profileCard.json");
+import * as ImagePicker from "expo-image-picker";
+import { Button } from "react-native-paper";
+import Colors from "../constants/Colors";
 
 const ProfileScreen = () => {
   const [data, setData] = useState(null);
   const { currentUser } = useDataContext();
   const { UserID } = currentUser;
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -25,7 +40,32 @@ const ProfileScreen = () => {
 
   return (
     <View style={styles.container}>
-      <LottieView autoPlay style={{ height: 150 }} source={ProfileCard} />
+      <View
+        style={{
+          width: "100%",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+      >
+        <Image
+          source={{ uri: image }}
+          style={{ width: 100, height: 100, borderRadius: 999 }}
+        />
+        {/* <LottieView autoPlay style={{ height: 150 }} source={ProfileCard} /> */}
+        <Button
+          mode="contained"
+          buttonColor={Colors.light.tint}
+          labelStyle={{ top: 1, fontFamily: "Poppins" }}
+          style={{ borderRadius: 8, borderColor: Colors.light.tint }}
+          onPress={pickImage}
+        >
+          Upload Picture
+        </Button>
+      </View>
+
+      {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
+
       <View
         style={{
           width: "80%",
@@ -77,6 +117,6 @@ const styles = StyleSheet.create({
   },
   itemFont: {
     fontFamily: "Poppins",
-    fontSize: 16,
+    fontSize: 14,
   },
 });

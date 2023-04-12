@@ -117,12 +117,14 @@ export default function BottomTabNavigator() {
 const styles = StyleSheet.create({
   headerBox: {
     flexDirection: "row",
-    marginTop: 5,
+    alignItems: "center",
+    // backgroundColor: "red",
   },
   text: {
-    fontSize: 20,
+    fontSize: 16,
     color: "#fff",
     marginHorizontal: 10,
+    top: 2,
     fontFamily: "Poppins",
   },
 });

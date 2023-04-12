@@ -84,7 +84,6 @@ export default ConfirmLogout;
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    paddingBottom: 0,
   },
   header: {},
   btnBox: {
