@@ -22,7 +22,7 @@ function MonthSheet({ sheetId, payload }) {
             style={styles.item}
             activeOpacity={0.5}
             onPress={() => {
-              setMonth(item.name);
+              setMonth(item.value);
               SheetManager.hide(sheetId);
             }}
           >

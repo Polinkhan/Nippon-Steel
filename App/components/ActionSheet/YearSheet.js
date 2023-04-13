@@ -22,7 +22,7 @@ function YearSheet({ sheetId, payload }) {
             style={styles.item}
             activeOpacity={0.5}
             onPress={() => {
-              setYear(item.name);
+              setYear(item.value);
               SheetManager.hide(sheetId);
             }}
           >

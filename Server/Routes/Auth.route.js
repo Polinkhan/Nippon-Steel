@@ -10,7 +10,8 @@ const router = express.Router();
 router.get("/", verifyAccessToken, async (req, res, next) => {
   console.log("ff");
   const { id } = req.payload;
-  const query1 = `SELECT * FROM Credentials WHERE UserID=?`;
+  const query1 =
+    "SELECT Credentials.UserID,FullName,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ?";
   try {
     const [result] = await db.query(query1, [id]);
     if (result.length) {
@@ -44,10 +45,13 @@ router.post("/requestOTP", async (req, res, next) => {
 
 router.post("/verifyOtp", async (req, res, next) => {
   const { id, otp } = req.body;
-  const query1 = `SELECT * FROM Credentials WHERE UserID=?`;
+  console.log(id);
+  const query1 =
+    "SELECT Credentials.UserID,FullName,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ?";
 
   try {
     const [result] = await db.query(query1, [id]);
+    console.log(result[0].OTP, otp);
     const isMatched = result[0].OTP === otp;
 
     if (isMatched) {

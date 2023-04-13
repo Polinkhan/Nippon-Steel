@@ -5,9 +5,11 @@ const dbUrl = "http://10.10.10.13:5000/api/v1/db";
 
 const authClient = axios.create({
   baseURL: authUrl,
+  timeout: 5000,
 });
 const dbClient = axios.create({
   baseURL: dbUrl,
+  timeout: 5000,
 });
 
 export { authClient, dbClient };

@@ -1,10 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import Pdf from "react-native-pdf";
-import { StyleSheet, Dimensions, View, Animated } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Animated,
+  Alert,
+  BackHandler,
+} from "react-native";
 import { Circle, G, Svg } from "react-native-svg";
 import Colors from "../constants/Colors";
 
-const PDFViewerScreen = () => {
+const PDFViewerScreen = ({ route }) => {
   const size = 100;
   const strokeWidth = 4;
   const center = size / 2;
@@ -36,12 +43,9 @@ const PDFViewerScreen = () => {
     };
   }, []);
 
+  const { data } = route.params;
   const [loadComplete, setLoadComplete] = useState(false);
-
-  const source = {
-    uri: "http://samples.leanpub.com/thereactnativebook-sample.pdf",
-    // cache: true,
-  };
+  const source = { uri: data.fileUrl };
   return (
     <View style={styles.container}>
       <Pdf
@@ -49,17 +53,17 @@ const PDFViewerScreen = () => {
         trustAllCerts={false}
         onLoadComplete={(numberOfPages, filePath) => {
           setLoadComplete(true);
-          console.log(`Number of pages: ${numberOfPages}`);
+          // console.log(`Number of pages: ${numberOfPages}`);
         }}
-        onPageChanged={(page, numberOfPages) => {
-          console.log(`Current page: ${page}`);
-        }}
-        onError={(error) => {
-          console.log(error);
-        }}
-        onPressLink={(uri) => {
-          console.log(`Link pressed: ${uri}`);
-        }}
+        // onPageChanged={(page, numberOfPages) => {
+        //   console.log(`Current page: ${page}`);
+        // }}
+        // onError={(error) => {
+        //   console.log(error);
+        // }}
+        // onPressLink={(uri) => {
+        //   console.log(`Link pressed: ${uri}`);
+        // }}
         style={styles.pdf}
         onLoadProgress={(e) => {
           animation(e);
@@ -100,7 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    // marginTop: 25,
   },
   pdf: {
     flex: 1,

@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/viewData", async (req, res, next) => {
   const { id } = req.params;
   const query =
-    "SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID";
+    "SELECT Credentials.UserID,Email,Password,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID";
   try {
     const [result] = await db.query(query);
     res.send(result);
@@ -18,8 +18,7 @@ router.get("/viewData", async (req, res, next) => {
 router.get("/viewData/query/:text", async (req, res, next) => {
   const { text } = req.params;
   console.log(text);
-  const query1 = `SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM Credentials join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID LIKE '%${text}%'`;
-  const query2 = `SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM Credentials join Information ON Credentials.UserID = Information.UserID WHERE Email LIKE '%${text}%'`;
+  const query1 = `SELECT Credentials.UserID,Email,Password,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM Credentials join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID LIKE '%${text}%'`;
   try {
     const [result] = await db.query(query1);
     // const [result2] = await db.query(query2);

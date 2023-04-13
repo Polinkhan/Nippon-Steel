@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 var cors = require("cors");
 require("dotenv").config();
+var bodyParser = require("body-parser");
 
 //Scafolding
 const AuthRoute = require("./Routes/Auth.route");
@@ -16,6 +17,8 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "50mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.get("/", async (req, res, next) => {
   try {

@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import LottieView from "lottie-react-native";
+import { font } from "../constants/SIzes";
 const Profile = require("../assets/lottie/Teamwork.json");
-
+const { width, height } = Dimensions.get("window");
 const PermissionScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={{ marginVertical: 20, alignItems: "center" }}>
-        <LottieView autoPlay style={{ height: 200 }} source={Profile} />
-        <Text style={{ fontFamily: "Poppins", fontSize: 14, color: "gray" }}>
+      <View style={{ alignItems: "center" }}>
+        <LottieView autoPlay style={{ height: height / 5 }} source={Profile} />
+        <Text style={{ ...font, color: "gray" }}>
           Peoples behind this incredible (App)
         </Text>
       </View>
@@ -36,12 +37,11 @@ export default PermissionScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: width / 25,
     alignItems: "center",
     justifyContent: "space-around",
   },
   itemBox: {
-    // flex: 1,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -51,8 +51,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   text: {
-    fontFamily: "Poppins",
-    fontSize: 14,
+    ...font,
     color: "gray",
     padding: 12,
   },

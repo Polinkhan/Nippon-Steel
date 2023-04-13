@@ -1,39 +1,43 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { useWindowDimensions } from "react-native";
 import { SheetManager, SheetProvider } from "react-native-actions-sheet";
 import { TouchableNativeFeedback } from "react-native";
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
-import LottieView from "lottie-react-native";
-const Profile = require("../assets/lottie/Settings.json");
+import { Dimensions } from "react-native";
+import { font, mediumFont } from "../constants/SIzes";
+import { IconButton } from "react-native-paper";
+const { width, height } = Dimensions.get("window");
 
 const SettingsScreen = ({}) => {
   return (
     <View style={styles.container}>
-      <LottieView autoPlay style={{ height: 150 }} source={Profile} />
-      <View style={{ alignItems: "center" }}>
-        <Text style={{ fontFamily: "Poppins", fontSize: 16 }}>
-          OFFSHORE SUPPORT PTE LTD
-        </Text>
-        <Text style={{ fontFamily: "Poppins", fontSize: 12, color: "#aaa" }}>
-          Mobile Salary Share App
-        </Text>
+      <View style={{ alignItems: "center", height: height / 4 }}>
+        <IconButton icon={"book-settings"} size={width / 8} />
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text style={{ ...mediumFont }}>OFFSHORE SUPPORT PTE LTD</Text>
+          <Text style={{ ...font, color: "#aaa" }}>
+            Mobile Salary Share App
+          </Text>
+        </View>
       </View>
 
-      <View style={styles.manuBox}>
-        {data.map((item) => (
-          <CustomButton key={item.id} item={item} />
-        ))}
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.manuBox}>
+          {data.map((item) => (
+            <CustomButton key={item.id} item={item} />
+          ))}
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const CustomButton = ({ item }) => {
-  const { width } = useWindowDimensions();
   const navigation = useNavigation();
-  const btnWidth = (width - 50) / 2;
+  const btnWidth = (width - width / 10) / 2;
   return (
     <View style={[styles.manuItem, { width: btnWidth }]}>
       <TouchableNativeFeedback
@@ -48,7 +52,7 @@ const CustomButton = ({ item }) => {
         )}
       >
         <View style={{ padding: 12 }}>
-          <LottieView autoPlay style={{ width: 40 }} source={item.source} />
+          <IconButton icon={item.icon} style={{ margin: 0 }} />
           <Text style={styles.manuText}>{item.name}</Text>
         </View>
       </TouchableNativeFeedback>
@@ -63,8 +67,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 40,
+    padding: width / 25,
+    paddingBottom: width / 10,
   },
   imageBox: {
     flex: 1,
@@ -86,10 +90,9 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   manuText: {
-    fontSize: 12,
+    ...font,
     color: "rgba(0,0,0,0.5)",
     marginTop: 8,
-    fontFamily: "Poppins",
   },
 });
 
@@ -97,12 +100,14 @@ const data = [
   {
     id: 1,
     name: "View Profile",
+    icon: "card-account-details-outline",
     source: require("../assets/lottie/Profile_icon.json"),
     colors: ["transparent", "#0000ff4d", "transparent"],
     navigate: "profile",
   },
   {
     id: 2,
+    icon: "lock-open-outline",
     name: "Change Password",
     source: require("../assets/lottie/Password.json"),
     colors: ["transparent", "#8054204d", "transparent"],
@@ -110,6 +115,7 @@ const data = [
   },
   {
     id: 3,
+    icon: "update",
     name: "Check For Update",
     source: require("../assets/lottie/Update.json"),
     navigate: "update",
@@ -117,12 +123,14 @@ const data = [
   },
   {
     id: 4,
+    icon: "alert-octagon-outline",
     name: "Report a problem",
     source: require("../assets/lottie/Report.json"),
     colors: ["transparent", "#dea4524d", "transparent"],
   },
   {
     id: 5,
+    icon: "account-supervisor",
     name: "Teams",
     source: require("../assets/lottie/Permission.json"),
     navigate: "permission",
@@ -130,6 +138,7 @@ const data = [
   },
   {
     id: 6,
+    icon: "contacts-outline",
     name: "Contact Admin",
     source: require("../assets/lottie/Contact.json"),
     navigate: "contact",
@@ -137,6 +146,7 @@ const data = [
   },
   {
     id: 7,
+    icon: "android",
     name: "About App",
     source: require("../assets/lottie/About_US.json"),
     navigate: "about",
@@ -144,6 +154,7 @@ const data = [
   },
   {
     id: 8,
+    icon: "logout",
     name: "Logout",
     source: require("../assets/lottie/Logout.json"),
     onPress: () => SheetManager.show("confirmLogout"),

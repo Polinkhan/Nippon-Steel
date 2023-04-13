@@ -7,7 +7,10 @@ import "../components/ActionSheet/sheets";
 import { SheetManager, SheetProvider } from "react-native-actions-sheet";
 import Colors from "../constants/Colors";
 import LottieView from "lottie-react-native";
+import { Dimensions } from "react-native";
+import { font } from "../constants/SIzes";
 const Payslip = require("../assets/lottie/Payslip.json");
+const { width, height } = Dimensions.get("window");
 
 const ReportSearchScreen = ({ navigation }) => {
   const [type, setType] = useState();
@@ -22,8 +25,8 @@ const ReportSearchScreen = ({ navigation }) => {
           justifyContent: "space-around",
         }}
       >
-        <LottieView autoPlay style={{ width: 200 }} source={Payslip} />
-        <Text style={{ fontFamily: "Poppins", fontSize: 16 }}>
+        {/* <Lo  */}
+        <Text style={{ fontFamily: "Poppins", ...font }}>
           OFS Crew Document Search
         </Text>
       </View>
@@ -32,18 +35,13 @@ const ReportSearchScreen = ({ navigation }) => {
           flex: 6,
           justifyContent: "space-around",
           alignItems: "center",
+          backgroundColor: "blue",
+          backgroundColor: "#fff",
+          borderRadius: 12,
+          elevation: 2,
         }}
       >
-        <View
-          style={{
-            // flex: 1,
-            width: "100%",
-            backgroundColor: "#fff",
-            elevation: 2,
-            padding: 30,
-            borderRadius: 12,
-          }}
-        >
+        <View style={{ width: "80%" }}>
           <CustomButton
             name={type || "Select Type"}
             onPress={() => {
@@ -64,8 +62,6 @@ const ReportSearchScreen = ({ navigation }) => {
             }}
           />
         </View>
-      </View>
-      <View style={{ flex: 1 }}>
         <Button
           mode="contained"
           icon="database-search"
@@ -74,8 +70,9 @@ const ReportSearchScreen = ({ navigation }) => {
             top: 1,
             fontFamily: "Poppins",
           }}
-          contentStyle={{ padding: 6 }}
+          contentStyle={{ padding: height / 150 }}
           style={{
+            width: "80%",
             borderRadius: 8,
             borderColor: Colors.light.tint,
           }}
@@ -101,7 +98,7 @@ const CustomButton = ({ name, onPress }) => {
       activeOpacity={0.9}
       onPress={onPress}
     >
-      <Text style={{ fontSize: 16, fontWeight: "500", color: "#505050" }}>
+      <Text style={{ ...font, fontWeight: "500", color: "#505050" }}>
         {name}
       </Text>
       <MaterialIcons name="keyboard-arrow-down" size={24} color="gray" />
@@ -115,15 +112,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 20,
+    padding: height / 50,
+    paddingBottom: height / 20,
   },
   selectBox: {
-    // borderWidth: 1,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    padding: 16,
-    marginVertical: 10,
+    padding: height / 50,
+    marginVertical: height / 100,
     borderColor: "#aaa",
     borderRadius: 12,
     backgroundColor: "#fff",

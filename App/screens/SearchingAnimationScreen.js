@@ -1,9 +1,19 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import {
+  Alert,
+  BackHandler,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
-import { StatusBar } from "expo-status-bar";
 import { useDataContext } from "../hooks/useDataContext";
 import { dbClient } from "../Api/Client";
+import * as Haptics from "expo-haptics";
+import * as secureStore from "expo-secure-store";
+import { CheckIfObjectIncluded } from "../constants/Helpers";
+import { mediumFont } from "../constants/SIzes";
 
 const SearchingAnimationScreen = ({ navigation, route }) => {
   const { currentUser } = useDataContext();
@@ -11,14 +21,37 @@ const SearchingAnimationScreen = ({ navigation, route }) => {
   const { type, month, year } = route.params;
 
   useEffect(() => {
-    (async () => {
-      try {
-        await dbClient.post(`getPayslipData/${UserID}`, { type, month, year });
-      } catch (err) {
+    dbClient
+      .post(`getPayslipData/${UserID}`, { type, month, year })
+      .then(async ({ data }) => {
+        let pdfViewed =
+          JSON.parse(await secureStore.getItemAsync("pdfViewed")) || [];
+        if (!CheckIfObjectIncluded(pdfViewed, { type, month, year })) {
+          pdfViewed.push({ type, month, year });
+          await secureStore.setItemAsync(
+            "pdfViewed",
+            JSON.stringify(pdfViewed)
+          );
+        }
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        navigation.replace("pdfviwer", {
+          data,
+          name: `${month} ${year} (${type})`,
+        });
+        console.log(`${month} ${year} (${type})`);
+      })
+      .catch((err) => {
         navigation.goBack();
         ToastAndroid.show(err?.response?.data?.message, ToastAndroid.SHORT);
-      }
-    })();
+      });
+  }, []);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => true
+    );
+    return () => backHandler.remove();
   }, []);
 
   return (
@@ -47,8 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   text: {
-    fontSize: 24,
-    fontWeight: 600,
+    ...mediumFont,
     color: "gray",
   },
 });

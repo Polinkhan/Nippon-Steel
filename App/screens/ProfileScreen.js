@@ -5,27 +5,14 @@ import { dbClient } from "../Api/Client";
 import React from "react";
 import LottieView from "lottie-react-native";
 const ProfileCard = require("../assets/lottie/profileCard.json");
-import * as ImagePicker from "expo-image-picker";
-import { Button } from "react-native-paper";
-import Colors from "../constants/Colors";
+import { font } from "../constants/SIzes";
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const ProfileScreen = () => {
   const [data, setData] = useState(null);
   const { currentUser } = useDataContext();
   const { UserID } = currentUser;
-  const [image, setImage] = useState(null);
-
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   useEffect(() => {
     (async () => {
@@ -33,7 +20,7 @@ const ProfileScreen = () => {
         const { data } = await dbClient.get(`/viewData/${UserID}`);
         setData(data);
       } catch (err) {
-        console.log(err.response.data);
+        console.log(37, err.response.data);
       }
     })();
   }, []);
@@ -48,30 +35,18 @@ const ProfileScreen = () => {
           justifyContent: "space-around",
         }}
       >
-        <Image
-          source={{ uri: image }}
-          style={{ width: 100, height: 100, borderRadius: 999 }}
+        <LottieView
+          autoPlay
+          style={{ height: width / 3 }}
+          source={ProfileCard}
         />
-        {/* <LottieView autoPlay style={{ height: 150 }} source={ProfileCard} /> */}
-        <Button
-          mode="contained"
-          buttonColor={Colors.light.tint}
-          labelStyle={{ top: 1, fontFamily: "Poppins" }}
-          style={{ borderRadius: 8, borderColor: Colors.light.tint }}
-          onPress={pickImage}
-        >
-          Upload Picture
-        </Button>
       </View>
-
-      {/* <Button title="Pick an image from camera roll" onPress={pickImage} /> */}
-
       <View
         style={{
           width: "80%",
           borderBottomWidth: 1,
           borderColor: "#eee",
-          marginBottom: 20,
+          marginBottom: width / 25,
         }}
       />
       <ScrollView
@@ -101,22 +76,21 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: width / 25,
     backgroundColor: "#fff",
     alignItems: "center",
   },
   item: {
     flexDirection: "row",
-    marginBottom: 10,
-    paddingHorizontal: 20,
-    height: 60,
+    marginBottom: width / 30,
+    paddingHorizontal: width / 25,
+    height: width / 7,
     alignItems: "center",
     backgroundColor: "#f2f2f5",
     elevation: 1,
     borderRadius: 8,
   },
   itemFont: {
-    fontFamily: "Poppins",
-    fontSize: 14,
+    ...font,
   },
 });

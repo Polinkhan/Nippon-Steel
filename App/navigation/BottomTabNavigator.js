@@ -2,7 +2,7 @@
 // https://reactnavigation.org/docs/bottom-tab-navigator
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useColorScheme } from "react-native";
+import { Dimensions, useColorScheme } from "react-native";
 import Colors from "../constants/Colors";
 import { TouchableOpacity } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
@@ -11,15 +11,17 @@ import ReportSearchScreen from "../screens/ReportSearchScreen";
 import { Text } from "react-native";
 import { StyleSheet } from "react-native";
 import { View } from "react-native";
+import { font, mediumFont } from "../constants/SIzes";
+const { width, height } = Dimensions.get("window");
 
 const BottomTab = createBottomTabNavigator();
 
 const iconStyle = {
-  height: 40,
-  width: 100,
+  height: width / 8,
+  width: width / 8,
   justifyContent: "center",
   alignItems: "center",
-  borderRadius: 10,
+  borderRadius: 999,
   backgroundColor: Colors.light.tintOpacity,
   // elevation: 1,
 };
@@ -32,7 +34,7 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: Colors.light.tint,
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: 60,
+          height: width / 6,
         },
         tabBarButton: (props) => (
           <TouchableOpacity {...props} activeOpacity={0.7} />
@@ -47,7 +49,7 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons name={"ios-home"} size={20} color={"#fff"} />
+              <Ionicons name={"ios-home"} size={width / 20} color={"#fff"} />
               <Text style={styles.text}>Home</Text>
             </View>
           ),
@@ -55,7 +57,7 @@ export default function BottomTabNavigator() {
             <View style={focused && iconStyle}>
               <Ionicons
                 name={focused ? "ios-home" : "ios-home-outline"}
-                size={24}
+                size={width / 20}
                 color={color}
               />
             </View>
@@ -68,19 +70,19 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons name={"ios-search"} size={20} color={"#fff"} />
+              <Ionicons name={"ios-search"} size={width / 20} color={"#fff"} />
               <Text style={styles.text}>Search Report</Text>
             </View>
           ),
           tabBarIcon: ({ color, focused }) => (
             <View>
-              <Ionicons name={"ios-search"} size={24} color={"#fff"} />
+              <Ionicons name={"ios-search"} size={width / 15} color={"#fff"} />
               <View style={styles.before} />
             </View>
           ),
           tabBarIconStyle: {
             bottom: 25,
-            width: 120,
+            width: width / 3.5,
             backgroundColor: Colors.light.tint,
             borderRadius: 999,
             borderWidth: 6,
@@ -95,7 +97,11 @@ export default function BottomTabNavigator() {
         options={{
           headerTitle: () => (
             <View style={styles.headerBox}>
-              <Ionicons name={"ios-settings"} size={20} color={"#fff"} />
+              <Ionicons
+                name={"ios-settings"}
+                size={width / 20}
+                color={"#fff"}
+              />
               <Text style={styles.text}>Settings</Text>
             </View>
           ),
@@ -103,7 +109,7 @@ export default function BottomTabNavigator() {
             <View style={focused && iconStyle}>
               <Ionicons
                 name={focused ? "ios-settings" : "ios-settings-outline"}
-                size={24}
+                size={width / 20}
                 color={color}
               />
             </View>
@@ -121,10 +127,9 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   text: {
-    fontSize: 16,
+    ...mediumFont,
     color: "#fff",
     marginHorizontal: 10,
-    top: 2,
-    fontFamily: "Poppins",
+    top: 2.5,
   },
 });

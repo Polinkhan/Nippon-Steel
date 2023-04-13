@@ -2,37 +2,57 @@ import {
   Animated,
   Dimensions,
   FlatList,
+  RefreshControl,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Colors from "../constants/Colors";
 import { Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { IconButton } from "react-native-paper";
-
-const { width } = Dimensions.get("window");
-
-const spacing = 10;
-const Item_Size = width;
+import { useDataContext } from "../hooks/useDataContext";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import * as secureStore from "expo-secure-store";
+import { font, largeFont } from "../constants/SIzes";
+const { width, height } = Dimensions.get("window");
+console.log(height);
 
 const HomeScreen = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { currentUser } = useDataContext();
+  console.log(currentUser);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+  const [pdfHistory, setPdfHistory] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
 
-  const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
-  const viewableItemsChanged = useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0].index);
-  }).current;
-  const scrollTo = async (value) => {
-    const updatedIndx = currentIndex + value;
-    if (updatedIndx < data.length && updatedIndx > -1) {
-      slidesRef.current.scrollToIndex({ index: updatedIndx });
-    }
-    console.log(value);
-  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      slidesRef.current.scrollToIndex({ index: index });
+      index = (index + 1) % 3;
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const pdfViewed =
+        JSON.parse(await secureStore.getItemAsync("pdfViewed")) || [];
+      setPdfHistory(pdfViewed);
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -42,75 +62,69 @@ const HomeScreen = () => {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
       >
-        <View style={styles.headerTextBox}>
+        <View style={[styles.headerTextBox, { flex: 1 }]}>
           <View>
-            <Text
-              style={{ fontFamily: "PoppinsBold", color: "#fff", fontSize: 24 }}
-            >
-              Hello , {"User"}
+            <Text style={{ ...largeFont, color: "#fff" }}>
+              Hello , {currentUser.FullName}
             </Text>
-            <Text
-              style={{ fontFamily: "Poppins", color: "#fff", fontSize: 18 }}
-            >
-              {"Job Title"}
-            </Text>
+            <Text style={{ ...font, color: "#fff" }}>{currentUser.Title}</Text>
+          </View>
+
+          <IconButton
+            size={32}
+            icon={"account"}
+            style={{ backgroundColor: "#ddd" }}
+          />
+        </View>
+      </LinearGradient>
+      <View style={{ flex: 5 }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={[styles.body, { flex: 1, marginBottom: 30 }]}>
+            <FlatList
+              horizontal
+              pagingEnabled
+              bounces={false}
+              ref={slidesRef}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                {
+                  useNativeDriver: false,
+                }
+              )}
+              showsHorizontalScrollIndicator={false}
+              data={data}
+              keyExtractor={({ id }) => id}
+              renderItem={({ item, index }) => {
+                return <Card item={item} />;
+              }}
+            />
           </View>
           <View
             style={{
-              backgroundColor: "#f2f2f2",
-              height: 65,
-              width: 65,
-              borderRadius: 999,
-              justifyContent: "center",
+              flex: 1,
+              backgroundColor: "#fff",
+              elevation: 2,
+              paddingVertical: width / 10,
+              borderRadius: 12,
+              marginBottom: width / 20,
               alignItems: "center",
             }}
           >
-            <Text>I</Text>
+            <Text
+              style={{ paddingHorizontal: width / 20, fontFamily: "Poppins" }}
+            >
+              Recently Viewed Documents
+            </Text>
+            {pdfHistory.map((item, i) => (
+              <PDFCard key={i} item={item} />
+            ))}
           </View>
-        </View>
-        <View style={styles.headerInnerBox}></View>
-      </LinearGradient>
-      <View style={{ flex: 3, paddingBottom: 50, justifyContent: "flex-end" }}>
-        <View style={styles.body}>
-          <IconButton
-            icon="chevron-left"
-            iconColor={Colors.light.tint}
-            size={24}
-            style={{ margin: 5, width: 40, height: "60%" }}
-            onPress={() => {
-              scrollTo(-1);
-            }}
-          />
-          <FlatList
-            horizontal
-            pagingEnabled
-            bounces={false}
-            ref={slidesRef}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              {
-                useNativeDriver: false,
-              }
-            )}
-            onViewableItemsChanged={viewableItemsChanged}
-            showsHorizontalScrollIndicator={false}
-            viewabilityConfig={viewConfig}
-            data={data}
-            keyExtractor={({ id }) => id}
-            renderItem={({ item, index }) => {
-              return <Card item={item} />;
-            }}
-          />
-          <IconButton
-            icon="chevron-right"
-            iconColor={Colors.light.tint}
-            size={24}
-            style={{ margin: 5, width: 40, height: "60%" }}
-            onPress={() => {
-              scrollTo(1);
-            }}
-          />
-        </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -118,9 +132,14 @@ const HomeScreen = () => {
 
 const Card = ({ item }) => {
   return (
-    <View style={styles.innerCard}>
+    <TouchableOpacity style={styles.innerCard} activeOpacity={0.9}>
       <LinearGradient
-        style={{ width: "100%", borderRadius: 8, overflow: "hidden" }}
+        style={{
+          backgroundColor: "blue",
+          width: "100%",
+          borderRadius: 8,
+          overflow: "hidden",
+        }}
         colors={["#000", "transparent"]}
         start={{ x: 1, y: 1 }}
         end={{ x: 1, y: 0.9 }}
@@ -135,7 +154,47 @@ const Card = ({ item }) => {
         />
         <Text style={styles.cardText}>Nippon Steel Engineering</Text>
       </LinearGradient>
-    </View>
+    </TouchableOpacity>
+  );
+};
+
+const PDFCard = ({ item }) => {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity
+      style={{
+        // paddingHorizontal: width / 30,
+        paddingVertical: width / 50,
+        width: "90%",
+      }}
+      onPress={() => {
+        navigation.navigate("searchAnimation", item);
+      }}
+      activeOpacity={0.8}
+    >
+      <LinearGradient
+        style={{
+          backgroundColor: "#fff",
+          flexDirection: "row",
+          alignItems: "center",
+          elevation: 2,
+          borderRadius: 8,
+        }}
+        colors={["#4568dc", "#b06ab3"]}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <IconButton
+          iconColor={"#fff"}
+          size={32}
+          icon={"file-pdf-box"}
+          style={{ margin: 0 }}
+        />
+        <Text style={{ fontFamily: "Poppins", top: 2, color: "#fff" }}>
+          {item.month} {item.year} ({item.type})
+        </Text>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 
@@ -146,37 +205,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    padding: width / 25,
+    paddingBottom: width / 10,
   },
   header: {
     flex: 1,
-    width: width - 32,
-    borderRadius: 16,
-    margin: 16,
+    width: "100%",
+    borderRadius: 8,
     padding: 16,
+    marginBottom: 20,
   },
   headerTextBox: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 10,
   },
   body: {
-    // flex: 3,
-    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  headerInnerBox: {
-    height: 60,
-    backgroundColor: "#f2f2f2",
-    borderRadius: 8,
-    elevation: 5,
   },
 
   innerCard: {
-    height: 200,
-    width: width - 100,
-    paddingHorizontal: 5,
+    height: width / 2,
+    width: width - (width / 30) * 2,
   },
   cardText: {
     position: "absolute",
@@ -204,4 +254,10 @@ const data = [
     name: "",
     url: "https://www.eng.nipponsteel.com/english/whatwedo/upload/images/4-1-2_01.jpg",
   },
+];
+
+const recentViewedPdfData = [
+  { type: "Payslip", month: "Jan", year: "23" },
+  { type: "Payslip", month: "Jan", year: "23" },
+  { type: "Payslip", month: "Jan", year: "23" },
 ];

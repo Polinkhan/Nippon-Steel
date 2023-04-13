@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { IconButton } from "react-native-paper";
-import { useWindowDimensions } from "react-native";
 import Colors from "../constants/Colors";
 import { Linking } from "react-native";
+const { width, height } = Dimensions.get("window");
 
 const ContactAdminScreen = () => {
-  const { width } = useWindowDimensions();
   const [btnWidth, setBtnWidth] = useState((width - 30) / 2);
 
   return (
@@ -21,14 +20,14 @@ const ContactAdminScreen = () => {
         <IconButton
           icon="format-list-bulleted"
           iconColor={Colors.light.tint}
-          size={20}
+          size={width / 20}
           onPress={() => setBtnWidth(width - 20)}
           style={{ marginVertical: 0 }}
         />
         <IconButton
           icon="view-grid"
           iconColor={Colors.light.tint}
-          size={20}
+          size={width / 20}
           onPress={() => setBtnWidth((width - 30) / 2)}
           style={{ marginVertical: 0 }}
         />
@@ -56,22 +55,12 @@ const CustomButton = ({ item, btnWidth }) => {
             );
           })}
         </View>
-        <View
-          style={{
-            backgroundColor: Colors.light.tintOpacity,
-            padding: 10,
-            borderRadius: 999,
-            height: 50,
-          }}
-        >
-          <Image
-            style={{ width: 30, height: 30 }}
-            source={{
-              uri: "http://www.eventfulnigeria.com/wp-content/uploads/2021/04/Avatar-PNG-Free-Download.png",
-            }}
-          />
-        </View>
+        <IconButton
+          icon={"account"}
+          style={{ backgroundColor: Colors.light.tintOpacity }}
+        />
       </View>
+
       <View style={styles.btnBox}>
         <IconButton
           icon="phone"
@@ -119,10 +108,11 @@ const styles = StyleSheet.create({
   },
   manuText: {
     color: "gray",
+    fontSize: 12,
     fontFamily: "Poppins",
   },
   btnBox: {
-    marginTop: 10,
+    marginTop: 5,
     flexDirection: "row",
   },
 });

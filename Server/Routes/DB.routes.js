@@ -4,6 +4,23 @@ const router = express.Router();
 const { getUserDetails } = require("../Box/box");
 const { ObjectToArray } = require("../Healpers/functions");
 const db = require("../DB/mySQL_init");
+const multer = require("multer");
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, __dirname + "/uploads"); //you tell where to upload the files,
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now() + ".png");
+  },
+});
+
+var upload = multer({
+  storage: storage,
+  onFileUploadStart: function (file) {
+    console.log(file.originalname + " is starting ...");
+  },
+});
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
@@ -25,6 +42,16 @@ router.get("/viewData/:id", async (req, res, next) => {
     res.send(result[0]);
   } catch (err) {
     next(err);
+  }
+});
+
+router.post("/uploadProfilePicture", async (req, res) => {
+  try {
+    console.log(50, req.body);
+    res.send({ congrats: "data recieved" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error");
   }
 });
 

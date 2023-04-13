@@ -4,6 +4,7 @@ import { Button, TextInput } from "react-native-paper";
 import { useDataContext } from "../hooks/useDataContext";
 import Colors from "../constants/Colors";
 import { authClient } from "../Api/Client";
+import { font } from "../constants/SIzes";
 
 const ChangePasswordScreen = ({ navigation, route }) => {
   const { isVerified } = route.params;
@@ -69,6 +70,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     return (
       <View style={styles.container}>
         <TextInput
+          autoFocus
           mode="outlined"
           label={"New Password"}
           style={styles.input}
@@ -99,6 +101,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     return (
       <View style={styles.container}>
         <TextInput
+          autoFocus
           mode="outlined"
           label={"Enter Current Password"}
           style={{ width: "80%", backgroundColor: "#f2f2f2" }}
@@ -124,9 +127,8 @@ const CustomButton = ({ name, onClick, loading }) => {
       textColor="#fff"
       style={{ borderRadius: 8, width: "80%", marginTop: 50 }}
       labelStyle={{
-        fontSize: 14,
+        ...font,
         padding: 2,
-        fontFamily: "Poppins",
         paddingTop: 5,
       }}
       loading={loading}

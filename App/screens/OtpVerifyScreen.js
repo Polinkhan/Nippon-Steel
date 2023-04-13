@@ -1,58 +1,65 @@
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { Button } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { useDataContext } from "../hooks/useDataContext";
 import { authClient } from "../Api/Client";
 import { ToastAndroid } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
+const { width, height } = Dimensions.get("window");
 
 const OtpVerifyScreen = ({ navigation, route }) => {
-  const [OTP, setOTP] = useState([]);
+  const [OTP, setOTP] = useState();
   const { setCurrentUser } = useDataContext();
 
   const { id, redirectTo } = route.params;
+  console.log(id);
 
-  useEffect(() => {
-    if (OTP.length === 4) {
-      const otp = `${OTP[0]}${OTP[1]}${OTP[2]}${OTP[3]}`;
-      (async () => {
-        try {
-          const res = (await authClient.post("/verifyOtp", { id, otp })).data;
-          if (redirectTo === "changePassword") {
-            navigation.replace(redirectTo, {
-              isVerified: true,
-              name: "New Password",
-            });
-          } else {
-            const { accessToken, currentUser } = res;
-            await SecureStore.setItemAsync("accessToken", accessToken);
-            setCurrentUser(currentUser);
-            navigation.replace(redirectTo);
-          }
-        } catch (err) {
-          setOTP([]);
-          const { message } = err?.response.data;
-          ToastAndroid.show(message, ToastAndroid.SHORT);
-        } finally {
-        }
-      })();
-    }
-  }, [OTP]);
-
-  const handleErase = () => {
-    const currentOtp = [...OTP];
-    currentOtp.pop();
-    setOTP(currentOtp);
+  const handleChange = (text) => {
+    setOTP(text);
+    console.log(text);
   };
 
-  const OnPress = (_) => {
-    if (OTP.length < 4) setOTP((prev) => [...prev, _]);
-  };
+  // useEffect(() => {
+  //   if (OTP.length === 4) {
+  //     const otp = `${OTP[0]}${OTP[1]}${OTP[2]}${OTP[3]}`;
+  //     (async () => {
+  //       try {
+  //         const res = (await authClient.post("/verifyOtp", { id, otp })).data;
+  //         if (redirectTo === "changePassword") {
+  //           navigation.replace(redirectTo, {
+  //             isVerified: true,
+  //             name: "New Password",
+  //           });
+  //         } else {
+  //           const { accessToken, currentUser } = res;
+  //           await SecureStore.setItemAsync("accessToken", accessToken);
+  //           setCurrentUser(currentUser);
+  //           navigation.replace(redirectTo);
+  //         }
+  //       } catch (err) {
+  //         setOTP([]);
+  //         const { message } = err?.response.data;
+  //         ToastAndroid.show(message, ToastAndroid.SHORT);
+  //       } finally {
+  //       }
+  //     })();
+  //   }
+  // }, [OTP]);
+
+  // const handleErase = () => {
+  //   const currentOtp = [...OTP];
+  //   currentOtp.pop();
+  //   setOTP(currentOtp);
+  // };
+
+  // const OnPress = (_) => {
+  //   if (OTP.length < 4) setOTP((prev) => [...prev, _]);
+  // };
 
   return (
     <View style={styles.container}>
@@ -61,14 +68,14 @@ const OtpVerifyScreen = ({ navigation, route }) => {
         animated={true}
         backgroundColor="rgba(0,0,0,0.2)"
       />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 2, justifyContent: "center", alignItems: "center" }}>
         <LottieView
           autoPlay
-          style={{ width: 200, height: 200 }}
+          style={{ height: height / 5 }}
           source={require("../assets/lottie/OTP.json")}
         />
       </View>
-      <View style={{ flex: 2 }}>
+      {/* <View style={{ flex: 2 }}>
         <View style={styles.inputContainer}>
           {[0, 1, 2, 3].map((_, i) => (
             <InputBox key={i.toString()} number={OTP[_]} />
@@ -116,6 +123,17 @@ const OtpVerifyScreen = ({ navigation, route }) => {
           </Text>
           <Text style={styles.underlineText}>Resend code</Text>
         </View>
+      </View> */}
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <TextInput
+          maxLength={4}
+          autoFocus
+          mode="flat"
+          label={"Enter OTP (4 digits)"}
+          style={{ width: "90%", backgroundColor: "#fff" }}
+          activeUnderlineColor={Colors.light.tint}
+          onChangeText={handleChange}
+        />
       </View>
     </View>
   );
@@ -149,7 +167,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 30,
+    padding: width / 15,
     backgroundColor: "#fff",
   },
   inputContainer: {
@@ -159,9 +177,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   inputBox: {
-    width: 50,
-    height: 60,
-    borderRadius: 8,
+    width: width / 10,
+    height: height / 15,
+    borderRadius: 4,
     marginHorizontal: 5,
     display: "flex",
     justifyContent: "center",

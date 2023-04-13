@@ -240,6 +240,7 @@ const keys = [
   { name: "UserID", type: "text", isDasabled: true, flex: 1 },
   { name: "FullName", type: "text", isDasabled: false, flex: 1 },
   { name: "Email", type: "text", isDasabled: false, flex: 1.5 },
+  { name: "Password", type: "text", isDasabled: false, flex: 1 },
   { name: "DateOfBirth", type: "date", isDasabled: false, flex: 1 },
   { name: "Title", type: "text", isDasabled: false, flex: 1 },
   { name: "Type", type: "text", isDasabled: false, flex: 1 },
