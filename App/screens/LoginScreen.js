@@ -1,29 +1,49 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  ToastAndroid,
+  View,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import Colors from "../constants/Colors";
-import { MonoText } from "../components/StyledText";
-import { Button, Checkbox, TextInput } from "react-native-paper";
+import { Button, Checkbox, IconButton, TextInput } from "react-native-paper";
 import { authClient } from "../Api/Client";
 import { Keyboard } from "react-native";
 import { StatusBar } from "expo-status-bar";
+import { font, mediumFont } from "../constants/SIzes";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+const { width, height } = Dimensions.get("window");
 
 const LoginScreen = ({ navigation }) => {
   const [checked, setChecked] = useState(true);
   const [id, setId] = useState();
   const [pass, setPass] = useState();
+  const [togglePass, setTogglePass] = useState(true);
+  const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setError(false);
     Keyboard.dismiss();
     try {
       setLoading(true);
-      const res = (await authClient.post("/requestOTP", { id, pass })).data;
-      ToastAndroid.show(res?.message, ToastAndroid.SHORT);
-      navigation.navigate("otp", { id, redirectTo: "Root" });
+      const { data } = await authClient.post("/requestOTP", {
+        id,
+        pass,
+      });
+      navigation.navigate("otp", {
+        id,
+        pass,
+        redirectTo: "Root",
+        Email: data.Email,
+      });
     } catch (err) {
-      const { message } = err?.response?.data;
-      console.log(message);
-      ToastAndroid.show(message, ToastAndroid.SHORT);
+      const message = err?.response?.data?.message;
+      Toast.show({ type: "error", text1: message });
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -34,58 +54,68 @@ const LoginScreen = ({ navigation }) => {
       style={[styles.container, { backgroundColor: Colors.light.background }]}
     >
       <StatusBar animated style="dark" />
+      {/* <ScrollView
+        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+      > */}
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <Text style={{ fontSize: 56, fontFamily: "sultan" }}>Welcome</Text>
-        <Text style={{ fontSize: 28, fontFamily: "sultan" }}>
-          Nippon Steel Engineering
+        <Text style={{ fontSize: width / 10, fontFamily: "sultan" }}>
+          Welcome
+        </Text>
+        <Text style={{ fontSize: width / 16, fontFamily: "sultan" }}>
+          Nippon Steel Engineering!
         </Text>
       </View>
-      <View style={{ flex: 2, justifyContent: "center" }}>
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="User ID"
-          onChangeText={(text) => setId(text)}
-          activeOutlineColor={Colors.light.tint}
-        />
-        <TextInput
-          style={styles.input}
-          mode="outlined"
-          label="Password"
-          onChangeText={(text) => setPass(text)}
-          activeOutlineColor={Colors.light.tint}
-          secureTextEntry
-          right={<TextInput.Affix text="/100" />}
-        />
-
+      <View style={{ flex: 3, justifyContent: "space-around" }}>
         <View>
+          <TextInput
+            error={error}
+            style={styles.input}
+            mode="outlined"
+            label="User ID"
+            onChangeText={(text) => setId(text)}
+            activeOutlineColor={Colors.light.tint}
+          />
+          <TextInput
+            error={error}
+            style={styles.input}
+            mode="outlined"
+            label="Password"
+            onChangeText={(text) => setPass(text)}
+            activeOutlineColor={Colors.light.tint}
+            secureTextEntry={togglePass}
+            right={
+              <TextInput.Icon
+                icon={togglePass ? "eye" : "eye-off"}
+                onPress={() => setTogglePass((prev) => !prev)}
+              />
+            }
+          />
+
           <Checkbox.Item
-            labelStyle={{ fontFamily: "Poppins" }}
+            labelStyle={{ ...mediumFont }}
             label="Remember me"
             status={checked ? "checked" : "unchecked"}
             color={Colors.light.tint}
             onPress={() => setChecked((prev) => !prev)}
           />
         </View>
-      </View>
-      <View style={{ flex: 1, justifyContent: "center" }}>
         <Button
           mode="elevated"
           onPress={!loading && handleSubmit}
           buttonColor={Colors.light.tint}
           textColor="#fff"
-          style={{ borderRadius: 999 }}
+          style={{ borderRadius: 10 }}
           labelStyle={{
-            fontSize: 20,
-            padding: 5,
-            fontFamily: "Poppins",
-            paddingTop: 10,
+            padding: width / 80,
+            ...mediumFont,
           }}
           loading={loading}
         >
           Login
         </Button>
       </View>
+
+      {/* </ScrollView> */}
     </View>
   );
 };
@@ -96,10 +126,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 40,
+    padding: width / 12,
   },
   input: {
-    marginVertical: 10,
+    marginVertical: height / 150,
     borderRadius: 999,
   },
   text: {},

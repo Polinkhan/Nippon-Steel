@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const authUrl = "http://localhost:5000/api/v1/admin/auth";
+// const authUrl = "http://localhost:5000/api/v1/admin/auth";
+const authUrl = "https://backend.ofsnse.com/api/v1/admin/auth";
 const dbUrl = "http://localhost:5000/api/v1/admin/db";
 
 const authClient = axios.create({

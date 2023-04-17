@@ -6,40 +6,39 @@ const { ObjectToArray } = require("../Healpers/functions");
 const db = require("../DB/mySQL_init");
 const multer = require("multer");
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, __dirname + "/uploads"); //you tell where to upload the files,
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + ".png");
-  },
-});
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, __dirname + "/uploads"); //you tell where to upload the files,
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + "-" + Date.now() + ".png");
+//   },
+// });
 
-var upload = multer({
-  storage: storage,
-  onFileUploadStart: function (file) {
-    console.log(file.originalname + " is starting ...");
-  },
-});
+// var upload = multer({
+//   storage: storage,
+//   onFileUploadStart: function (file) {
+//     console.log(file.originalname + " is starting ...");
+//   },
+// });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/viewData/:id", async (req, res, next) => {
   const { id } = req.params;
+  const query =
+    "SELECT Credentials.UserID,FullName,Title,FullName,Email,DateOfBirth,Company,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ? ";
   try {
-    const admin = await getContactList();
-    const images = await getAdPictures();
-    res.send({ admin, images });
+    const [result] = await db.query(query, [id]);
+    res.send(result[0]);
   } catch (err) {
     next(err);
   }
 });
 
-router.get("/viewData/:id", async (req, res, next) => {
-  const { id } = req.params;
-  const query =
-    "SELECT Credentials.UserID,Email,FullName,DateOfBirth,Company,Title,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ? ";
+router.get("/app/typeList", async (req, res, next) => {
+  const query = "SELECT * From DocumentTypes";
   try {
-    const [result] = await db.query(query, [id]);
-    res.send(result[0]);
+    const [result] = await db.query(query);
+    res.send(result);
   } catch (err) {
     next(err);
   }
@@ -55,15 +54,35 @@ router.post("/uploadProfilePicture", async (req, res) => {
   }
 });
 
-router.get("/contacts/all", async (req, res, next) => {
+router.get("/adminContactList", async (req, res, next) => {
   try {
-    const data = await getContactList();
-    res.send({ data });
+    const query = "SELECT * From AdminContactList";
+    const [result] = await db.query(query);
+    res.send(result);
   } catch (err) {
-    console.log(err);
     next(err);
   }
 });
+
+router.post("/reportProblem", async (req, res, next) => {
+  try {
+    const { UserID, subject, description, data } = req.body;
+    const query =
+      "INSERT INTO `ReportProblems`(`UserID`, `Subject`, `Description`,`ReportTime`,`DeviceDetails`) VALUES (?,?,?,?,?)";
+    await db.query(query, [
+      UserID,
+      subject,
+      description,
+      new Date().getTime(),
+      JSON.stringify(data),
+    ]);
+    res.send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+console.log(new Date().getTime());
 
 router.post("/getPayslipData/:id", async (req, res, next) => {
   try {
@@ -73,6 +92,15 @@ router.post("/getPayslipData/:id", async (req, res, next) => {
     res.send({ name, fileUrl });
   } catch (err) {
     console.log(err);
+    next(err);
+  }
+});
+
+router.get("/dashboardPicture", async (req, res, next) => {
+  try {
+    const images = await getAdPictures();
+    res.send(images);
+  } catch (err) {
     next(err);
   }
 });

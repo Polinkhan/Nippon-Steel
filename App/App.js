@@ -3,12 +3,18 @@ import "expo-dev-client";
 
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import { useLoadedAssets } from "./hooks/useLoadedAssets";
 import Navigation from "./navigation";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
-import { Alert, BackHandler } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View, StatusBar as bar } from "react-native";
+import { mediumFont } from "./constants/SIzes";
+import NetInfo from "@react-native-community/netinfo";
+import { IconButton } from "react-native-paper";
+import { Dimensions } from "react-native";
+import NetStatus from "./components/NetStatus";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
+const { width, height } = Dimensions.get("window");
 
 export default function App() {
   const isLoadingComplete = useLoadedAssets();
@@ -17,27 +23,6 @@ export default function App() {
     Poppins: require("./assets/font/Poppins-Regular.ttf"),
     PoppinsBold: require("./assets/font/Poppins-Bold.ttf"),
   });
-
-  useEffect(() => {
-    const backAction = () => {
-      Alert.alert("Hold on!", "Are you sure you want to go back?", [
-        {
-          text: "Cancel",
-          onPress: () => null,
-          style: "cancel",
-        },
-        { text: "YES", onPress: () => BackHandler.exitApp() },
-      ]);
-      return true;
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-
-    return () => backHandler.remove();
-  }, []);
 
   if (!isLoadingComplete) {
     return null;
@@ -50,7 +35,9 @@ export default function App() {
             animated={true}
             backgroundColor="rgba(0,0,0,0.3)"
           />
+          <NetStatus />
           <Navigation />
+          <Toast position="bottom" bottomOffset={20} />
         </SafeAreaProvider>
       )
     );

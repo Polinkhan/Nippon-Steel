@@ -50,6 +50,8 @@
 
 .userInfoBody {
   background-color: #fff;
+  align-items: center;
+  padding: 50px 0;
   box-shadow: rgba(99, 99, 99, 0.2) 0px -2px 8px 0px;
 }
 
@@ -60,12 +62,83 @@
   color: #3b4d61;
 }
 
+.dashboardBody {
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+  padding: 30px;
+}
+
+.dashboardItemBox {
+  flex: 1;
+  justify-content: space-between;
+  min-width: 220px;
+  height: 120px;
+  background-color: #fff;
+  z-index: 1;
+  overflow: hidden;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: rgba(99, 99, 99, 0.3) 0px 2px 8px 0px;
+  position: relative;
+  transition: 0.3s;
+  cursor: pointer;
+  color: #3b4d61;
+}
+
+.dashboardItemIcon {
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  color: #283542;
+}
+
+.dashboardItemIcon:hover {
+  background-color: #ddd;
+}
+
+.dashboardItemBox p {
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashboardItemBoxHover {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0%;
+  width: 100%;
+  border-radius: 10px;
+  background-color: rgba(40, 53, 66, 1);
+  transition: 0.3s;
+}
+
+.dashboardItemBox:hover {
+  color: #fff;
+  flex: 1.5;
+}
+
+.dashboardItemBox:hover .dashboardItemBoxHover {
+  height: 100%;
+}
+
+.dashboardAbsolute {
+  background-color: #3b4d6150;
+  height: 1200px;
+  width: 2000px;
+  left: 50%;
+  transform: translate(-50%, -90%);
+  position: absolute;
+  border-radius: 9999px;
+}
+
 /*----- Login Page----- */
 
 .container {
-  display: flex;
-  place-items: center;
-  place-content: center;
+  justify-content: center;
+  align-items: center;
   width: 100vw;
   height: 100vh;
   background: hsla(139, 72%, 83%, 1);
@@ -90,30 +163,30 @@
   );
 }
 .outerBox {
-  display: flex;
   width: 60vw;
   height: 75vh;
-  background-color: #fff;
+  /* background-color: #fff; */
   border-radius: 10px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  overflow: hidden;
+  background-color: #f2f2f5;
 }
+
 .leftBox {
-  flex: 4;
-  display: flex;
-  place-items: center;
-  place-content: center;
+  justify-content: center;
+  align-items: center;
 }
+
 .RightBox {
-  flex: 3;
-  display: flex;
   place-items: center;
-  justify-content: space-around;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  flex-direction: column;
+  border-radius: 12px;
+  background-color: #fff;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 5px 0px;
 }
 .form {
+  flex: 3;
   width: 60%;
   display: flex;
+  justify-content: space-around;
   flex-direction: column;
 }
 
@@ -177,8 +250,18 @@
 
 /*----- ViewDatabase Page----- */
 
-.viewDatabaseDiv {
-  flex: 1;
+/*----- App Settings Page----- */
+
+.appSettingsBox {
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px 0px;
+}
+
+.typeBox p {
+  z-index: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /*----- Responsive Page----- */
@@ -212,7 +295,7 @@
     height: 70px;
   }
   .navLogo {
-    width: 300px;
+    width: 280px;
   }
   .header {
     padding: 10px 20px;

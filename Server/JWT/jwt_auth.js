@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const createError = require("http-errors");
 
-const genarateToken = (userId, secret, expTime) => {
+const genarateToken = (userId, pass, secret, expTime) => {
   return new Promise((resolve, reject) => {
-    const payload = { id: userId };
+    const payload = { id: userId, pass };
     const option = {
       expiresIn: expTime,
       issuer: "abusayedpolin.com",
@@ -16,15 +16,15 @@ const genarateToken = (userId, secret, expTime) => {
   });
 };
 
-const signAccessToken = async (userId) =>
-  await genarateToken(userId, process.env.JWT_ACCESS_TOKEN_SECRET, "1y");
+const signAccessToken = async (userId, pass) =>
+  await genarateToken(userId, pass, process.env.JWT_ACCESS_TOKEN_SECRET, "1y");
 
 // const signRefreshToken = async (userId) =>
 //   await genarateToken(userId, process.env.JWT_REFRESH_TOKEN_SECRET, "1y");
 
 const verifyAccessToken = async (req, res, next) => {
+  console.log("requested");
   const token = req.headers.authorization;
-  console.log(token);
   if (!token) return next(createError.Unauthorized());
   jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET, (err, payload) => {
     if (err) return next(createError.Unauthorized(err.message));

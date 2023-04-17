@@ -2,37 +2,39 @@ import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import "../components/ActionSheet/sheets";
 import { SheetManager, SheetProvider } from "react-native-actions-sheet";
 import Colors from "../constants/Colors";
-import LottieView from "lottie-react-native";
 import { Dimensions } from "react-native";
-import { font } from "../constants/SIzes";
-const Payslip = require("../assets/lottie/Payslip.json");
+import { font, mediumFont } from "../constants/SIzes";
+import { Platform } from "react-native";
+import Search from "../assets/RNSVG/Search";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 const { width, height } = Dimensions.get("window");
 
 const ReportSearchScreen = ({ navigation }) => {
   const [type, setType] = useState();
   const [month, setMonth] = useState();
   const [year, setYear] = useState();
+
   return (
     <View style={styles.container}>
       <View
         style={{
-          flex: 3,
+          flex: 1,
           alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "center",
         }}
       >
-        {/* <Lo  */}
+        <Search />
         <Text style={{ fontFamily: "Poppins", ...font }}>
           OFS Crew Document Search
         </Text>
       </View>
       <View
         style={{
-          flex: 6,
+          flex: 2,
           justifyContent: "space-around",
           alignItems: "center",
           backgroundColor: "blue",
@@ -50,15 +52,16 @@ const ReportSearchScreen = ({ navigation }) => {
           />
 
           <CustomButton
-            name={month || "Select Month"}
-            onPress={() => {
-              SheetManager.show("month", { payload: { setMonth } });
-            }}
-          />
-          <CustomButton
             name={year || "Select Year"}
             onPress={() => {
               SheetManager.show("year", { payload: { setYear } });
+            }}
+          />
+
+          <CustomButton
+            name={month || "Select Month"}
+            onPress={() => {
+              SheetManager.show("month", { payload: { setMonth } });
             }}
           />
         </View>
@@ -80,7 +83,11 @@ const ReportSearchScreen = ({ navigation }) => {
             if (type && month && year) {
               navigation.navigate("searchAnimation", { type, month, year });
             } else {
-              ToastAndroid.show("Empty Field", ToastAndroid.SHORT);
+              Toast.show({
+                type: "error",
+                text1: "Empty Field",
+                text2: "Please Select Type, Year and Month",
+              });
             }
           }}
         >
@@ -119,10 +126,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    padding: height / 50,
+    padding: height / 60,
     marginVertical: height / 100,
     borderColor: "#aaa",
-    borderRadius: 12,
+    borderWidth: Platform.OS === "ios" ? 1 : 0,
+    borderRadius: 10,
     backgroundColor: "#fff",
     elevation: 2,
   },

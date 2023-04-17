@@ -28,18 +28,16 @@ const getPDFURL = (id, month, year, type) => {
     if (!month || !year || !type) {
       reject({ status: 500, message: "Input Field Missing" });
     }
-    console.log(`"${id}_${month}_${year}_${type}"`);
     client.search
       .query(`"${id}_${month}_${year}_${type}"`, {
         fields: "name",
         type: "file",
       })
       .then((results) => {
-        console.log(results);
         if (results.total_count) {
           results.entries.forEach(async (element) => {
             const fileUrl = await getUrl(element.id);
-            resolve({ name: element.name, fileUrl });
+            resolve({ name: element["name"].split(".")[0], fileUrl });
           });
         } else {
           reject({ status: 500, message: "File Not Found" });

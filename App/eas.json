@@ -12,6 +12,9 @@
     },
     "preview": {
       "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
       "ios": {
         "resourceClass": "m-medium"
       }
@@ -23,6 +26,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "yoshida.jun@nsc-eng.com",
+        "ascAppId": "126255865",
+        "appleTeamId": "5J38G6RM3V"
+      }
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Animated } from "react-native";
+import { StyleSheet, Text, View, Animated, Dimensions } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { Slides } from "../constants/OnboardData";
 import { FlatList } from "react-native";
@@ -10,33 +10,47 @@ import * as SecureStore from "expo-secure-store";
 import { authClient } from "../Api/Client";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
+import { IconButton } from "react-native-paper";
+import { font, mediumFont } from "../constants/SIzes";
+import Colors from "../constants/Colors";
+const { width, height } = Dimensions.get("window");
 
 const Onbording = ({ navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [serverError, setServerError] = useState(false);
   const { setCurrentUser } = useDataContext();
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    (async () => {
-      const state = await SecureStore.getItemAsync("onBoard");
-      const token = await SecureStore.getItemAsync("accessToken");
-      try {
-        console.log("gg");
-        const res = await authClient.get("/", {
-          headers: { Authorization: token },
-        });
-        console.log("gg");
-        setCurrentUser(res?.data?.currentUser);
-        JSON.parse(state) && navigation.replace("Root");
-      } catch (err) {
-        console.log(err?.response?.data || err);
-        JSON.parse(state) && navigation.replace("login");
-      } finally {
+  const FETCH = async () => {
+    console.log(1, "requested");
+    setLoading(true);
+    setServerError(false);
+    const state = await SecureStore.getItemAsync("onBoard");
+    const token = await SecureStore.getItemAsync("accessToken");
+
+    authClient
+      .get("/", { headers: { Authorization: token } })
+      .then(({ data }) => {
+        setCurrentUser(data?.currentUser);
+        navigation.replace("Root");
+      })
+      .catch((err) => {
+        console.log(2, err);
+        if (err?.message === "timeout of 20000ms exceeded") {
+          setServerError(true);
+        } else {
+          JSON.parse(state) && navigation.replace("login");
+        }
+      })
+      .finally(() => {
         setLoading(false);
-      }
-    })();
+      });
+  };
+
+  useEffect(() => {
+    FETCH();
   }, []);
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
@@ -49,6 +63,31 @@ const Onbording = ({ navigation }) => {
       slidesRef.current.scrollToIndex({ index: updatedIndx });
     }
   };
+
+  if (serverError) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#fff",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          paddingVertical: height / 5,
+        }}
+      >
+        <StatusBar animated style="dark" />
+        <IconButton
+          icon={"restore"}
+          size={width / 12}
+          onPress={FETCH}
+          style={{ backgroundColor: Colors.light.tintOpacity }}
+        />
+        <Text style={{ ...mediumFont, textAlign: "center" }}>
+          {"Error 408! Connection timeout!!\nClick to retry"}
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: "#fff" }]}>

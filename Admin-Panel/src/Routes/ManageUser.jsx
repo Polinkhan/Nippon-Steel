@@ -1,16 +1,25 @@
-import { Button, Divider, Drawer, Stack, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Button,
+  Divider,
+  Drawer,
+  IconButton,
+  Snackbar,
+  Stack,
+  TextField,
+} from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { dbClient } from "../Api/Client";
-import { Delete, Edit } from "@mui/icons-material";
+import { Block, Close, Delete, Edit } from "@mui/icons-material";
 
 const ManageUser = () => {
   const [data, setData] = useState([]);
   const [drawerState, setDrawerState] = useState({ state: false });
+  const [snakeBarStare, setSnakeBarStare] = useState({ state: false });
 
   const FETCHDATA = async () => {
     try {
-      const { data } = await dbClient.get("/viewData");
+      const { data } = await dbClient.get("/viewData/unblock");
       setData(data);
     } catch (err) {
       toast.error(err?.response?.data?.message);
@@ -66,7 +75,7 @@ const ManageUser = () => {
         method: handleSubmit,
         message: "Change and click update to modify the data",
       });
-    } else {
+    } else if (type === "delete") {
       setDrawerState({
         data,
         state: true,
@@ -74,8 +83,38 @@ const ManageUser = () => {
         method: handleDelete,
         message: "Are you sure you want to delete the user data?",
       });
+    } else if (type === "block") {
+      await dbClient
+        .post("/blockUser/block", { UserID: data.UserID })
+        .then(() => {
+          setSnakeBarStare({ state: true, id: data.UserID });
+          FETCHDATA();
+        })
+        .catch(() => {});
     }
   };
+
+  const handleUndo = async () => {
+    await dbClient.post("/blockUser/unblock", { UserID: snakeBarStare.id });
+    setSnakeBarStare({ state: false });
+    FETCHDATA();
+  };
+
+  const action = (
+    <Fragment>
+      <Button color="white" size="small" onClick={handleUndo}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => setSnakeBarStare({ state: false })}
+      >
+        <Close />
+      </IconButton>
+    </Fragment>
+  );
 
   return (
     <Stack className="rightContainer" spacing={1}>
@@ -108,6 +147,13 @@ const ManageUser = () => {
         >
           <UpdateForm state={drawerState} />
         </Drawer>
+        <Snackbar
+          open={snakeBarStare.state}
+          autoHideDuration={6000}
+          onClose={() => setSnakeBarStare({ state: false })}
+          message="User Moved to Blocklist"
+          action={action}
+        />
       </Stack>
     </Stack>
   );
@@ -143,7 +189,7 @@ const UserData = ({ data, handleClick }) => {
         </p>
       ))}
       <Stack
-        flex={1}
+        flex={1.5}
         px={"10px"}
         flexDirection={"row"}
         justifyContent={"space-around"}
@@ -159,6 +205,12 @@ const UserData = ({ data, handleClick }) => {
           onClick={() => handleClick("delete", data)}
         >
           <Delete />
+        </CustomIconButton>
+        <CustomIconButton
+          color="warning"
+          onClick={() => handleClick("block", data)}
+        >
+          <Block />
         </CustomIconButton>
       </Stack>
     </Stack>
@@ -230,7 +282,7 @@ const Label = () => {
           {name}
         </p>
       ))}
-      <p style={{ flex: 1, padding: "0 10px" }}>Modify</p>
+      <p style={{ flex: 1.5, padding: "0 10px" }}>Modify</p>
     </Stack>
   );
 };

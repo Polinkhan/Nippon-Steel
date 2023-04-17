@@ -1,11 +1,4 @@
-import {
-  Alert,
-  BackHandler,
-  StyleSheet,
-  Text,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Alert, BackHandler, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { useDataContext } from "../hooks/useDataContext";
@@ -14,6 +7,7 @@ import * as Haptics from "expo-haptics";
 import * as secureStore from "expo-secure-store";
 import { CheckIfObjectIncluded } from "../constants/Helpers";
 import { mediumFont } from "../constants/SIzes";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const SearchingAnimationScreen = ({ navigation, route }) => {
   const { currentUser } = useDataContext();
@@ -36,13 +30,16 @@ const SearchingAnimationScreen = ({ navigation, route }) => {
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
         navigation.replace("pdfviwer", {
           data,
-          name: `${month} ${year} (${type})`,
+          name: data.name,
         });
-        console.log(`${month} ${year} (${type})`);
       })
       .catch((err) => {
+        Toast.show({
+          type: "error",
+          text1: "File not found",
+          text2: `Currently, your file cannot be found on BOX Drive. Please try again later.`,
+        });
         navigation.goBack();
-        ToastAndroid.show(err?.response?.data?.message, ToastAndroid.SHORT);
       });
   }, []);
 

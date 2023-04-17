@@ -1,19 +1,27 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { SheetManager, SheetProvider } from "react-native-actions-sheet";
+import { SheetManager } from "react-native-actions-sheet";
 import { TouchableNativeFeedback } from "react-native";
 import Colors from "../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { Dimensions } from "react-native";
 import { font, mediumFont } from "../constants/SIzes";
 import { IconButton } from "react-native-paper";
+import Profile from "../assets/RNSVG/Profile";
+import Password from "../assets/RNSVG/Password";
+import Download from "../assets/RNSVG/Download";
+import Question from "../assets/RNSVG/Question";
+import Teams from "../assets/RNSVG/Teams";
+import Admin from "../assets/RNSVG/Admin";
+import About from "../assets/RNSVG/About";
+import Settings from "../assets/RNSVG/Settings";
 const { width, height } = Dimensions.get("window");
 
 const SettingsScreen = ({}) => {
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: "center", height: height / 4 }}>
-        <IconButton icon={"book-settings"} size={width / 8} />
+      <View style={{ alignItems: "center", height: width / 2 }}>
+        <Settings />
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
@@ -30,6 +38,14 @@ const SettingsScreen = ({}) => {
             <CustomButton key={item.id} item={item} />
           ))}
         </View>
+        {/* <Button
+          onPress={async () => {
+            await secureStore.deleteItemAsync("accessToken");
+            await secureStore.deleteItemAsync("onBoard");
+          }}
+        >
+          Remove all Data
+        </Button> */}
       </ScrollView>
     </View>
   );
@@ -51,8 +67,8 @@ const CustomButton = ({ item }) => {
           false
         )}
       >
-        <View style={{ padding: 12 }}>
-          <IconButton icon={item.icon} style={{ margin: 0 }} />
+        <View style={{ height: width / 4.5, padding: width / 30 }}>
+          {<item.Icon />}
           <Text style={styles.manuText}>{item.name}</Text>
         </View>
       </TouchableNativeFeedback>
@@ -100,63 +116,58 @@ const data = [
   {
     id: 1,
     name: "View Profile",
-    icon: "card-account-details-outline",
-    source: require("../assets/lottie/Profile_icon.json"),
+    Icon: () => <Profile />,
     colors: ["transparent", "#0000ff4d", "transparent"],
     navigate: "profile",
   },
   {
     id: 2,
-    icon: "lock-open-outline",
+    Icon: () => <Password />,
     name: "Change Password",
-    source: require("../assets/lottie/Password.json"),
     colors: ["transparent", "#8054204d", "transparent"],
     navigate: "changePassword",
   },
   {
     id: 3,
-    icon: "update",
+    Icon: () => <Download />,
     name: "Check For Update",
-    source: require("../assets/lottie/Update.json"),
     navigate: "update",
     colors: ["transparent", "#529dde4d", "transparent"],
   },
   {
     id: 4,
-    icon: "alert-octagon-outline",
+    Icon: () => <Question />,
     name: "Report a problem",
-    source: require("../assets/lottie/Report.json"),
+    navigate: "report",
     colors: ["transparent", "#dea4524d", "transparent"],
   },
   {
     id: 5,
-    icon: "account-supervisor",
+    Icon: () => <Teams />,
     name: "Teams",
-    source: require("../assets/lottie/Permission.json"),
     navigate: "permission",
     colors: ["transparent", "#0054004d", "transparent"],
   },
   {
     id: 6,
-    icon: "contacts-outline",
+    Icon: () => <Admin />,
     name: "Contact Admin",
-    source: require("../assets/lottie/Contact.json"),
     navigate: "contact",
     colors: ["transparent", "#0000ff4d", "transparent"],
   },
   {
     id: 7,
-    icon: "android",
+    Icon: () => <About />,
     name: "About App",
-    source: require("../assets/lottie/About_US.json"),
     navigate: "about",
     colors: ["transparent", "#4ca1af4d", "transparent"],
   },
   {
     id: 8,
-    icon: "logout",
+    Icon: () => (
+      <IconButton icon={"logout"} size={width / 16} style={{ margin: 0 }} />
+    ),
     name: "Logout",
-    source: require("../assets/lottie/Logout.json"),
     onPress: () => SheetManager.show("confirmLogout"),
     colors: ["transparent", "#ff00004d", "transparent"],
   },

@@ -8,12 +8,12 @@ const { genarateOTP } = require("../Healpers/functions");
 const router = express.Router();
 
 router.get("/", verifyAccessToken, async (req, res, next) => {
-  console.log("ff");
-  const { id } = req.payload;
+  const { id, pass } = req.payload;
+  console.log({ id, pass });
   const query1 =
-    "SELECT Credentials.UserID,FullName,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ?";
+    "SELECT Credentials.UserID,FullName,Email,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ? and Password = ? and blockStatus = ?";
   try {
-    const [result] = await db.query(query1, [id]);
+    const [result] = await db.query(query1, [id, pass, "unblock"]);
     if (result.length) {
       res.send({ currentUser: result[0] });
     } else next(createError.BadRequest("Something Went Wrong !!"));
@@ -31,12 +31,15 @@ router.post("/requestOTP", async (req, res, next) => {
   try {
     const [result] = await db.query(query1, [id, pass]);
     if (result.length) {
-      const OTP = genarateOTP();
-      const time = new Date().getTime();
-      await db.query(query2, [OTP, time, id]);
-      const message = await mailTo(result[0].Email, OTP, time);
-
-      res.send({ message });
+      if (result[0].BlockStatus === "block") {
+        next(createError.BadRequest("Account is in blocklist"));
+      } else {
+        const OTP = genarateOTP();
+        const time = new Date().getTime();
+        await db.query(query2, [OTP, time, id]);
+        const message = await mailTo(result[0].Email, OTP, time);
+        res.send({ message, Email: result[0].Email });
+      }
     } else next(createError.BadRequest("Invalid User ID or Password"));
   } catch (err) {
     next(err);
@@ -44,10 +47,10 @@ router.post("/requestOTP", async (req, res, next) => {
 });
 
 router.post("/verifyOtp", async (req, res, next) => {
-  const { id, otp } = req.body;
-  console.log(id);
+  const { id, pass, otp } = req.body;
+  console.log(48, id, otp);
   const query1 =
-    "SELECT Credentials.UserID,FullName,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ?";
+    "SELECT Credentials.UserID,FullName,Email,OTP,Title FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ?";
 
   try {
     const [result] = await db.query(query1, [id]);
@@ -55,7 +58,7 @@ router.post("/verifyOtp", async (req, res, next) => {
     const isMatched = result[0].OTP === otp;
 
     if (isMatched) {
-      const accessToken = await signAccessToken(id);
+      const accessToken = await signAccessToken(id, pass);
       res.send({ accessToken, currentUser: result[0] });
     } else next(createError.BadRequest("OTP not matched !!"));
   } catch (err) {
@@ -69,7 +72,8 @@ router.post("/changePassword", async (req, res, next) => {
 
   try {
     db.query(query, [pass, id]);
-    res.send({ message: "Password Updated" });
+    const accessToken = await signAccessToken(id, pass);
+    res.send({ accessToken });
   } catch (err) {
     next(err);
   }

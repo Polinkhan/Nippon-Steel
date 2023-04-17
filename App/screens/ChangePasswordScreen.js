@@ -5,72 +5,64 @@ import { useDataContext } from "../hooks/useDataContext";
 import Colors from "../constants/Colors";
 import { authClient } from "../Api/Client";
 import { font } from "../constants/SIzes";
+import { Platform } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const ChangePasswordScreen = ({ navigation, route }) => {
   const { isVerified } = route.params;
   const { currentUser } = useDataContext();
   const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState({ password: null });
-  const [error, setError] = useState(false);
-
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    setError(false);
     try {
       setLoading(true);
-      const res = (
-        await authClient.post("/requestOTP", {
-          id: currentUser.UserID,
-          pass: password.password,
-        })
-      ).data;
-      ToastAndroid.show(res?.message, ToastAndroid.SHORT);
+      await authClient.post("/requestOTP", {
+        id: currentUser.UserID,
+        pass: password.password,
+      });
       navigation.replace("otp", {
         id: currentUser.UserID,
         redirectTo: "changePassword",
+        Email: currentUser.Email,
       });
     } catch (err) {
-      setError(true);
-      const { message } = err?.response?.data;
-      ToastAndroid.show(message, ToastAndroid.SHORT);
+      Toast.show({ type: "error", text1: err?.response?.data?.message });
     } finally {
       setLoading(false);
     }
   };
 
   const handleSubmitPassword = async () => {
-    setError(false);
     if (password.password !== password.confirmPassword) {
-      setError(true);
-      if (!password?.password) {
-        ToastAndroid.show("Empty Password Field", ToastAndroid.SHORT);
-      } else {
-        ToastAndroid.show(
-          "Password & Confirm Password not matched",
-          ToastAndroid.SHORT
-        );
-      }
+      Toast.show({
+        type: "error",
+        text1: "Password and Confirm Password not matched",
+      });
       return;
     }
 
-    try {
-      await authClient.post("/changePassword", {
+    authClient
+      .post("/changePassword", {
         id: currentUser.UserID,
         pass: password.password,
+      })
+      .then(async ({ data }) => {
+        const { accessToken } = data;
+        await SecureStore.setItemAsync("accessToken", accessToken);
+        Toast.show({
+          type: "success",
+          text1: "Password has changed successfully",
+        });
+        navigation.goBack();
       });
-      ToastAndroid.show("Password Changed Successfully", ToastAndroid.SHORT);
-      navigation.goBack();
-    } catch (err) {
-      const { message } = err?.response?.data;
-      ToastAndroid.show(message, ToastAndroid.SHORT);
-    }
   };
 
   if (isVerified) {
     return (
       <View style={styles.container}>
         <TextInput
-          autoFocus
           mode="outlined"
           label={"New Password"}
           style={styles.input}
@@ -78,7 +70,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
           onChangeText={(text) =>
             setPassword((prev) => ({ ...prev, password: text }))
           }
-          error={error}
         />
         <TextInput
           mode="outlined"
@@ -88,7 +79,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
           onChangeText={(text) =>
             setPassword((prev) => ({ ...prev, confirmPassword: text }))
           }
-          error={error}
         />
         <CustomButton
           name={"Submit Password"}
@@ -101,7 +91,6 @@ const ChangePasswordScreen = ({ navigation, route }) => {
     return (
       <View style={styles.container}>
         <TextInput
-          autoFocus
           mode="outlined"
           label={"Enter Current Password"}
           style={{ width: "80%", backgroundColor: "#f2f2f2" }}
@@ -142,7 +131,7 @@ export default ChangePasswordScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: Platform.OS === "ios" ? 0.5 : 1,
     justifyContent: "center",
     alignItems: "center",
   },

@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
@@ -15,21 +16,23 @@ function YearSheet({ sheetId, payload }) {
       containerStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
       // snapPoints={[30, 60, 100]}
     >
-      <View style={styles.container}>
-        {data.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.item}
-            activeOpacity={0.5}
-            onPress={() => {
-              setYear(item.value);
-              SheetManager.hide(sheetId);
-            }}
-          >
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {data.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.item}
+              activeOpacity={0.5}
+              onPress={() => {
+                setYear(item.value);
+                SheetManager.hide(sheetId);
+              }}
+            >
+              <Text>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </ActionSheet>
   );
 }
@@ -50,33 +53,48 @@ const styles = StyleSheet.create({
 
 const data = [
   {
-    id: 1,
-    name: "2020",
-    value: "20",
-  },
-  {
-    id: 2,
-    name: "2021",
-    value: "21",
-  },
-  {
-    id: 3,
+    id: 0,
     name: "2022",
     value: "22",
   },
   {
-    id: 4,
+    id: 1,
     name: "2023",
     value: "23",
   },
   {
-    id: 5,
+    id: 2,
     name: "2024",
     value: "24",
   },
   {
-    id: 6,
+    id: 3,
     name: "2025",
     value: "25",
+  },
+  {
+    id: 4,
+    name: "2026",
+    value: "26",
+  },
+  {
+    id: 5,
+    name: "2027",
+    value: "27",
+  },
+  {
+    id: 6,
+    name: "2028",
+    value: "28",
+  },
+  {
+    id: 7,
+    name: "2029",
+    value: "29",
+  },
+  {
+    id: 8,
+    name: "2030",
+    value: "30",
   },
 ];

@@ -8,7 +8,7 @@ import OtpVerifyScreen from "../screens/OtpVerifyScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SearchingAnimationScreen from "../screens/SearchingAnimationScreen";
 import PDFViewerScreen from "../screens/PDFViewerScreen";
-import { Text } from "react-native";
+import { Platform, Text } from "react-native";
 import AboutUsScreen from "../screens/AboutUsScreen";
 import Colors from "../constants/Colors";
 import { SheetProvider } from "react-native-actions-sheet";
@@ -19,6 +19,7 @@ import UpdateScreen from "../screens/UpdateScreen";
 import PermissionScreen from "../screens/PermissionScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import ChangePasswordScreen from "../screens/ChangePasswordScreen";
+import ReportScreen from "../screens/ReportScreen";
 
 export default function Navigation({ colorScheme }) {
   return (
@@ -42,7 +43,8 @@ function RootNavigator() {
       screenOptions={{
         headerStyle: { backgroundColor: Colors.light.tabIconSelected },
         headerTintColor: "#f2f2f2",
-        animation: "fade_from_bottom",
+        animation:
+          Platform.OS === "ios" ? "slide_from_right" : "fade_from_bottom",
       }}
     >
       <Stack.Screen
@@ -119,6 +121,15 @@ function RootNavigator() {
           <Stack.Screen
             name="permission"
             component={PermissionScreen}
+            options={({ route }) => ({
+              headerTitle: ({ tintColor }) => (
+                <Text style={styles.text}>{route.params.name}</Text>
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="report"
+            component={ReportScreen}
             options={({ route }) => ({
               headerTitle: ({ tintColor }) => (
                 <Text style={styles.text}>{route.params.name}</Text>

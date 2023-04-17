@@ -21,12 +21,12 @@ app.use(bodyParser.json({ limit: "50mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.get("/", async (req, res, next) => {
-  try {
-    const [result] = await db.query(`SELECT * FROM Credentials`);
-    res.send({ ...result[0] });
-  } catch (err) {
-    next(err);
-  }
+  db.query(`SELECT * FROM Credentials`, (err, results, fields) => {
+    if (err) next(err);
+    else {
+      res.send(results);
+    }
+  });
 });
 
 //App routes

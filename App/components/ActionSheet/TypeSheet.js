@@ -1,12 +1,23 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import { dbClient } from "../../Api/Client";
 
 function TypeSheet({ sheetId, payload }) {
+  const [data, setData] = useState([]);
   const { setType } = payload;
+
+  useEffect(() => {
+    console.log("Start");
+    dbClient
+      .get("app/typeList")
+      .then((res) => setData(res.data))
+      .catch((err) => console.log(err.response.data));
+  }, []);
+
   return (
     <ActionSheet
       id={sheetId}
@@ -18,15 +29,15 @@ function TypeSheet({ sheetId, payload }) {
       <View style={styles.container}>
         {data.map((item) => (
           <TouchableOpacity
-            key={item.id}
+            key={item.ID}
             style={styles.item}
             activeOpacity={0.5}
             onPress={() => {
-              setType(item.name);
+              setType(item.Type);
               SheetManager.hide(sheetId);
             }}
           >
-            <Text>{item.name}</Text>
+            <Text>{item.Type}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -47,21 +58,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
 });
-
-const data = [
-  {
-    id: 1,
-    name: "Payslip",
-    value: "Payslip",
-  },
-  {
-    id: 2,
-    name: "TimeSheet",
-    value: "TimeSheet",
-  },
-  {
-    id: 3,
-    name: "Other",
-    value: "Other",
-  },
-];

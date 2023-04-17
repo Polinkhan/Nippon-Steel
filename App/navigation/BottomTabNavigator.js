@@ -2,7 +2,7 @@
 // https://reactnavigation.org/docs/bottom-tab-navigator
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Dimensions, useColorScheme } from "react-native";
+import { Dimensions, Platform, useColorScheme } from "react-native";
 import Colors from "../constants/Colors";
 import { TouchableOpacity } from "react-native";
 import HomeScreen from "../screens/HomeScreen";
@@ -34,7 +34,7 @@ export default function BottomTabNavigator() {
         tabBarActiveTintColor: Colors.light.tint,
         tabBarShowLabel: false,
         tabBarStyle: {
-          height: width / 6,
+          height: Platform.OS === "ios" ? width / 4.5 : width / 7,
         },
         tabBarButton: (props) => (
           <TouchableOpacity {...props} activeOpacity={0.7} />

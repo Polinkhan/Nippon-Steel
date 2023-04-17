@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
@@ -15,21 +16,23 @@ function MonthSheet({ sheetId, payload }) {
       containerStyle={{ borderTopLeftRadius: 25, borderTopRightRadius: 25 }}
       // snapPoints={[60, 100]}
     >
-      <View style={styles.container}>
-        {data.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            style={styles.item}
-            activeOpacity={0.5}
-            onPress={() => {
-              setMonth(item.value);
-              SheetManager.hide(sheetId);
-            }}
-          >
-            <Text>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {data.map((item) => (
+            <TouchableOpacity
+              key={item.id}
+              style={styles.item}
+              activeOpacity={0.5}
+              onPress={() => {
+                setMonth(item.value);
+                SheetManager.hide(sheetId);
+              }}
+            >
+              <Text>{item.name}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
     </ActionSheet>
   );
 }

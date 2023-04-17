@@ -12,16 +12,20 @@ import Loading from "../components/Loading";
 import ManageUser from "./ManageUser/";
 import AppSettings from "./AppSettings";
 import RootPage from "./RootPage";
+import BlockList from "./BlockList";
+import { authClient } from "../Api/Client";
 
 function RootRouter() {
+  const token = localStorage.getItem("accessToken");
   const [loadind, setLoadind] = useState(true);
-  const { currentUser, setCurrentUser } = useDataContext();
+  const { setCurrentUser } = useDataContext();
 
   useEffect(() => {
-    setTimeout(() => {
-      // setCurrentUser(true);
-      setLoadind(false);
-    }, 1000);
+    authClient
+      .get("/", { headers: { Authorization: token } })
+      .then(({ data }) => setCurrentUser(data))
+      .catch((err) => console.log(err))
+      .finally(() => setTimeout(() => setLoadind(false), 1000));
   }, []);
 
   if (loadind) {
@@ -36,6 +40,7 @@ function RootRouter() {
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="manageUser" element={<ManageUser />} />
+            <Route path="blockList" element={<BlockList />} />
             <Route path="database" element={<ViewDatabasePage />} />
             <Route path="appSettings" element={<AppSettings />} />
             <Route path="*" element={<NotFound />} />

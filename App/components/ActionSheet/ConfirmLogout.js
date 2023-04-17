@@ -68,6 +68,7 @@ function ConfirmLogout({ sheetId }) {
             onPress={async () => {
               SheetManager.hide(sheetId);
               await secureStore.deleteItemAsync("accessToken");
+              await secureStore.deleteItemAsync("pdfViewed");
               setCurrentUser(null);
             }}
           >

@@ -1,4 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
+import BlockIcon from "@mui/icons-material/Block";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import StorageRoundedIcon from "@mui/icons-material/StorageRounded";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -13,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Stack } from "@mui/material";
 import Navbar from "../components/Navbar";
+import { useDataContext } from "../contexts/DataContext";
 
 const toastConfig = {
   position: "bottom-right",
@@ -48,6 +50,7 @@ const RootPage = () => {
 };
 
 const Sidebar = () => {
+  const { setCurrentUser } = useDataContext();
   return (
     <Stack justifyContent={"space-between"} className="sideContainer">
       <Stack spacing={1}>
@@ -55,15 +58,17 @@ const Sidebar = () => {
           <SidebarItem key={item.id} item={item} />
         ))}
       </Stack>
-      <div style={{ width: "100%" }}>
-        <Stack
-          direction={"row"}
-          className="sidebarItem"
-          style={{ cursor: "pointer" }}
-        >
-          <LogoutOutlinedIcon style={{ flex: 1 }} color={"white"} />
-          <p style={{ flex: 2, color: "#fff" }}>Sign out</p>
-        </Stack>
+      <div
+        className="sidebarItem"
+        style={{ display: "flex", width: "100%", cursor: "pointer" }}
+        onClick={() => {
+          localStorage.removeItem("accessToken");
+          setCurrentUser(null);
+        }}
+      >
+        <LogoutOutlinedIcon style={{ flex: 1 }} color={"white"} />
+        <p style={{ flex: 2, color: "#fff" }}>Sign out</p>
+        {/* </Stack> */}
       </div>
     </Stack>
   );
@@ -131,13 +136,20 @@ const data = [
   },
   {
     id: 4,
+    name: "Block List",
+    routeName: "/blockList",
+    activeIcon: (props) => <BlockIcon {...props} />,
+    inActiveIcon: (props) => <BlockIcon {...props} />,
+  },
+  {
+    id: 5,
     name: "View mySQL Data",
     routeName: "/database",
     activeIcon: (props) => <StorageRoundedIcon {...props} />,
     inActiveIcon: (props) => <StorageRoundedIcon {...props} />,
   },
   {
-    id: 5,
+    id: 6,
     name: "App Settings",
     routeName: "/appSettings",
     activeIcon: (props) => <AppSettingsAltRoundedIcon {...props} />,
