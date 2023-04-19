@@ -85,8 +85,8 @@ const DashboardPage = () => {
 export default DashboardPage;
 
 const data = [
-  { header: "Total Registered User", message: "Total User", count: 265 },
-  { header: "Active User", message: "Active User", count: 26 },
+  { header: "Total Registered User", message: "Total User", count: "null" },
+  { header: "Active User", message: "Active User", count: "null" },
   {
     header: "Manage User",
     message: "Navigate to Manage User",

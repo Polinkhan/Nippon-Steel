@@ -10,24 +10,10 @@ import PersonAddOutlinedIcon from "@mui/icons-material/PersonAddOutlined";
 import AppSettingsAltRoundedIcon from "@mui/icons-material/AppSettingsAltRounded";
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
 import AppSettingsAltOutlinedIcon from "@mui/icons-material/AppSettingsAltOutlined";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Stack } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useDataContext } from "../contexts/DataContext";
-
-const toastConfig = {
-  position: "bottom-right",
-  autoClose: 3000,
-  hideProgressBar: false,
-  newestOnTop: false,
-  closeOnClick: true,
-  rtl: false,
-  pauseOnFocusLoss: true,
-  draggable: true,
-  pauseOnHover: true,
-  theme: "colored",
-};
 
 const RootPage = () => {
   return (
@@ -42,7 +28,6 @@ const RootPage = () => {
         <Sidebar />
         <Stack flex={1}>
           <Outlet />
-          <ToastContainer {...toastConfig} />
         </Stack>
       </Stack>
     </Stack>
@@ -50,13 +35,18 @@ const RootPage = () => {
 };
 
 const Sidebar = () => {
-  const { setCurrentUser } = useDataContext();
+  const { currentUser, setCurrentUser } = useDataContext();
   return (
     <Stack justifyContent={"space-between"} className="sideContainer">
       <Stack spacing={1}>
-        {data.map((item) => (
-          <SidebarItem key={item.id} item={item} />
-        ))}
+        {data.map((item) => {
+          if (
+            item.name === "Manage Admin" &&
+            currentUser.AccountLavel === "Moderator"
+          )
+            return;
+          return <SidebarItem key={item.id} item={item} />;
+        })}
       </Stack>
       <div
         className="sidebarItem"
@@ -136,17 +126,17 @@ const data = [
   },
   {
     id: 4,
-    name: "Block List",
+    name: "User Block List",
     routeName: "/blockList",
     activeIcon: (props) => <BlockIcon {...props} />,
     inActiveIcon: (props) => <BlockIcon {...props} />,
   },
   {
     id: 5,
-    name: "View mySQL Data",
-    routeName: "/database",
-    activeIcon: (props) => <StorageRoundedIcon {...props} />,
-    inActiveIcon: (props) => <StorageRoundedIcon {...props} />,
+    name: "Manage Admin",
+    routeName: "/manageAdmin",
+    activeIcon: (props) => <PeopleAltRoundedIcon {...props} />,
+    inActiveIcon: (props) => <PeopleAltOutlinedIcon {...props} />,
   },
   {
     id: 6,

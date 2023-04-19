@@ -104,9 +104,7 @@ const PDFViewerScreen = ({ route }) => {
               text1: "File downloaded Successfully",
             });
           })
-          .catch((e) => {
-            console.log(e);
-          })
+          .catch((e) => {})
           .finally(() => setDownloadProgress(0));
       } catch (e) {
         throw new Error(e);

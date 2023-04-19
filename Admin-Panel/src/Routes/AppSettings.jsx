@@ -5,7 +5,14 @@ import {
   Edit,
   TaskAltRounded,
 } from "@mui/icons-material";
-import { Button, Divider, Stack, TextField } from "@mui/material";
+import {
+  Button,
+  Divider,
+  FormControlLabel,
+  Stack,
+  Switch,
+  TextField,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { dbClient } from "../Api/Client";
 
@@ -15,18 +22,10 @@ const AppSettings = () => {
       <div className="header">
         <p>App Settings</p>
       </div>
-      <Stack
-        direction={"row"}
-        spacing={1}
-        flex={1}
-        sx={{ backgroundColor: "#fff" }}
-      >
+      <Stack direction={"row"} spacing={1} flex={1}>
         <DocumentTypes />
         <AdminContacts />
-        <Stack flex={1} spacing={1}>
-          <Stack flex={1}></Stack>
-          <Stack flex={1}></Stack>
-        </Stack>
+        <ServerStatistics />
       </Stack>
     </Stack>
   );
@@ -270,6 +269,72 @@ const Label = ({ labelData, flexing }) => {
           {name}
         </p>
       ))}
+    </Stack>
+  );
+};
+
+const ServerStatistics = () => {
+  const [serverData, setServerData] = useState([]);
+
+  const FETCH = async () => {
+    dbClient.get("/appSettings").then(({ data }) => {
+      setServerData(data);
+    });
+  };
+
+  useEffect(() => {
+    FETCH();
+  }, []);
+
+  const handleChange = (value, name) => {
+    const data = value ? "enable" : "disable";
+    dbClient.post("/appSettings/update", { name, data }).then(() => {
+      FETCH();
+    });
+  };
+
+  return (
+    <Stack
+      flex={1}
+      spacing={1}
+      className="appSettingsBox"
+      divider={<Divider />}
+    >
+      <div style={{ margin: "20px 0", textAlign: "center" }}>
+        <p style={{ fontSize: 20, fontWeight: "bold" }}>Server Statistics</p>
+      </div>
+
+      <Stack spacing={2} divider={<Divider />}>
+        <Stack direction={"row"} divider={<Divider orientation="vertical" />}>
+          <p style={{ flex: 2, textAlign: "center", fontWeight: "bold" }}>
+            Description
+          </p>
+          <p style={{ flex: 1, textAlign: "center", fontWeight: "bold" }}>
+            Status
+          </p>
+        </Stack>
+        {serverData.map(({ Name, data }, i) => (
+          <Stack
+            direction={"row"}
+            key={i}
+            divider={<Divider orientation="vertical" />}
+          >
+            <p style={{ flex: 2, textAlign: "center" }}>{Name}</p>
+            <Stack flex={1} alignItems={"end"}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    size="small"
+                    checked={data === "enable"}
+                    onChange={(e) => handleChange(e.target.checked, Name)}
+                  />
+                }
+                label={`(${data})`}
+              />
+            </Stack>
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 };

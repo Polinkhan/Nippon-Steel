@@ -26,63 +26,43 @@ router.get("/viewData/:id", async (req, res, next) => {
   const { id } = req.params;
   const query =
     "SELECT Credentials.UserID,FullName,Title,FullName,Email,DateOfBirth,Company,Mobile,Nationality,Type,Bank FROM `Credentials` join Information ON Credentials.UserID = Information.UserID WHERE Credentials.UserID = ? ";
-  try {
-    const [result] = await db.query(query, [id]);
-    res.send(result[0]);
-  } catch (err) {
-    next(err);
-  }
+
+  db.query(query, [id], (err, results, fields) => {
+    if (err) next(err);
+    else res.send(results[0]);
+  });
 });
 
 router.get("/app/typeList", async (req, res, next) => {
   const query = "SELECT * From DocumentTypes";
-  try {
-    const [result] = await db.query(query);
-    res.send(result);
-  } catch (err) {
-    next(err);
-  }
-});
 
-router.post("/uploadProfilePicture", async (req, res) => {
-  try {
-    console.log(50, req.body);
-    res.send({ congrats: "data recieved" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Error");
-  }
+  db.query(query, (err, results, fields) => {
+    if (err) next(err);
+    else res.send(results);
+  });
 });
 
 router.get("/adminContactList", async (req, res, next) => {
-  try {
-    const query = "SELECT * From AdminContactList";
-    const [result] = await db.query(query);
-    res.send(result);
-  } catch (err) {
-    next(err);
-  }
+  const query = "SELECT * From AdminContactList";
+  db.query(query, (err, results, fields) => {
+    if (err) next(err);
+    else res.send(results);
+  });
 });
 
 router.post("/reportProblem", async (req, res, next) => {
-  try {
-    const { UserID, subject, description, data } = req.body;
-    const query =
-      "INSERT INTO `ReportProblems`(`UserID`, `Subject`, `Description`,`ReportTime`,`DeviceDetails`) VALUES (?,?,?,?,?)";
-    await db.query(query, [
-      UserID,
-      subject,
-      description,
-      new Date().getTime(),
-      JSON.stringify(data),
-    ]);
-    res.send();
-  } catch (err) {
-    next(err);
-  }
+  const { UserID, subject, description, data } = req.body;
+  const query =
+    "INSERT INTO `ReportProblems`(`UserID`, `Subject`, `Description`,`ReportTime`,`DeviceDetails`) VALUES (?,?,?,?,?)";
+  await db.query(
+    query,
+    [UserID, subject, description, new Date().getTime(), JSON.stringify(data)],
+    (err, results, fields) => {
+      if (err) next(err);
+      else res.send();
+    }
+  );
 });
-
-console.log(new Date().getTime());
 
 router.post("/getPayslipData/:id", async (req, res, next) => {
   try {
@@ -91,7 +71,6 @@ router.post("/getPayslipData/:id", async (req, res, next) => {
     const { name, fileUrl } = await getPDFURL(id, month, year, type);
     res.send({ name, fileUrl });
   } catch (err) {
-    console.log(err);
     next(err);
   }
 });

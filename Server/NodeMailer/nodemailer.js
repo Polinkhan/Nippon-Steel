@@ -1,30 +1,15 @@
 const path = require("path");
-var nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
-const smtpTransport = require("nodemailer-smtp-transport");
+const nodemailer = require("nodemailer");
 
-// var transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: "noreply.nsc.eng@gmail.com",
-//     pass: "pogarrsecbuwpkpt",
-//   },
-// });
-
-var transporter = nodemailer.createTransport(
-  smtpTransport({
-    host: "mail.nippontechnology.com",
-    secureConnection: false,
-    tls: {
-      rejectUnauthorized: false,
-    },
-    port: 587,
-    auth: {
-      user: "naeem@nippontechnology.com",
-      pass: "Naeem@1993",
-    },
-  })
-);
+let transporter = nodemailer.createTransport({
+  host: "localhost",
+  port: 25,
+  secure: false,
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 transporter.use(
   "compile",
@@ -45,9 +30,12 @@ const mailTo = async (email, OTP, isAdminLogin) => {
     : `${OTP} is your Nippon Steel Engineering (App) Verification OTP`;
 
   var mailOptions = {
-    from: "naeem@nippontechnology.com",
+    from: "noreply@ofsnse.com",
     to: email,
     subject: subject,
+    headers: {
+      priority: "high",
+    },
     template: "index",
     context: {
       OTP: OTP,
@@ -57,6 +45,7 @@ const mailTo = async (email, OTP, isAdminLogin) => {
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
+        console.log(error);
         reject(error);
       } else resolve("A code has been sent to your mail");
     });

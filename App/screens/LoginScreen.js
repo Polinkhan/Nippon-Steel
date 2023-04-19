@@ -1,12 +1,4 @@
-import {
-  Dimensions,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  ToastAndroid,
-  View,
-} from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useRef, useState } from "react";
 import Colors from "../constants/Colors";
 import { Button, Checkbox, IconButton, TextInput } from "react-native-paper";
@@ -14,6 +6,8 @@ import { authClient } from "../Api/Client";
 import { Keyboard } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { font, mediumFont } from "../constants/SIzes";
+import { useDataContext } from "../hooks/useDataContext";
+import * as SecureStore from "expo-secure-store";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 const { width, height } = Dimensions.get("window");
 
@@ -24,29 +18,36 @@ const LoginScreen = ({ navigation }) => {
   const [togglePass, setTogglePass] = useState(true);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { setCurrentUser } = useDataContext();
 
   const handleSubmit = async () => {
     setError(false);
+    setLoading(true);
     Keyboard.dismiss();
-    try {
-      setLoading(true);
-      const { data } = await authClient.post("/requestOTP", {
-        id,
-        pass,
-      });
-      navigation.navigate("otp", {
-        id,
-        pass,
-        redirectTo: "Root",
-        Email: data.Email,
-      });
-    } catch (err) {
-      const message = err?.response?.data?.message;
-      Toast.show({ type: "error", text1: message });
-      setError(message);
-    } finally {
-      setLoading(false);
-    }
+
+    authClient
+      .post("/login", { id, pass })
+      .then(async ({ data }) => {
+        const { OtpService, accessToken, User, Email } = data;
+        if (OtpService) {
+          navigation.navigate("otp", {
+            id,
+            pass,
+            redirectTo: "Root",
+            Email: Email,
+          });
+        } else {
+          await SecureStore.setItemAsync("accessToken", accessToken);
+          setCurrentUser(User);
+        }
+      })
+      .catch((err) => {
+        Toast.show({
+          type: "error",
+          text1: err?.response?.data?.message,
+        });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (

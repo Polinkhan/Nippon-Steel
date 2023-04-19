@@ -11,27 +11,57 @@ import { Toast } from "react-native-toast-message/lib/src/Toast";
 
 const ChangePasswordScreen = ({ navigation, route }) => {
   const { isVerified } = route.params;
+
   const { currentUser } = useDataContext();
   const [loading, setLoading] = useState(false);
+  const [verified, setVerified] = useState(isVerified);
   const [password, setPassword] = useState({ password: null });
+
+  // const handleSubmit = async () => {
+  //   Keyboard.dismiss();
+  //   try {
+  //     setLoading(true);
+  //     await authClient.post("/requestOTP", {
+  //       id: currentUser.UserID,
+  //       pass: password.password,
+  //     });
+  //     navigation.replace("otp", {
+  //       id: currentUser.UserID,
+  //       redirectTo: "changePassword",
+  //       Email: currentUser.Email,
+  //     });
+  //   } catch (err) {
+  //     Toast.show({ type: "error", text1: err?.response?.data?.message });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async () => {
+    setLoading(true);
     Keyboard.dismiss();
-    try {
-      setLoading(true);
-      await authClient.post("/requestOTP", {
+    authClient
+      .post("/login", {
         id: currentUser.UserID,
         pass: password.password,
-      });
-      navigation.replace("otp", {
-        id: currentUser.UserID,
-        redirectTo: "changePassword",
-        Email: currentUser.Email,
-      });
-    } catch (err) {
-      Toast.show({ type: "error", text1: err?.response?.data?.message });
-    } finally {
-      setLoading(false);
-    }
+      })
+      .then(async ({ data }) => {
+        const { OtpService, accessToken, User, Email } = data;
+        if (OtpService) {
+          navigation.replace("otp", {
+            id: currentUser.UserID,
+            redirectTo: "changePassword",
+            Email: currentUser.Email,
+          });
+        } else {
+          setPassword({ password: null });
+          setVerified(true);
+        }
+      })
+      .catch((err) => {
+        Toast.show({ type: "error", text1: err?.response?.data?.message });
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleSubmitPassword = async () => {
@@ -59,13 +89,14 @@ const ChangePasswordScreen = ({ navigation, route }) => {
       });
   };
 
-  if (isVerified) {
+  if (verified) {
     return (
       <View style={styles.container}>
         <TextInput
           mode="outlined"
           label={"New Password"}
           style={styles.input}
+          value={password.password}
           activeOutlineColor={Colors.light.tint}
           onChangeText={(text) =>
             setPassword((prev) => ({ ...prev, password: text }))
@@ -75,6 +106,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
           mode="outlined"
           label={"Confirm New Password"}
           style={styles.input}
+          value={password.confirmPassword}
           activeOutlineColor={Colors.light.tint}
           onChangeText={(text) =>
             setPassword((prev) => ({ ...prev, confirmPassword: text }))
@@ -93,6 +125,7 @@ const ChangePasswordScreen = ({ navigation, route }) => {
         <TextInput
           mode="outlined"
           label={"Enter Current Password"}
+          value={password.password}
           style={{ width: "80%", backgroundColor: "#f2f2f2" }}
           activeOutlineColor={Colors.light.tint}
           onChangeText={(text) => setPassword({ password: text })}

@@ -11,20 +11,29 @@ import {
 import { useDataContext } from "../contexts/DataContext";
 import { useState } from "react";
 import { authClient } from "../Api/Client";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const { setCurrentUser } = useDataContext();
-
   const handleSubmit = (data, callback) => {
-    const { email, pass } = data;
+    const { email, pass, remember } = data;
     authClient
       .post("login", { email, pass })
-      .then(() => {
-        callback({ loading: false, isOTPSend: true });
+      .then(({ data }) => {
+        const { OtpService, accessToken, currentUser } = data;
+        console.log(data);
+        if (OtpService) {
+          callback({ loading: false, isOTPSend: true });
+        } else {
+          if (remember) localStorage.setItem("accessToken", accessToken);
+          setCurrentUser(currentUser);
+        }
       })
       .catch((err) => {
+        console.log(err);
+        console.log(err?.response?.data?.message);
         callback({ loading: false, isOTPSend: false });
-        console.log(err?.response?.data);
+        toast.error(err?.response?.data?.message);
       });
   };
 
@@ -56,7 +65,7 @@ const LoginPage = () => {
         <Stack flex={3} className="RightBox">
           <Stack spacing={2} style={{ flex: 1, justifyContent: "center" }}>
             <p style={{ fontSize: 24 }}>Nippon Steel Engineering</p>
-            <p>Admin Login</p>
+            <p>(HR-Admin) Login</p>
           </Stack>
           <LoginForm handleSubmit={handleSubmit} varifyOTP={varifyOTP} />
         </Stack>
@@ -105,8 +114,9 @@ const LoginForm = ({ handleSubmit, varifyOTP }) => {
             {loading ? <CircularProgress color="white" size={20} /> : "Submit"}
           </Button>
         </Stack>
-        <Stack spacing={1} direction={"row"} justifyContent={"center"}>
-          <p style={{ fontSize: 12 }}>A OTP has been sent to your email</p>
+        <Stack spacing={1} alignItems={"center"}>
+          <p style={{ fontSize: 12 }}>An OTP will be sent to your email soon</p>
+          <p style={{ fontSize: 12 }}>this may take upto (2 minutes) </p>
         </Stack>
       </form>
     );
@@ -118,7 +128,7 @@ const LoginForm = ({ handleSubmit, varifyOTP }) => {
       onSubmit={(e) => {
         setLoading(true);
         e.preventDefault();
-        handleSubmit({ email, pass }, ({ loading, isOTPSend }) => {
+        handleSubmit({ email, pass, remember }, ({ loading, isOTPSend }) => {
           setLoading(loading);
           setOTPSend(isOTPSend);
         });

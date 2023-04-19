@@ -10,7 +10,7 @@ import { ToastAndroid } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
-import { font } from "../constants/SIzes";
+import { boldFont, font } from "../constants/SIzes";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 const { width, height } = Dimensions.get("window");
 
@@ -25,7 +25,7 @@ const OtpVerifyScreen = ({ navigation, route }) => {
       await authClient
         .post("/verifyOtp", { id, pass, otp: text })
         .then(async ({ data }) => {
-          const { accessToken, currentUser } = data;
+          const { accessToken, User } = data;
           if (redirectTo === "changePassword") {
             navigation.replace(redirectTo, {
               isVerified: true,
@@ -33,7 +33,7 @@ const OtpVerifyScreen = ({ navigation, route }) => {
             });
           } else {
             await SecureStore.setItemAsync("accessToken", accessToken);
-            setCurrentUser(currentUser);
+            setCurrentUser(User);
             navigation.replace(redirectTo);
           }
         })
@@ -72,15 +72,22 @@ const OtpVerifyScreen = ({ navigation, route }) => {
           justifyContent: Platform.OS === "ios" ? "flex-start" : "center",
         }}
       >
+        <Text style={{ ...font, textAlign: "center", color: "gray" }}>
+          A 4 digit OTP will be sent in this email soon
+        </Text>
+        <Text style={{ ...font, textAlign: "center", color: "gray" }}>
+          ({Email})
+        </Text>
         <Text
           style={{
-            ...font,
+            ...boldFont,
+            fontSize: width / 40,
             textAlign: "center",
-            marginBottom: height / 50,
             color: "gray",
+            marginVertical: height / 100,
           }}
         >
-          We have sent a 4 digit OTP in this email{"\n"} ({Email})
+          this may take upto (2 minutes)
         </Text>
         <TextInput
           keyboardType="numeric"
@@ -98,6 +105,7 @@ const OtpVerifyScreen = ({ navigation, route }) => {
   );
 };
 
+//
 export default OtpVerifyScreen;
 
 const styles = StyleSheet.create({

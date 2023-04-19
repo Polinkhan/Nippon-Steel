@@ -28,9 +28,7 @@ const ReportScreen = () => {
       dbClient
         .post("reportProblem", { UserID, subject, description, data })
         .then(() => setSubmitted(true))
-        .catch((err) => {
-          console.log(err.response.data);
-        });
+        .catch((err) => {});
     } else {
       setError("Fillup atleast one field");
     }

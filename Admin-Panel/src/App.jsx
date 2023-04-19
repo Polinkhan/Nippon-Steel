@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import DataContextProvider from "./contexts/DataContext";
 import "./App.css";
 import RootRouter from "./Routes/RootRouter";
+import { ToastContainer } from "react-toastify";
 
 const THEME = createTheme({
   typography: {
@@ -19,12 +20,25 @@ const THEME = createTheme({
     light: { main: "rgba(255,255,255,0.5)" },
   },
 });
+const toastConfig = {
+  position: "bottom-right",
+  autoClose: 3000,
+  hideProgressBar: false,
+  newestOnTop: false,
+  closeOnClick: true,
+  rtl: false,
+  pauseOnFocusLoss: true,
+  draggable: true,
+  pauseOnHover: true,
+  theme: "colored",
+};
 
 function App() {
   return (
     <ThemeProvider theme={THEME}>
       <DataContextProvider>
         <RootRouter />
+        <ToastContainer {...toastConfig} />
       </DataContextProvider>
     </ThemeProvider>
   );

@@ -130,6 +130,7 @@ const InputWithLabel = ({ item, setData }) => {
       id={item.key}
       required
       type={item.type}
+      // value={item.type === "date" && new Date()}
       label={item.placeholder}
       variant="outlined"
       // focused={item.key === "dateOfBirth" && true}

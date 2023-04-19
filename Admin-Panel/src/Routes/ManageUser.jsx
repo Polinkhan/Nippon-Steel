@@ -20,6 +20,7 @@ const ManageUser = () => {
   const FETCHDATA = async () => {
     try {
       const { data } = await dbClient.get("/viewData/unblock");
+      console.log(data);
       setData(data);
     } catch (err) {
       toast.error(err?.response?.data?.message);
@@ -286,6 +287,7 @@ const Label = () => {
     </Stack>
   );
 };
+
 export default ManageUser;
 
 const keys = [

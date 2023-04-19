@@ -21,12 +21,7 @@ app.use(bodyParser.json({ limit: "50mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.get("/", async (req, res, next) => {
-  db.query(`SELECT * FROM Credentials`, (err, results, fields) => {
-    if (err) next(err);
-    else {
-      res.send(results);
-    }
-  });
+  res.send("404! not found");
 });
 
 //App routes

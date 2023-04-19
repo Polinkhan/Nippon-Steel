@@ -254,7 +254,7 @@
 
 .appSettingsBox {
   padding: 20px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 8px 0px;
+  background-color: #fff;
 }
 
 .typeBox p {

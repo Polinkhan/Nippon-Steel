@@ -19,12 +19,11 @@ const Onbording = ({ navigation }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [serverError, setServerError] = useState(false);
+  const [serverError, setServerError] = useState(null);
   const { setCurrentUser } = useDataContext();
   const [loading, setLoading] = useState(true);
 
   const FETCH = async () => {
-    console.log(1, "requested");
     setLoading(true);
     setServerError(false);
     const state = await SecureStore.getItemAsync("onBoard");
@@ -37,9 +36,10 @@ const Onbording = ({ navigation }) => {
         navigation.replace("Root");
       })
       .catch((err) => {
-        console.log(2, err);
-        if (err?.message === "timeout of 20000ms exceeded") {
-          setServerError(true);
+        if (err?.message === "timeout of 15000ms exceeded") {
+          setServerError({ message: "Connection timeout!!", status: 408 });
+        } else if (err.code === "ERR_BAD_RESPONSE") {
+          setServerError(err?.response?.data);
         } else {
           JSON.parse(state) && navigation.replace("login");
         }
@@ -70,9 +70,8 @@ const Onbording = ({ navigation }) => {
         style={{
           flex: 1,
           backgroundColor: "#fff",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           alignItems: "center",
-          paddingVertical: height / 5,
         }}
       >
         <StatusBar animated style="dark" />
@@ -80,10 +79,16 @@ const Onbording = ({ navigation }) => {
           icon={"restore"}
           size={width / 12}
           onPress={FETCH}
-          style={{ backgroundColor: Colors.light.tintOpacity }}
+          style={{
+            backgroundColor: Colors.light.tintOpacity,
+            marginVertical: height / 20,
+          }}
         />
         <Text style={{ ...mediumFont, textAlign: "center" }}>
-          {"Error 408! Connection timeout!!\nClick to retry"}
+          Error Code : {serverError.status}
+        </Text>
+        <Text style={{ ...font, textAlign: "center" }}>
+          Details : {serverError.message}
         </Text>
       </View>
     );

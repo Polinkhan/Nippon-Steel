@@ -7,6 +7,7 @@ import LottieView from "lottie-react-native";
 const ProfileCard = require("../assets/lottie/profileCard.json");
 import { font } from "../constants/SIzes";
 import { Dimensions } from "react-native";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 const { width, height } = Dimensions.get("window");
 
 const ProfileScreen = () => {
@@ -19,9 +20,7 @@ const ProfileScreen = () => {
       try {
         const { data } = await dbClient.get(`/viewData/${UserID}`);
         setData(data);
-      } catch (err) {
-        console.log(37, err.response.data);
-      }
+      } catch (err) {}
     })();
   }, []);
 
