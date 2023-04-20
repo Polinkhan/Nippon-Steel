@@ -11,22 +11,37 @@ import AppSettingsAltRoundedIcon from "@mui/icons-material/AppSettingsAltRounded
 import SpaceDashboardOutlinedIcon from "@mui/icons-material/SpaceDashboardOutlined";
 import AppSettingsAltOutlinedIcon from "@mui/icons-material/AppSettingsAltOutlined";
 import "react-toastify/dist/ReactToastify.css";
-import { Stack } from "@mui/material";
+import { Drawer, Stack } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useDataContext } from "../contexts/DataContext";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
+import { useState } from "react";
 
 const RootPage = () => {
+  const { lg, regulerFontSize } = useResponsiveSizes();
+  const [drawer, setDrawer] = useState(false);
   return (
     <Stack
       height={"calC(100vh - 16px)"}
       spacing={1}
       p={1}
       sx={{ backgroundColor: "#ddd" }}
+      fontSize={regulerFontSize}
     >
-      <Navbar />
+      <Navbar setDrawer={setDrawer} />
       <Stack direction={"row"} flex={1} spacing={1}>
-        <Sidebar />
-        <Stack flex={1}>
+        {lg ? (
+          <Sidebar />
+        ) : (
+          <Drawer
+            anchor={"left"}
+            open={drawer}
+            onClose={() => setDrawer(false)}
+          >
+            <Sidebar setDrawer={setDrawer} />
+          </Drawer>
+        )}
+        <Stack flex={1} overflow={"auto"}>
           <Outlet />
         </Stack>
       </Stack>
@@ -34,10 +49,11 @@ const RootPage = () => {
   );
 };
 
-const Sidebar = () => {
+const Sidebar = ({ setDrawer }) => {
   const { currentUser, setCurrentUser } = useDataContext();
+  const { regulerFontSize } = useResponsiveSizes();
   return (
-    <Stack justifyContent={"space-between"} className="sideContainer">
+    <div className="sideContainer">
       <Stack spacing={1}>
         {data.map((item) => {
           if (
@@ -45,28 +61,38 @@ const Sidebar = () => {
             currentUser.AccountLavel === "Moderator"
           )
             return;
-          return <SidebarItem key={item.id} item={item} />;
+          return (
+            <SidebarItem key={item.id} item={item} setDrawer={setDrawer} />
+          );
         })}
       </Stack>
       <div
         className="sidebarItem"
-        style={{ display: "flex", width: "100%", cursor: "pointer" }}
+        style={{
+          display: "flex",
+          width: "100%",
+          cursor: "pointer",
+          alignItems: "center",
+        }}
         onClick={() => {
           localStorage.removeItem("accessToken");
           setCurrentUser(null);
         }}
       >
         <LogoutOutlinedIcon style={{ flex: 1 }} color={"white"} />
-        <p style={{ flex: 2, color: "#fff" }}>Sign out</p>
+        <p style={{ fontSize: regulerFontSize, flex: 2, color: "#fff" }}>
+          Sign out
+        </p>
         {/* </Stack> */}
       </div>
-    </Stack>
+    </div>
   );
 };
 
-const SidebarItem = ({ item }) => {
+const SidebarItem = ({ item, setDrawer }) => {
   const location = useLocation();
   const currentUri = decodeURI(location.pathname);
+  const { regulerFontSize } = useResponsiveSizes();
 
   const isSelected = currentUri === item.routeName;
   const linearBackground =
@@ -75,8 +101,10 @@ const SidebarItem = ({ item }) => {
   if (isSelected) {
     return (
       <Stack
+        fontSize={regulerFontSize}
         direction={"row"}
         className="sidebarItem"
+        alignItems={"center"}
         style={{
           cursor: "pointer",
           borderWidth: 3,
@@ -90,8 +118,14 @@ const SidebarItem = ({ item }) => {
   }
 
   return (
-    <Link to={item.routeName} style={{ textDecoration: "none" }}>
-      <Stack direction={"row"} className="sidebarItem">
+    <Link
+      to={item.routeName}
+      style={{ textDecoration: "none", fontSize: regulerFontSize }}
+      onClick={() => {
+        setDrawer && setDrawer(false);
+      }}
+    >
+      <Stack direction={"row"} className="sidebarItem" alignItems={"center"}>
         <item.inActiveIcon style={{ margin: "0 20px" }} color={"light"} />
         <p className="text" style={{ flex: 1, color: "rgba(255,255,255,0.5)" }}>
           {item.name}

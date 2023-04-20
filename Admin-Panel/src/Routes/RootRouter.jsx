@@ -31,7 +31,7 @@ function RootRouter() {
   }, []);
 
   if (loadind) {
-    return <Loading size={250} />;
+    return <Loading />;
   }
 
   return (

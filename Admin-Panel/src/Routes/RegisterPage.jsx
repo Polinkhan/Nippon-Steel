@@ -1,16 +1,10 @@
 import { PersonAdd, Search, RotateLeft } from "@mui/icons-material";
-import {
-  Button,
-  Divider,
-  Fade,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, Divider, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { dbClient } from "../Api/Client";
 import Loading from "../components/Loading";
 import { toast } from "react-toastify";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const RegisterPage = () => {
   const [Credentials, setCredentials] = useState({});
@@ -34,6 +28,8 @@ const RegisterPage = () => {
     }
   };
 
+  const { lg } = useResponsiveSizes();
+
   return (
     <Stack className="rightContainer" spacing={1}>
       <div className="header">
@@ -45,7 +41,7 @@ const RegisterPage = () => {
           sx={{ height: "100%" }}
         >
           <Stack
-            direction={"row"}
+            direction={lg ? "row" : "column"}
             flex={8}
             className="registerInputBody"
             divider={<Divider orientation="vertical" flexItem />}
@@ -55,7 +51,11 @@ const RegisterPage = () => {
               <p style={{ flex: 1, fontSize: 20, margin: "50px 0" }}>
                 Credentials
               </p>
-              <Stack flex={10} justifyContent={"space-around"}>
+              <Stack
+                flex={10}
+                spacing={!lg && 2}
+                justifyContent={"space-around"}
+              >
                 {credentials.map((item, i) => (
                   <InputWithLabel
                     key={i}
@@ -71,7 +71,8 @@ const RegisterPage = () => {
               </p>
               <Stack
                 flex={10}
-                direction={"row"}
+                direction={lg ? "row" : "column"}
+                spacing={!lg && 2}
                 flexWrap={"wrap"}
                 justifyContent={"space-around"}
                 alignItems={"center"}
@@ -92,6 +93,7 @@ const RegisterPage = () => {
             alignItems={"center"}
             justifyContent={"center"}
             spacing={5}
+            sx={{ py: 5 }}
           >
             <Button
               type="reset"

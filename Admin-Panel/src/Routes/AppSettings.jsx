@@ -15,14 +15,17 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { dbClient } from "../Api/Client";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const AppSettings = () => {
+  const { lg } = useResponsiveSizes();
+
   return (
     <Stack className="rightContainer" spacing={1}>
       <div className="header">
         <p>App Settings</p>
       </div>
-      <Stack direction={"row"} spacing={1} flex={1}>
+      <Stack direction={lg ? "row" : "column"} spacing={1} flex={1}>
         <DocumentTypes />
         <AdminContacts />
         <ServerStatistics />
@@ -32,9 +35,9 @@ const AppSettings = () => {
 };
 
 const DocumentTypes = () => {
-  const labelData = ["ID", "Type", "Modify"];
+  const labelData = ["Type", "Modify"];
 
-  const flexing = [1, 2, 1];
+  const flexing = [2, 1];
 
   const [types, setTypes] = useState([]);
 
@@ -92,9 +95,9 @@ const DocumentTypes = () => {
 };
 
 const AdminContacts = () => {
-  const labelData = ["ID", "Name", "Email", "Number", "Modify"];
+  const labelData = ["Name", "Email", "Number", "Modify"];
 
-  const flexing = [1, 1, 2, 1.5, 1];
+  const flexing = [1, 2, 1.5, 1];
 
   const [admins, setAdmins] = useState([]);
 
@@ -174,13 +177,8 @@ const TypeBox = ({ item, flexing, handleClick }) => {
           divider={<Divider orientation="vertical" />}
         >
           {Object.keys(item).map((label, i) => {
-            if (label === "ID") {
-              return (
-                <p key={i} style={{ flex: flexing[i] }}>
-                  {item.ID}
-                </p>
-              );
-            } else {
+            if (label === "ID") return;
+            else {
               return (
                 <div key={i} style={{ flex: flexing[i] }}>
                   <TextField
@@ -215,7 +213,7 @@ const TypeBox = ({ item, flexing, handleClick }) => {
         </Stack>
       </form>
     );
-
+  let count = 0;
   return (
     <Stack
       direction={"row"}
@@ -224,11 +222,14 @@ const TypeBox = ({ item, flexing, handleClick }) => {
       className="typeBox"
       divider={<Divider orientation="vertical" />}
     >
-      {Object.keys(item).map((label, i) => (
-        <p key={i} style={{ flex: flexing[i] }}>
-          {item[label]}
-        </p>
-      ))}
+      {Object.keys(item).map((label, i) => {
+        if (label === "ID") return;
+        return (
+          <p key={i} style={{ flex: flexing[count++] }}>
+            {item[label]}
+          </p>
+        );
+      })}
       <Stack flex={1} direction={"row"} justifyContent={"center"} spacing={1}>
         <CustomIconButton color="info" onClick={() => setEditMode(true)}>
           <Edit />
@@ -275,6 +276,7 @@ const Label = ({ labelData, flexing }) => {
 
 const ServerStatistics = () => {
   const [serverData, setServerData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const FETCH = async () => {
     dbClient.get("/appSettings").then(({ data }) => {
@@ -287,10 +289,14 @@ const ServerStatistics = () => {
   }, []);
 
   const handleChange = (value, name) => {
+    setLoading(true);
     const data = value ? "enable" : "disable";
-    dbClient.post("/appSettings/update", { name, data }).then(() => {
-      FETCH();
-    });
+    dbClient
+      .post("/appSettings/update", { name, data })
+      .then(() => {
+        FETCH();
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -306,7 +312,7 @@ const ServerStatistics = () => {
 
       <Stack spacing={2} divider={<Divider />}>
         <Stack direction={"row"} divider={<Divider orientation="vertical" />}>
-          <p style={{ flex: 2, textAlign: "center", fontWeight: "bold" }}>
+          <p style={{ flex: 1.5, textAlign: "center", fontWeight: "bold" }}>
             Description
           </p>
           <p style={{ flex: 1, textAlign: "center", fontWeight: "bold" }}>
@@ -319,11 +325,12 @@ const ServerStatistics = () => {
             key={i}
             divider={<Divider orientation="vertical" />}
           >
-            <p style={{ flex: 2, textAlign: "center" }}>{Name}</p>
+            <p style={{ flex: 1.5, textAlign: "center" }}>{Name}</p>
             <Stack flex={1} alignItems={"end"}>
               <FormControlLabel
                 control={
                   <Switch
+                    disabled={loading}
                     size="small"
                     checked={data === "enable"}
                     onChange={(e) => handleChange(e.target.checked, Name)}

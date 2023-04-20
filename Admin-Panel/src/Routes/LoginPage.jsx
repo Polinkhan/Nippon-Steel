@@ -53,15 +53,15 @@ const LoginPage = () => {
   };
 
   return (
-    <Stack className="container">
+    <Stack className="loginBody">
       <Stack direction={"row"} className="outerBox">
-        <Stack flex={4} className="leftBox">
+        <div className="leftBox">
           <Lottie
             animationData={login}
             loop={true}
             style={{ width: "calc(30vw - 80px)" }}
           />
-        </Stack>
+        </div>
         <Stack flex={3} className="RightBox">
           <Stack spacing={2} style={{ flex: 1, justifyContent: "center" }}>
             <p style={{ fontSize: 24 }}>Nippon Steel Engineering</p>

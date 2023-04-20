@@ -1,4 +1,9 @@
-.container {
+.loadingAnimation {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
 }
 
 .header {
@@ -16,6 +21,9 @@
 /*----- Rootpage Page----- */
 
 .sideContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: #283542;
 }
 
@@ -25,8 +33,8 @@
 }
 
 .rightContainer {
+  overflow: auto;
   height: 100%;
-  /* height: calc(100% - 40px); */
 }
 
 .sidebarItem:hover {
@@ -70,9 +78,10 @@
 }
 
 .dashboardItemBox {
-  flex: 1;
+  /* flex: 1; */
   justify-content: space-between;
-  min-width: 220px;
+  margin: 20px;
+  width: 220px;
   height: 120px;
   background-color: #fff;
   z-index: 1;
@@ -117,7 +126,7 @@
 
 .dashboardItemBox:hover {
   color: #fff;
-  flex: 1.5;
+  /* flex: 1.5; */
 }
 
 .dashboardItemBox:hover .dashboardItemBoxHover {
@@ -136,14 +145,14 @@
 
 /*----- Login Page----- */
 
-.container {
+.loginBody {
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: hsla(139, 72%, 83%, 1);
   color: #3b4d61;
 
+  background: hsla(139, 72%, 83%, 1);
   background: linear-gradient(
     180deg,
     hsla(139, 72%, 83%, 1) 0%,
@@ -163,15 +172,14 @@
   );
 }
 .outerBox {
-  width: 60vw;
   height: 75vh;
-  /* background-color: #fff; */
   border-radius: 10px;
   overflow: hidden;
-  background-color: #f2f2f5;
+  background-color: #f2f2f2;
 }
 
 .leftBox {
+  flex: 4;
   justify-content: center;
   align-items: center;
 }
@@ -248,7 +256,13 @@
   right: 0;
 }
 
-/*----- ViewDatabase Page----- */
+/*----- ManageAdmin Page----- */
+
+.adminData p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /*----- App Settings Page----- */
 
@@ -266,17 +280,98 @@
 
 /*----- Responsive Page----- */
 
-@media only screen and (min-width: 992px) {
-  .navbar {
-    height: 50px;
+@media only screen and (max-width: 576px) {
+  .loading {
+    width: 150px;
   }
+
+  .header {
+    padding: 6px 12px;
+    font-size: 1rem;
+  }
+
+  .navbar {
+    height: 70px;
+  }
+
+  .navLogo {
+    width: 200px;
+  }
+
+  .sideContainer {
+    width: 250px;
+    height: 100%;
+    padding: 12px;
+  }
+  .sidebarItem {
+    padding: 15px 0;
+  }
+
+  /*----- Login Page----- */
+
+  .outerBox {
+    width: 95vw;
+    height: 90vh;
+  }
+
+  .leftBox {
+    display: none;
+  }
+
+  .form {
+    width: 80%;
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  .navbar {
+    height: 70px;
+  }
+
+  .header {
+    padding: 6px 12px;
+    font-size: 1rem;
+  }
+
   .navLogo {
     width: 220px;
   }
+
+  .sideContainer {
+    width: 250px;
+    height: 100%;
+    padding: 12px;
+  }
+  .sidebarItem {
+    padding: 15px 0;
+  }
+
+  /*----- Login Page----- */
+
+  .outerBox {
+    width: 70vw;
+  }
+
+  .leftBox {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .navbar {
+    height: 50px;
+  }
+  .loading {
+    width: 250px;
+  }
+
   .header {
     padding: 6px 12px;
     font-size: 1.2rem;
   }
+
+  /*----- Rootpage Page----- */
+
   .sideContainer {
     width: 200px;
     padding: 12px;
@@ -284,9 +379,15 @@
   .sidebarItem {
     padding: 15px 0;
   }
-  .viewDatabaseDiv {
+
+  /*----- Login Page----- */
+
+  .outerBox {
+    width: 65vw;
+  }
+
+  .leftBox {
     display: flex;
-    width: calc(100vw - 264px);
   }
 }
 
@@ -301,6 +402,9 @@
     padding: 10px 20px;
     font-size: 1.5rem;
   }
+
+  /*----- Rootpage Page----- */
+
   .sideContainer {
     width: 250px;
     padding: 20px;
@@ -308,8 +412,10 @@
   .sidebarItem {
     padding: 20px 0;
   }
-  .viewDatabaseDiv {
-    display: flex;
-    width: calc(100vw - 314px);
+
+  /*----- Login Page----- */
+
+  .outerBox {
+    width: 60vw;
   }
 }

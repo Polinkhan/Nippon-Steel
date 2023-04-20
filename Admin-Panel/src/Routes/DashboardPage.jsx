@@ -3,9 +3,11 @@ import { Divider, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import AreaChartView from "../components/AreaChartView";
 import { useDataContext } from "../contexts/DataContext";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const DashboardPage = () => {
   const { currentUser } = useDataContext();
+  const { regulerFontSize, md, lg } = useResponsiveSizes();
   return (
     <Stack direction={"row"} className="rightContainer" spacing={1}>
       <Stack flex={4} spacing={1}>
@@ -22,14 +24,12 @@ const DashboardPage = () => {
             flex={1}
             direction={"row"}
             justifyContent={"center"}
-            spacing={5}
             flexWrap={"wrap"}
-            alignItems={"flex-start"}
           >
             {data.map((elem, i) => (
               <Stack key={i} direction={"row"} className="dashboardItemBox">
-                <Stack flex={1} justifyContent={"space-between"}>
-                  <p style={{ fontSize: 18, fontWeight: "bold" }}>
+                <Stack width={"80%"} justifyContent={"space-between"}>
+                  <p style={{ fontSize: regulerFontSize, fontWeight: "bold" }}>
                     {elem.header}
                   </p>
                   <Stack
@@ -37,7 +37,7 @@ const DashboardPage = () => {
                     justifyContent={"space-between"}
                     alignItems={"center"}
                   >
-                    <p>{elem.message}</p>
+                    <p style={{ fontSize: regulerFontSize }}>{elem.message}</p>
                     {elem.count && (
                       <p style={{ fontWeight: "bold", fontSize: 32 }}>
                         {elem.count}
@@ -45,11 +45,21 @@ const DashboardPage = () => {
                     )}
                   </Stack>
                 </Stack>
+
                 {elem.linkTo && (
-                  <Link to={elem.linkTo} style={{ zIndex: 2 }}>
+                  <Link
+                    to={elem.linkTo}
+                    style={{
+                      width: "20%",
+                      zIndex: 2,
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
                     <Launch className="dashboardItemIcon" />
                   </Link>
                 )}
+
                 <div className="dashboardItemBoxHover" />
               </Stack>
             ))}
@@ -57,27 +67,29 @@ const DashboardPage = () => {
           </Stack>
           <Stack flex={2} py={1}>
             <div>Summary</div>
-            <AreaChartView ChartData={ChartData} />
+            {/* <AreaChartView ChartData={ChartData} /> */}
           </Stack>
         </Stack>
       </Stack>
-      <Stack flex={1} spacing={2} className="userInfoBody">
-        <Stack
-          justifyContent={"center"}
-          alignItems={"center"}
-          style={{
-            border: "1px solid black",
-            width: "60px",
-            height: "60px",
-            borderRadius: 999,
-          }}
-        >
-          <Person sx={{ fontSize: 50 }} />
+      {lg && (
+        <Stack flex={1} spacing={2} className="userInfoBody">
+          <Stack
+            justifyContent={"center"}
+            alignItems={"center"}
+            style={{
+              border: "1px solid black",
+              width: "60px",
+              height: "60px",
+              borderRadius: 999,
+            }}
+          >
+            <Person sx={{ fontSize: 50 }} />
+          </Stack>
+          <p>{currentUser.AccountType}</p>
+          <p>{currentUser.FullName}</p>
+          <p>{currentUser.Email}</p>
         </Stack>
-        <p>{currentUser.AccountType}</p>
-        <p>{currentUser.FullName}</p>
-        <p>{currentUser.Email}</p>
-      </Stack>
+      )}
     </Stack>
   );
 };

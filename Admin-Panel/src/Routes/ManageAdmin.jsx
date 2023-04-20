@@ -10,8 +10,9 @@ import {
 import { useEffect, useState } from "react";
 import { authClient, dbClient } from "../Api/Client";
 import { toast } from "react-toastify";
-import { Block, Delete, Edit } from "@mui/icons-material";
+import { CloseSharp, Delete, Edit } from "@mui/icons-material";
 import { useDataContext } from "../contexts/DataContext";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const ManageAdmin = () => {
   const [adminData, setAdminData] = useState([]);
@@ -55,6 +56,7 @@ const ManageAdmin = () => {
         state: true,
         action: "UPDATE",
         method: handleUpdate,
+        closeDrawer: () => setDrawerState({ state: false }),
         message: "Change and click update to modify the data",
       });
     } else if (type === "delete") {
@@ -64,17 +66,20 @@ const ManageAdmin = () => {
         state: true,
         action: "confirm delete",
         method: handleDelete,
+        closeDrawer: () => setDrawerState({ state: false }),
         message: `Are you sure you want to delete the ${data.AccountLavel} data?`,
       });
     }
   };
+
+  const { lg } = useResponsiveSizes();
 
   return (
     <Stack className="rightContainer" spacing={1}>
       <div className="header">
         <p>Manage Admin Data</p>
       </div>
-      <Stack direction={"row"} spacing={1} flex={1}>
+      <Stack direction={lg ? "row" : "column"} spacing={1} flex={1}>
         <CreateForm FETCH={FETCH} />
         <ModifyForm adminData={adminData} handleClick={handleClick} />
       </Stack>
@@ -197,19 +202,28 @@ const CreateForm = ({ FETCH }) => {
 const ModifyForm = ({ adminData, handleClick }) => {
   const { currentUser } = useDataContext();
 
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
+
   return (
-    <Stack flex={2} p={4} spacing={5} style={{ backgroundColor: "#fff" }}>
+    <Stack
+      flex={2}
+      spacing={5}
+      style={{ backgroundColor: "#fff" }}
+      overflow={"auto"}
+    >
       <p style={{ textAlign: "center" }}>Modify Admin</p>
-      <Stack spacing={1} divider={<Divider />}>
+      <Stack p={lg ? 4 : 2} spacing={1} divider={<Divider />}>
         <Label />
         {adminData.map((item, i) => (
           <Stack
             direction={"row"}
             key={i}
+            className="adminData"
             divider={<Divider orientation="vertical" />}
             alignItems={"center"}
           >
-            {keys.map(({ name, flex }, i) => (
+            {ShowData.map(({ name, flex }, i) => (
               <p key={i} style={{ flex, textAlign: "center" }}>
                 {name === "Password" && item.AccountLavel === "System Admin"
                   ? "*****"
@@ -252,18 +266,22 @@ const ModifyForm = ({ adminData, handleClick }) => {
 };
 
 const Label = () => {
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
+
   return (
     <Stack
       direction={"row"}
+      className="adminData"
       divider={<Divider orientation="vertical" />}
       sx={{ fontWeight: "bold", width: "100%" }}
     >
-      {keys.map(({ name, flex }, i) => (
-        <p key={i} style={{ flex, textAlign: "center", padding: 5 }}>
+      {ShowData.map(({ name, flex }, i) => (
+        <p key={i} style={{ flex, textAlign: "center" }}>
           {name}
         </p>
       ))}
-      <p style={{ flex: 1, textAlign: "center", padding: 5 }}>Modify</p>
+      <p style={{ flex: 1, textAlign: "center" }}>Modify</p>
     </Stack>
   );
 };
@@ -284,14 +302,19 @@ const CustomIconButton = (props) => {
 };
 
 const UpdateForm = ({ state }) => {
-  const { action, data, method, message } = state;
-  console.log(data);
+  const { action, data, method, message, closeDrawer } = state;
   const [updatedData, setUpdatedData] = useState(data);
+  const { lg } = useResponsiveSizes();
 
   return (
-    <Stack p={5} spacing={3} width={500} divider={<Divider />}>
-      <Stack justifyContent={"center"} alignItems={"center"}>
-        <p style={{ fontWeight: "bold" }}>{message}</p>
+    <Stack py={5} spacing={3} width={lg ? 500 : "100vw"} divider={<Divider />}>
+      <Stack direction={"row"} alignItems={"center"}>
+        <Stack style={{ flex: 1 }} alignItems={"center"}>
+          <CustomIconButton onClick={closeDrawer}>
+            <CloseSharp />
+          </CustomIconButton>
+        </Stack>
+        <p style={{ flex: 5, fontWeight: "bold" }}>{message}</p>
       </Stack>
       <form
         style={{ flex: 1, display: "flex", flexDirection: "column" }}
@@ -300,10 +323,10 @@ const UpdateForm = ({ state }) => {
           method(data.ID, updatedData);
         }}
       >
-        <Stack spacing={3}>
+        <Stack p={3} spacing={3}>
           {keys.map(({ name, isDasabled, type }, i) => (
             <Stack key={i} direction={"row"} alignItems={"center"}>
-              <p style={{ flex: 1 }}>{name}</p>
+              <p style={{ flex: 1.5 }}>{name}</p>
               <p style={{ width: 20 }}>:</p>
               <TextField
                 id={name}
@@ -345,4 +368,7 @@ const keys = [
   { name: "AccountLavel", type: "text", isDasabled: true, flex: 1 },
 ];
 
-const AccountLabelString = ["Moderator", "Admin", "Administrator"];
+const mobkeys = [
+  { name: "FullName", type: "text", isDasabled: false, flex: 1 },
+  { name: "AccountLavel", type: "text", isDasabled: true, flex: 1.5 },
+];

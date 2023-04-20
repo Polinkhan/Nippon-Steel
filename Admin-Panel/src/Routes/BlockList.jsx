@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { dbClient } from "../Api/Client";
 import { Delete, Edit, PublishedWithChanges } from "@mui/icons-material";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const BlockList = () => {
   const [data, setData] = useState([]);
@@ -64,6 +65,7 @@ const BlockList = () => {
           sx={{ backgroundColor: "#fff", padding: 2 }}
           divider={<Divider />}
           spacing={1}
+          overflow={"auto"}
         >
           <Stack sx={{ py: 1, px: 2 }}>
             <TextField
@@ -103,6 +105,8 @@ const CustomIconButton = (props) => {
 };
 
 const UserData = ({ data, handleClick }) => {
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
   return (
     <Stack
       // width={250}
@@ -111,7 +115,7 @@ const UserData = ({ data, handleClick }) => {
       divider={<Divider orientation="vertical" />}
       alignItems={"center"}
     >
-      {keys.map(({ name, flex }, i) => (
+      {ShowData.map(({ name, flex }, i) => (
         <p key={i} style={{ flex }}>
           {data[name]}
         </p>
@@ -130,6 +134,8 @@ const UserData = ({ data, handleClick }) => {
   );
 };
 const Label = () => {
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
   return (
     <Stack
       direction={"row"}
@@ -137,7 +143,7 @@ const Label = () => {
       sx={{ fontWeight: "bold" }}
       className="userData"
     >
-      {keys.map(({ name, flex }, i) => (
+      {ShowData.map(({ name, flex }, i) => (
         <p key={i} style={{ flex }}>
           {name}
         </p>
@@ -160,4 +166,9 @@ const keys = [
   { name: "Company", type: "text", isDasabled: false, flex: 1.5 },
   { name: "Nationality", type: "text", isDasabled: false, flex: 1 },
   { name: "Bank", type: "text", isDasabled: false, flex: 1.5 },
+];
+
+const mobkeys = [
+  { name: "UserID", type: "text", isDasabled: true, flex: 1 },
+  { name: "FullName", type: "text", isDasabled: false, flex: 2 },
 ];

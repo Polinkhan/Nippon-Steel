@@ -10,7 +10,8 @@ import {
 import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { dbClient } from "../Api/Client";
-import { Block, Close, Delete, Edit } from "@mui/icons-material";
+import { Block, Close, CloseSharp, Delete, Edit } from "@mui/icons-material";
+import useResponsiveSizes from "../hooks/useResponsiveSizes";
 
 const ManageUser = () => {
   const [data, setData] = useState([]);
@@ -35,6 +36,7 @@ const ManageUser = () => {
     try {
       const res = await dbClient.post(`/updateUser/${id}`, updatedData);
       FETCHDATA();
+      setDrawerState({ state: false });
       toast.success(res.data.message);
     } catch (err) {
       console.log(err);
@@ -74,6 +76,7 @@ const ManageUser = () => {
         state: true,
         action: "UPDATE",
         method: handleSubmit,
+        closeDrawer: () => setDrawerState({ state: false }),
         message: "Change and click update to modify the data",
       });
     } else if (type === "delete") {
@@ -82,6 +85,7 @@ const ManageUser = () => {
         state: true,
         action: "confirm delete",
         method: handleDelete,
+        closeDrawer: () => setDrawerState({ state: false }),
         message: "Are you sure you want to delete the user data?",
       });
     } else if (type === "block") {
@@ -129,6 +133,7 @@ const ManageUser = () => {
           sx={{ backgroundColor: "#fff", padding: 2 }}
           divider={<Divider />}
           spacing={1}
+          overflow={"auto"}
         >
           <Stack sx={{ py: 1, px: 2 }}>
             <TextField
@@ -176,19 +181,21 @@ const CustomIconButton = (props) => {
 };
 
 const UserData = ({ data, handleClick }) => {
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
   return (
     <Stack
-      // width={250}
       className="userData"
       direction={"row"}
       divider={<Divider orientation="vertical" />}
       alignItems={"center"}
     >
-      {keys.map(({ name, flex }, i) => (
+      {ShowData.map(({ name, flex }, i) => (
         <p key={i} style={{ flex }}>
           {data[name]}
         </p>
       ))}
+
       <Stack
         flex={1.5}
         px={"10px"}
@@ -219,13 +226,19 @@ const UserData = ({ data, handleClick }) => {
 };
 
 const UpdateForm = ({ state }) => {
-  const { action, data, method, message } = state;
+  const { action, data, method, message, closeDrawer } = state;
   const [updatedData, setUpdatedData] = useState(data);
+  const { lg } = useResponsiveSizes();
 
   return (
-    <Stack p={5} spacing={3} width={500} divider={<Divider />}>
-      <Stack justifyContent={"center"} alignItems={"center"}>
-        <p style={{ fontWeight: "bold" }}>{message}</p>
+    <Stack py={5} spacing={3} width={lg ? 500 : "100vw"} divider={<Divider />}>
+      <Stack direction={"row"} alignItems={"center"}>
+        <Stack style={{ flex: 1 }} alignItems={"center"}>
+          <CustomIconButton onClick={closeDrawer}>
+            <CloseSharp />
+          </CustomIconButton>
+        </Stack>
+        <p style={{ flex: 5, fontWeight: "bold" }}>{message}</p>
       </Stack>
       <form
         style={{ flex: 1, display: "flex", flexDirection: "column" }}
@@ -234,10 +247,10 @@ const UpdateForm = ({ state }) => {
           method(data.UserID, updatedData);
         }}
       >
-        <Stack spacing={3}>
+        <Stack p={3} spacing={3}>
           {keys.map(({ name, isDasabled, type }, i) => (
             <Stack key={i} direction={"row"} alignItems={"center"}>
-              <p style={{ flex: 1 }}>{name}</p>
+              <p style={{ flex: 1.5 }}>{name}</p>
               <p style={{ width: 20 }}>:</p>
               <TextField
                 id={name}
@@ -271,6 +284,8 @@ const UpdateForm = ({ state }) => {
 };
 
 const Label = () => {
+  const { lg } = useResponsiveSizes();
+  const ShowData = lg ? keys : mobkeys;
   return (
     <Stack
       direction={"row"}
@@ -278,7 +293,7 @@ const Label = () => {
       sx={{ fontWeight: "bold" }}
       className="userData"
     >
-      {keys.map(({ name, flex }, i) => (
+      {ShowData.map(({ name, flex }, i) => (
         <p key={i} style={{ flex }}>
           {name}
         </p>
@@ -302,4 +317,9 @@ const keys = [
   { name: "Company", type: "text", isDasabled: false, flex: 1.5 },
   { name: "Nationality", type: "text", isDasabled: false, flex: 1 },
   { name: "Bank", type: "text", isDasabled: false, flex: 1.5 },
+];
+
+const mobkeys = [
+  { name: "UserID", type: "text", isDasabled: true, flex: 1 },
+  { name: "FullName", type: "text", isDasabled: false, flex: 2 },
 ];
