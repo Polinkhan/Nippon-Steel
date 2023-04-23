@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1000" height="1000" viewBox="0 0 1000 1000" xml:space="preserve">
+<desc>Created with Fabric.js 3.5.0</desc>
+<defs>
+</defs>
+<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
+<g transform="matrix(14.8206 0 0 14.8206 488.5467 608.6832)" id="&#x30ec;&#x30a4;&#x30e4;&#x30fc;_1-2">
+<radialGradient id="SVGID_7" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1 0 0 1 0 0)" cx="23.9559" cy="27.8969" r="26.0045" fx="23.9559" fy="27.8969">
+<stop offset="0%" style="stop-color:rgb(0,167,234);stop-opacity: 1"/>
+<stop offset="13.450000000000001%" style="stop-color:rgb(2,159,229);stop-opacity: 1"/>
+<stop offset="33.75%" style="stop-color:rgb(6,139,213);stop-opacity: 1"/>
+<stop offset="58.37%" style="stop-color:rgb(13,105,189);stop-opacity: 1"/>
+<stop offset="86.13%" style="stop-color:rgb(23,58,155);stop-opacity: 1"/>
+<stop offset="100%" style="stop-color:rgb(29,32,136);stop-opacity: 1"/>
+</radialGradient>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; is-custom-font: none; font-file-url: none; fill: url(#SVGID_7); fill-rule: nonzero; opacity: 1;" transform=" translate(-18.779, -33.7183)" d="M 36.8926 28.85 A 18.7291 18.7291 0 1 0 0.7012 38.5088 c 2.668 9.9961 13.0254 16.2656 22.9258 13.2636 C 33.1524 48.8838 39.5606 38.8408 36.8926 28.85 Z" stroke-linecap="round"/>
+</g>
+<g transform="matrix(14.8206 0 0 14.8206 500.0005 500.0006)" id="&#x30ec;&#x30a4;&#x30e4;&#x30fc;_1-2">
+<linearGradient id="SVGID_8" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1 0 0 1 0 0)" x1="23.6671" y1="19.9842" x2="4.5855" y2="56.2567">
+<stop offset="1.1199999999999999%" style="stop-color:rgb(209,0,14);stop-opacity: 1"/>
+<stop offset="47.75%" style="stop-color:rgb(230,0,18);stop-opacity: 1"/>
+<stop offset="100%" style="stop-color:rgb(235,97,53);stop-opacity: 1"/>
+</linearGradient>
+<path style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; is-custom-font: none; font-file-url: none; fill: url(#SVGID_8); fill-rule: nonzero; opacity: 1;" transform=" translate(-19.5518, -26.3851)" d="M 33.0938 16.01 C 31.01 17.6953 11.8047 27.8828 7.1172 40.7646 C 3.8848 49.6474 13.6114 53.3115 22.09 52.167 c 0 0 -27.1 5.4687 -21.2676 -16.5264 C 6.2188 15.2871 39.1036 0 39.1036 0 Z" stroke-linecap="round"/>
+</g>
+</svg>

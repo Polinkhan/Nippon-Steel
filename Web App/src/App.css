@@ -1,0 +1,62 @@
+/*----- Login Page----- */
+
+.LoginForm {
+  height: 100%;
+  margin: auto 0;
+  padding: 0 50px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.Login_Body {
+  height: 100%;
+}
+
+/*----- Search Page----- */
+.SearchForm {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: #fff;
+}
+
+/*----- Home Page----- */
+
+.homeHeaderDiv {
+  background: rgb(43, 88, 118);
+  background: linear-gradient(
+    90deg,
+    rgba(43, 88, 118, 1) 0%,
+    rgba(36, 59, 85, 1) 100%
+  );
+  border-radius: 8px;
+  justify-content: center;
+}
+
+.avater {
+  padding: 4px;
+  background-color: #eee;
+  border-radius: 999px;
+}
+
+/*----- Settings Page----- */
+
+.customSettingsPage {
+  height: 60px;
+  margin-bottom: 10px;
+  color: black;
+  justify-content: space-between;
+  background-color: #eee;
+  border-radius: 10px;
+}
+
+/*----- OTP Page----- */
+
+.OTPForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin: 20px 0;
+}
