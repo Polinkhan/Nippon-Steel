@@ -3,9 +3,10 @@ import React from "react";
 import { Colors } from "../Constents/Colors";
 import { HomeRounded } from "@mui/icons-material";
 
-const Header = ({ name, Icon }) => {
+const Header = ({ name, Icon, style = {} }) => {
   return (
     <Stack
+      style={style}
       px={2}
       spacing={1}
       direction={"row"}

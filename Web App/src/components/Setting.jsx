@@ -22,6 +22,7 @@ const Setting = () => {
   const handleLogout = () => {
     if (confirm("Confirm Logout ?")) {
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("pdfViewed");
       setCurrentUser(null);
     } else {
     }
@@ -78,9 +79,13 @@ const CustomLinkButton = ({ item }) => {
 export default Setting;
 
 const settingsData = [
-  { name: "View Profile", linkTo: "profile", imgSrc: ViewProfile },
-  { name: "Change Password", linkTo: "changePassword", imgSrc: ChangePassword },
-  { name: "Teams", linkTo: "teams", imgSrc: Teams },
-  { name: "Contact Admin", linkTo: "contactAdmin", imgSrc: ContactAdmin },
-  { name: "About App", linkTo: "aboutApp", imgSrc: AboutApp },
+  { name: "View Profile", linkTo: "/profile", imgSrc: ViewProfile },
+  {
+    name: "Change Password",
+    linkTo: "/changePassword",
+    imgSrc: ChangePassword,
+  },
+  { name: "Teams", linkTo: "/teams", imgSrc: Teams },
+  { name: "Contact Admin", linkTo: "/contactAdmin", imgSrc: ContactAdmin },
+  { name: "About App", linkTo: "/aboutApp", imgSrc: AboutApp },
 ];

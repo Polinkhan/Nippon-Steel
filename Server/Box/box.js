@@ -1,5 +1,6 @@
 var BoxSDK = require("box-node-sdk");
 var request = require("request");
+const { filterData } = require("../Healpers/functions");
 
 var sdk = BoxSDK.getPreconfiguredInstance({
   boxAppSettings: {
@@ -14,6 +15,7 @@ var sdk = BoxSDK.getPreconfiguredInstance({
   },
   enterpriseID: "967440861",
 });
+
 var client = sdk.getAppAuthClient("enterprise");
 
 const getUrl = async (id) => {
@@ -95,10 +97,30 @@ const getAdPictures = () => {
   });
 };
 
+const getAvailableBoxData = ({ year, month, type }) => {
+  return new Promise(async (resolve, reject) => {
+    client.search
+      .query(`"${month}_${year}_${type}"`, {
+        fields: "name",
+        type: "file",
+      })
+      .then((results) => {
+        if (results.total_count) {
+          const data = results.entries;
+          const filteredData = filterData(data);
+          resolve(filteredData);
+        } else {
+          reject({ status: 500, message: "File Not Found" });
+        }
+      });
+  });
+};
+
 module.exports = {
   getPDFURL,
   getAuthDetails,
   getContactList,
   getAdPictures,
   getUserDetails,
+  getAvailableBoxData,
 };

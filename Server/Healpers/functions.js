@@ -7,4 +7,9 @@ const genarateOTP = () => {
   return otp;
 };
 
-module.exports = { ObjectToArray, genarateOTP };
+const filterData = (data) => {
+  const ids = data.map((item) => item.name.split("_")[0]);
+  return ids.sort();
+};
+
+module.exports = { ObjectToArray, genarateOTP, filterData };

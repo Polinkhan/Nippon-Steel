@@ -1,13 +1,13 @@
 const path = require("path");
 const hbs = require("nodemailer-express-handlebars");
 const nodemailer = require("nodemailer");
+const { log } = require("console");
 
 let transporter = nodemailer.createTransport({
-  host: "localhost",
-  port: 25,
-  secure: false,
-  tls: {
-    rejectUnauthorized: false,
+  service: "gmail",
+  auth: {
+    user: "noreply.nsc.eng@gmail.com",
+    pass: "fblqbqegimtlhshd",
   },
 });
 
@@ -30,8 +30,8 @@ const mailTo = async (email, OTP, isAdminLogin) => {
     : `${OTP} is your Nippon Steel Engineering (App) Verification OTP`;
 
   var mailOptions = {
-    from: "noreply@ofsnse.com",
-    to: email,
+    from: "noreply.nsc.eng@gmail.com",
+    to: "naeem@nsc-eng.com",
     subject: subject,
     headers: {
       priority: "high",
@@ -44,6 +44,7 @@ const mailTo = async (email, OTP, isAdminLogin) => {
 
   return new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, function (error, info) {
+      console.log(info);
       if (error) {
         console.log(error);
         reject(error);

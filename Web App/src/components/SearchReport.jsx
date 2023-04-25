@@ -31,7 +31,7 @@ const SearchReport = () => {
     dbClient
       .get("app/typeList")
       .then((res) => setTypeData(res.data))
-      .catch((err) => toast.error(err?.response?.data?.message));
+      .catch((err) => {});
   }, []);
 
   const navigate = useNavigate();
@@ -47,7 +47,11 @@ const SearchReport = () => {
         year: Year,
       })
       .then(async ({ data }) => {
-        console.log(data);
+        let pdfViewed = JSON.parse(localStorage.getItem("pdfViewed")) || [];
+        if (!CheckIfObjectIncluded(pdfViewed, { Type, Month, Year })) {
+          pdfViewed.push({ Type, Month, Year });
+          localStorage.setItem("pdfViewed", JSON.stringify(pdfViewed));
+        }
         navigate({
           pathname: "/view",
           search: createSearchParams({
@@ -76,8 +80,8 @@ const SearchReport = () => {
           <img src={img} width={height / 7} />
           <p>OFS Crew Document Search</p>
         </Stack>
-        <Stack flex={2} sx={{ px: 8, py: 4 }} justifyContent={"space-between"}>
-          <Stack spacing={3}>
+        <Stack flex={2} sx={{ px: 6, py: 4 }} justifyContent={"space-between"}>
+          <Stack spacing={2}>
             <CustomSelect
               data={typeData}
               name={"Type"}
@@ -159,4 +163,15 @@ const CustomSelect = ({ data, name, selected, setSelected }) => {
   );
 };
 
+const CheckIfObjectIncluded = (arr, obj) => {
+  let result = false;
+  arr.forEach((element, i) => {
+    if (JSON.stringify(element) === JSON.stringify(obj)) {
+      result = true;
+    }
+  });
+  return result;
+};
+
+export { CheckIfObjectIncluded };
 export default SearchReport;

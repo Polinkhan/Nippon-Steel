@@ -41,7 +41,7 @@ const PDFViewPage = () => {
           <Download sx={{ fontSize: 25 }} color="primary" />
         </Link>
       </Stack>
-      <Stack m={2}>
+      <Stack>
         <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
           <Viewer defaultScale={1} fileUrl={fileUrl} />
         </Worker>

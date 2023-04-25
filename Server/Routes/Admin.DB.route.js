@@ -1,6 +1,8 @@
 const express = require("express");
 const createError = require("http-errors");
 const db = require("../DB/mySQL_init");
+const { getAvailableBoxData } = require("../Box/box");
+const { Query } = require("../DB/CustomPromise");
 const router = express.Router();
 
 router.get("/viewData/:id", async (req, res, next) => {
@@ -267,6 +269,27 @@ router.post("/appSettings/update", async (req, res, next) => {
     if (err) next(err);
     else res.send();
   });
+});
+
+router.get("/availableBoxData/:year/:month/:type", async (req, res, next) => {
+  const { year, month, type } = req.params;
+  try {
+    const temp = {};
+    const query = `SELECT FullName FROM Information WHERE UserID=?`;
+
+    const IDs = await getAvailableBoxData({ year, month, type });
+    IDs.forEach(async (id) => {
+      const data = await Query(query, [id]).catch((err) => next(err));
+      const name = data[0]?.FullName ? data[0]?.FullName : "Unknown";
+      temp[id] = name;
+      if (Object.keys(temp).length === IDs.length) {
+        const finalData = IDs.map((id) => ({ id, name: temp[id] }));
+        finalData.length === IDs.length && res.send(finalData);
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

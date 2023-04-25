@@ -8,24 +8,31 @@ import {
   FormControlLabel,
   Button,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
+  Snackbar,
 } from "@mui/material";
 import { useDataContext } from "../Contexts/DataContext";
 import { authClient } from "../Api/Client";
 import { createSearchParams, useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export const LoginPage = () => {
   const { font_size, lg, md, sm, xl } = useResponsivesizes();
   const [id, setID] = useState("");
   const [pass, setPass] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const [showPassword, setShowPassword] = useState(false);
   const { setCurrentUser } = useDataContext();
+  const [snakeBarStare, setSnakeBarStare] = useState({ state: false });
   const navigate = useNavigate();
 
   const handle_submit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setError();
     authClient
       .post("/login", { id, pass })
       .then(async ({ data }) => {
@@ -42,7 +49,10 @@ export const LoginPage = () => {
           setCurrentUser(User);
         }
       })
-      .catch((err) => setError(err?.response?.data?.message))
+      .catch((err) => {
+        const message = err?.response?.data?.message || err.message || err;
+        setSnakeBarStare({ state: true, message });
+      })
       .finally(() => setLoading(false));
   };
 
@@ -63,19 +73,32 @@ export const LoginPage = () => {
             required
             label="User ID"
             value={id}
-            error={error !== undefined}
             onChange={(e) => setID(e.target.value)}
           />
-          <TextField
-            id="Password"
-            label="Password"
-            type="password"
-            required
-            value={pass}
-            error={error !== undefined}
-            onChange={(e) => setPass(e.target.value)}
-            helperText={error}
-          />
+          <FormControl variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              required
+              value={pass}
+              id="outlined-adornment-password"
+              onChange={(e) => setPass(e.target.value)}
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
           <FormControlLabel
             control={<Checkbox defaultChecked />}
             label="Remamber Me"
@@ -92,6 +115,12 @@ export const LoginPage = () => {
           </Button>
         </Stack>
       </Stack>
+      <Snackbar
+        open={snakeBarStare.state}
+        autoHideDuration={6000}
+        onClose={() => setSnakeBarStare({ state: false })}
+        message={snakeBarStare.message}
+      />
     </form>
   );
 };

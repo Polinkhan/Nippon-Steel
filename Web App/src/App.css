@@ -40,6 +40,37 @@
   border-radius: 999px;
 }
 
+.imageBox {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.imageBox::-webkit-scrollbar {
+  display: none;
+}
+
+.pdfHistoryBox {
+  color: black;
+  padding: 12px;
+  background-color: #f2f2f5;
+  border-radius: 12px;
+  overflow: auto;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.historyBox {
+  color: #fff;
+  background: rgb(176, 106, 179);
+  background: linear-gradient(
+    90deg,
+    rgba(176, 106, 179, 1) 0%,
+    rgba(69, 104, 220, 1) 100%
+  );
+  padding: 12px;
+  border-radius: 8px;
+  align-items: center;
+}
+
 /*----- Settings Page----- */
 
 .customSettingsPage {
@@ -59,4 +90,21 @@
   align-items: center;
   width: 100%;
   margin: 20px 0;
+}
+
+/*----- View Profile Page----- */
+
+.ProfileInfo {
+  background-color: #f2f2f5;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+/*----- Contact Admin Page----- */
+
+.adminInfo {
+  padding: 12px;
+  background-color: #f2f2f5;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
